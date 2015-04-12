@@ -5,6 +5,8 @@
 
 
     <!-- Session brief -->
+    <dimen name="sb_minHeight">70dp</dimen>
     <dimen name="sb_background_size">40dp</dimen>
     <dimen name="sb_padding">10dp</dimen>
+    <dimen name="sb_num_marginRight">10dp</dimen>
 </resources>

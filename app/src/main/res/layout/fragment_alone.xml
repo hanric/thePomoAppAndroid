@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center_horizontal">
+
+    <com.github.pavlospt.CircleView
+        android:id="@+id/aloneTimer"
+        android:layout_width="300dp"
+        android:layout_height="300dp"
+        android:layout_margin="40dp"
+        app:backgroundColorValue="#00FFFFFF"
+        app:fillColor="#00FFFFFF"
+        app:strokeColorValue="@color/colorPrimary"
+        app:strokeWidthSize="10"
+        app:subtitleText=" "
+        app:titleColor="@color/black"
+        app:titleSize="80dp"
+        app:titleText="00:00" />
+
+    <ListView
+        android:id="@+id/listLocalSession"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/aloneTimer"/>
+
+    <com.melnykov.fab.FloatingActionButton
+        android:id="@+id/fab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_margin="16dp"
+        android:src="@drawable/ic_plus_circle"
+        app:fab_colorNormal="?attr/colorAccent"
+        app:fab_colorPressed="@color/white" />
+</RelativeLayout>

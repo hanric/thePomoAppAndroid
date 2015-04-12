@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="SessionBriefView">
+        <attr name="numColor" format="integer"/>
+        <attr name="numValue" format="integer"/>
+        <attr name="description" format="string" />
+    </declare-styleable>
+</resources>
