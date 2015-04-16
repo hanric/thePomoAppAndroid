@@ -1,0 +1,10 @@
+<resources>
+    <!-- popup Login -->
+    <string name="popup_login_required">Para utilitzar las funcionalidades online de Pomodoro for Groups tienes que hacer login</string>
+    <string name="popup_login_button">LOGIN</string>
+    <string name="popup_login_register">¿Todavía no tienes una cuenta? Registrate aquí</string>
+    <string name="popup_login_register_button">REGISTRARSE</string>
+
+    <string name="popup_login_remember">Recordar</string>
+
+</resources>

@@ -7,16 +7,17 @@
 
     <com.github.pavlospt.CircleView
         android:id="@+id/aloneTimer"
-        android:layout_width="300dp"
-        android:layout_height="300dp"
-        android:layout_margin="40dp"
+        android:layout_width="@dimen/circleView_size"
+        android:layout_height="@dimen/circleView_size"
+        android:layout_margin="@dimen/circleView_margin"
+        android:layout_centerHorizontal="true"
         app:backgroundColorValue="#00FFFFFF"
         app:fillColor="#00FFFFFF"
         app:strokeColorValue="@color/colorPrimary"
         app:strokeWidthSize="10"
-        app:subtitleText=" "
+        app:subtitleText=""
         app:titleColor="@color/black"
-        app:titleSize="80dp"
+        app:titleSize="@dimen/circleView_title_size"
         app:titleText="00:00" />
 
     <ListView
@@ -34,7 +35,7 @@
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
         android:layout_margin="16dp"
-        android:src="@drawable/ic_plus_circle"
-        app:fab_colorNormal="?attr/colorAccent"
+        android:src="@drawable/ic_plus"
+        app:fab_colorNormal="?attr/colorPrimary"
         app:fab_colorPressed="@color/white" />
 </RelativeLayout>

@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:gravity="center_horizontal"
+    android:orientation="vertical"
+    android:paddingBottom="@dimen/popupLogin_padding_topBottom"
+    android:paddingLeft="@dimen/popupLogin_padding_leftRight"
+    android:paddingRight="@dimen/popupLogin_padding_leftRight"
+    android:paddingTop="@dimen/popupLogin_padding_topBottom">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="6"
+        android:layout_marginBottom="@dimen/popupLogin_separatorMargin"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:layout_marginBottom="@dimen/popupLogin_topText_marginBottom"
+            android:text="@string/popup_login_required"
+            style="@style/std_Gray"/>
+
+        <EditText
+            android:id="@+id/popup_login_email"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/popup_login_hint_email"
+            android:layout_marginBottom="@dimen/popupLogin_std_marginBottom"
+            android:inputType="textEmailAddress" />
+
+        <EditText
+            android:id="@+id/popup_login_password"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/popup_login_hint_password"
+            android:layout_marginBottom="@dimen/popupLogin_std_marginBottom"
+            android:inputType="textPassword" />
+
+        <CheckBox
+            android:id="@+id/popup_login_remember"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="start"
+            android:layout_marginBottom="@dimen/popupLogin_std_marginBottom"
+            android:text="@string/popup_login_remember" />
+
+        <Button
+            android:id="@+id/popup_login_button"
+            style="@style/baseButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:clickable="true"
+            android:text="@string/popup_login_button" />
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="4"
+        android:gravity="bottom"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:gravity="center"
+            android:layout_marginBottom="@dimen/popupLogin_topText_marginBottom"
+            android:text="@string/popup_login_register"
+            style="@style/std_Gray"/>
+
+        <Button
+            android:id="@+id/popup_login_register_button"
+            style="@style/baseButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/popup_login_register_button" />
+    </LinearLayout>
+
+</LinearLayout>

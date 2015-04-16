@@ -14,6 +14,7 @@
     <item name="black" type="color">#000000</item>
 
     <item name="colorPrimary" type="color">#00BBD3</item>
+    <item name="secondaryGray" type="color">#757575</item>
 
     <integer-array name="androidcolors">
         <item>@color/blue</item>
@@ -30,6 +31,7 @@
         <item>@color/black</item>
 
         <item>@color/colorPrimary</item>
+        <item>@color/secondaryGray</item>
     </integer-array>
 
 </resources>

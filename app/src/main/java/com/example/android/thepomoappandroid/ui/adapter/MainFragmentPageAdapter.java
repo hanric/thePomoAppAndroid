@@ -9,11 +9,11 @@ import java.util.List;
 /**
  * Created by Enric on 12/04/2015.
  */
-public class MainPageAdapter extends FragmentPagerAdapter {
+public class MainFragmentPageAdapter extends FragmentPagerAdapter {
 
     private List<Fragment> fragments;
 
-    public MainPageAdapter(FragmentManager fm, List<Fragment> fragments) {
+    public MainFragmentPageAdapter(FragmentManager fm, List<Fragment> fragments) {
         super(fm);
         this.fragments = fragments;
     }
@@ -24,7 +24,18 @@ public class MainPageAdapter extends FragmentPagerAdapter {
     }
 
     @Override
+    public CharSequence getPageTitle(int position) {
+        switch (position) {
+            case 0 : return "Alone";
+            case 1 : return "Group";
+            default : return "default";
+        }
+    }
+
+    @Override
     public int getCount() {
         return this.fragments.size();
     }
+
+
 }

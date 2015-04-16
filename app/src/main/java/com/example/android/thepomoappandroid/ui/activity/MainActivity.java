@@ -8,9 +8,11 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.astuetz.PagerSlidingTabStrip;
 import com.example.android.thepomoappandroid.R;
-import com.example.android.thepomoappandroid.ui.adapter.MainPageAdapter;
+import com.example.android.thepomoappandroid.ui.adapter.MainFragmentPageAdapter;
 import com.example.android.thepomoappandroid.ui.fragment.AloneFragment;
+import com.example.android.thepomoappandroid.ui.fragment.GroupFragment;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,49 +23,43 @@ public class MainActivity extends ActionBarActivity {
 //    ArrayList<LocalSession> arrayLocalSessions;
 //    ListView listViewLocalSessions;
 
-    MainPageAdapter pageAdapter;
-
+    Toolbar toolbar;
     private ViewPager pager;
+    PagerSlidingTabStrip tabs;
+
+    MainFragmentPageAdapter pageAdapter;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        List<Fragment> fragments = getFragments();
+        findViews();
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle("Pomodoro for Groups");
 
-        pageAdapter = new MainPageAdapter(getSupportFragmentManager(), getFragments());
-        pager = (ViewPager) findViewById(R.id.pager);
+        pageAdapter = new MainFragmentPageAdapter(getSupportFragmentManager(), getFragments());
         pager.setAdapter(pageAdapter);
-//        arrayLocalSessions = new ArrayList<LocalSession>();
-//        LocalSession plats = new LocalSession(0,3, "Fregar els plats");
-//        LocalSession planxar = new LocalSession(1,1, "Cal planxar");
-//        LocalSession fregar = new LocalSession(2,2, "Fregar la casa");
-//        LocalSession estudiar = new LocalSession(3,3, "Estudiar");
-//
-//        arrayLocalSessions.add(plats);
-//        arrayLocalSessions.add(planxar);
-//        arrayLocalSessions.add(fregar);
-//        arrayLocalSessions.add(estudiar);
-//
-//        listViewLocalSessions = (ListView) findViewById(R.id.listLocalSession);
-//        ListLocalSessionAdapter adapter = new ListLocalSessionAdapter(this, arrayLocalSessions);
-//        listViewLocalSessions.setAdapter(adapter);
-
+        tabs.setViewPager(pager);
+        tabs.getWidth();
     }
 
     private List<Fragment> getFragments() {
         List<Fragment> fragmentList = new ArrayList<>();
 
         fragmentList.add(AloneFragment.newInstance());
-        fragmentList.add(AloneFragment.newInstance());
-        fragmentList.add(AloneFragment.newInstance());
+        fragmentList.add(GroupFragment.newInstance());
 
         return fragmentList;
+    }
+
+    private void findViews() {
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
+        pager = (ViewPager) findViewById(R.id.pager);
+        tabs = (PagerSlidingTabStrip) findViewById(R.id.tabs);
+
     }
 
     @Override

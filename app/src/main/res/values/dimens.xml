@@ -3,10 +3,22 @@
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
 
+    <!-- CircleView -->
+    <dimen name="circleView_size">250dp</dimen>
+    <dimen name="circleView_margin">30dp</dimen>
+    <dimen name="circleView_title_size">70dp</dimen>
 
     <!-- Session brief -->
     <dimen name="sb_minHeight">70dp</dimen>
     <dimen name="sb_background_size">40dp</dimen>
     <dimen name="sb_padding">10dp</dimen>
     <dimen name="sb_num_marginRight">10dp</dimen>
+
+    <!-- popup Login -->
+    <dimen name="popupLogin_padding_leftRight">20dp</dimen>
+    <dimen name="popupLogin_padding_topBottom">32dp</dimen>
+    <dimen name="popupLogin_separatorMargin">24dp</dimen>
+    <dimen name="popupLogin_topText_marginBottom">14dp</dimen>
+    <dimen name="popupLogin_std_marginBottom">6dp</dimen>
+
 </resources>
