@@ -26,7 +26,7 @@ public class SessionBriefView extends LinearLayout {
         TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.SessionBriefView, 0, 0);
         Drawable numColor = a.getDrawable(R.styleable.SessionBriefView_numColor);
         Integer numValue = a.getInteger(R.styleable.SessionBriefView_numValue, -1);
-        String description = a.getString(R.styleable.SessionBriefView_description);
+        String description = a.getString(R.styleable.SessionBriefView_name);
         a.recycle();
 
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);

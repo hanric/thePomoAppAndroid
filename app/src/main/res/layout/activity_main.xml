@@ -7,7 +7,9 @@
     android:fitsSystemWindows="true"
     tools:context=".MainActivity">
 
-    <include layout="@layout/toolbar" />
+    <include
+        android:id="@+id/toolbar"
+        layout="@layout/toolbar" />
 
     <com.astuetz.PagerSlidingTabStrip
         android:id="@+id/tabs"

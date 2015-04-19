@@ -5,6 +5,12 @@
 
     <string name="pomodoros">Pomodoros</string>
 
+    <!-- menu & toolbar -->
+    <string name="menu_save">Save</string>
+    
+    <string name="toolbar_add_session">Add Session</string>
+    <string name="toolbar_edit_session">Edit Session</string>
+
     <!-- popup Login -->
     <string name="popup_login_required">To use the Pomodoro for Groups online features you need to login</string>
     <string name="popup_login_button">LOGIN</string>
@@ -14,5 +20,8 @@
     <string name="popup_login_hint_email">Email</string>
     <string name="popup_login_hint_password">Password</string>
     <string name="popup_login_remember">Remember</string>
+
+    <!-- popup Add alone session -->
+    <string name="popup_add_alone_session_name">Name</string>
 
 </resources>

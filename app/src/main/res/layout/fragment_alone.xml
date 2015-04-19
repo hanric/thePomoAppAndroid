@@ -35,7 +35,7 @@
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
         android:layout_margin="16dp"
-        android:src="@drawable/ic_plus"
+        android:src="@drawable/ic_plus_white_36dp"
         app:fab_colorNormal="?attr/colorPrimary"
         app:fab_colorPressed="@color/white" />
 </RelativeLayout>

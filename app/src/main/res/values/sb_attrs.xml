@@ -3,6 +3,6 @@
     <declare-styleable name="SessionBriefView">
         <attr name="numColor" format="integer"/>
         <attr name="numValue" format="integer"/>
-        <attr name="description" format="string" />
+        <attr name="name" format="string" />
     </declare-styleable>
 </resources>

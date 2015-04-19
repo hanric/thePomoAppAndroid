@@ -1,21 +1,21 @@
 package com.example.android.thepomoappandroid.ui.adapter;
 
 import android.content.Context;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
+import android.widget.ListAdapter;
 import android.widget.TextView;
 
 import com.example.android.thepomoappandroid.R;
-import com.example.android.thepomoappandroid.vo.LocalSession;
+import com.example.android.thepomoappandroid.db.AloneSession;
 
-import java.util.List;
+import io.realm.RealmBaseAdapter;
+import io.realm.RealmResults;
 
 /**
  * Created by Enric on 11/04/2015.
  */
-public class ListLocalSessionAdapter extends BaseAdapter {
+public class ListAloneSessionAdapter extends RealmBaseAdapter<AloneSession> implements ListAdapter {
 
     private class ViewHolder {
         TextView sbNum;
@@ -23,35 +23,16 @@ public class ListLocalSessionAdapter extends BaseAdapter {
         TextView sbDetail;
     }
 
-    Context context;
-
-    protected List<LocalSession> listLocalSessions;
-    LayoutInflater inflater;
-
-    public ListLocalSessionAdapter(Context context, List<LocalSession> listLocalSessions) {
-        this.listLocalSessions = listLocalSessions;
-        this.inflater = LayoutInflater.from(context);
-        this.context = context;
-    }
-
-    public int getCount() {
-        return listLocalSessions.size();
-    }
-
-    public LocalSession getItem(int position) {
-        return listLocalSessions.get(position);
-    }
-
-    public long getItemId(int position) {
-        return listLocalSessions.get(position).getId();
+    public ListAloneSessionAdapter(Context context, int resId, RealmResults<AloneSession> realmResults, boolean automaticUpdate) {
+        super(context, realmResults, automaticUpdate);
     }
 
     public View getView(int position, View convertView, ViewGroup parent) {
         ViewHolder holder;
         if (convertView == null) {
-            holder = new ViewHolder();
-            convertView = this.inflater.inflate(R.layout.session_brief_layout, parent, false);
+            convertView = inflater.inflate(R.layout.session_brief_layout, parent, false);
 
+            holder = new ViewHolder();
             holder.sbNum = (TextView) convertView.findViewById(R.id.sb_num);
             holder.sbHeader = (TextView) convertView.findViewById(R.id.sb_header);
             holder.sbDetail = (TextView) convertView.findViewById(R.id.sb_detail);
@@ -60,8 +41,8 @@ public class ListLocalSessionAdapter extends BaseAdapter {
         } else {
             holder = (ViewHolder) convertView.getTag();
         }
-        LocalSession localSession = listLocalSessions.get(position);
-        holder.sbNum.setText(Integer.toString(localSession.getNum()));
+        AloneSession aloneSession = realmResults.get(position);
+        holder.sbNum.setText(Integer.toString(aloneSession.getNum()));
         int module = position%4;
         switch (module) {
             case 0 : holder.sbNum.setBackgroundDrawable(context.getResources().getDrawable(R.drawable.sb_background_orange));
@@ -73,9 +54,15 @@ public class ListLocalSessionAdapter extends BaseAdapter {
             case 3: holder.sbNum.setBackgroundDrawable(context.getResources().getDrawable(R.drawable.sb_background_green));
                 break;
         }
-        holder.sbHeader.setText(localSession.getDescription());
-        holder.sbDetail.setText(Integer.toString(localSession.getNum()) + " " + context.getResources().getString(R.string.pomodoros));
+        holder.sbHeader.setText(aloneSession.getName());
+        holder.sbDetail.setText(Integer.toString(aloneSession.getNum()) + " " + context.getResources().getString(R.string.pomodoros));
 
         return convertView;
+    }
+
+
+
+    public RealmResults<AloneSession> getRealmResults() {
+        return realmResults;
     }
 }

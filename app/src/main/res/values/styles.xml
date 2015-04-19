@@ -1,4 +1,4 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
 
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
@@ -13,8 +13,7 @@
              which is used to tint widgets -->
         <item name="colorAccent">@color/orange</item>
 
-        <!-- You can also set colorControlNormal, colorControlActivated
-             colorControlHighlight, and colorSwitchThumbNormal. -->
+        <item name="android:dialogTheme">@style/DialogTheme</item>
     </style>
 
     <style name="ToolbarStyle" parent="Theme.AppCompat.NoActionBar">
@@ -22,6 +21,22 @@
         <item name="colorPrimaryDark">@color/darkblue</item>
         <item name="colorAccent">@color/orange</item>
         <!--<item name="android:textColorPrimary">@color/white</item>-->
+    </style>
+
+    <style name="DialogTheme" parent="Theme.AppCompat.Light.Dialog">
+        <item name="android:windowContentOverlay">@null</item>
+        <item name="android:windowIsFloating">true</item>
+        <item name="android:colorPrimary" tools:targetApi="21">@color/colorPrimary</item>
+        <item name="android:colorPrimaryDark" tools:targetApi="21">@color/darkblue</item>
+        <item name="android:colorAccent" tools:targetApi="21">@color/orange</item>
+    </style>
+
+    <style name="DialogThemeFullScreen" parent="Theme.AppCompat.Light.Dialog">
+        <item name="android:windowContentOverlay">@null</item>
+        <item name="android:windowIsFloating">false</item>
+        <item name="android:colorPrimary" tools:targetApi="21">@color/colorPrimary</item>
+        <item name="android:colorPrimaryDark" tools:targetApi="21">@color/darkblue</item>
+        <item name="android:colorAccent" tools:targetApi="21">@color/orange</item>
     </style>
 
     <style name="baseButton" parent="@android:style/Widget.Button">
