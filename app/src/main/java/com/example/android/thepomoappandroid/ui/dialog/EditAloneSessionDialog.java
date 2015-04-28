@@ -53,6 +53,7 @@ public class EditAloneSessionDialog extends AddAloneSessionDialog {
 
     @Override
     protected void performSaveAction() {
-        //TODO update the alone session
+        dbHandler.updateAloneSession(currentName, name.getText().toString(), Integer.parseInt(num.getText().toString()));
+        dismiss();
     }
 }

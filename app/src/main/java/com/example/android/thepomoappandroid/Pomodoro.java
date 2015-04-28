@@ -19,8 +19,10 @@ public class Pomodoro {
     public static final int BREAK = 1;
     public static final int LARGE_BREAK = 2;
 
+
     private CountDownTimer countDownTimer;
     private CircleView circleView;
+    private String key;
 
     private GregorianCalendar workTime;
     private GregorianCalendar breakTime;
@@ -37,17 +39,19 @@ public class Pomodoro {
     public interface OnPomodoroFinished {
         /**
          * Listener for when a working phase has ended
+         * @param nextPhase The following phase of the session
          */
-        public void phaseEnded(int nextPhase);
+        public void phaseEnded(String key, int nextPhase);
 
         /**
          * Listener for when the whole session has ended
          */
-        public void sessionEnded();
+        public void sessionEnded(String key);
     }
 
     public Pomodoro(CircleView circleView) {
         this.circleView = circleView;
+        this.isRunning = false;
     }
 
     /**
@@ -57,7 +61,8 @@ public class Pomodoro {
      * @param numberOfPomodoros Number of working phases.
      * @param startDate         Date when the session was scheduled to start. By now, when offline, it will be null and a start button will trigger the countdown.
      */
-    public void setSession(GregorianCalendar workTime, GregorianCalendar breakTime, GregorianCalendar largeBreakTime, int numberOfPomodoros, GregorianCalendar startDate) {
+    public void setSession(String key, GregorianCalendar workTime, GregorianCalendar breakTime, GregorianCalendar largeBreakTime, int numberOfPomodoros, GregorianCalendar startDate) {
+        this.key = key;
         this.workTime = workTime;
         this.breakTime = breakTime;
         this.largeBreakTime = largeBreakTime;
@@ -77,32 +82,21 @@ public class Pomodoro {
         this.onPomodoroFinished = onPomodoroFinished;
     }
 
+    /**
+     * startSession -> startPhase -> betweenPhase -> finishSession
+     */
+
     public void startSession() {
+        Log.v(CLASS_TAG, "startSession");
         // TODO handle startDate
+        isRunning = true;
         currentPomodoro = 1;
         currentPhase = Pomodoro.WORK;
         startPhase();
     }
 
-    private void betweenPhase() {
-        if (currentPomodoro == numberOfPomodoros) {
-//            onPomodoroFinished.sessionEnded();
-        } else {
-            if (currentPhase == Pomodoro.BREAK || currentPhase == Pomodoro.LARGE_BREAK) {
-                currentPhase = Pomodoro.WORK;
-            } else if (currentPhase == Pomodoro.WORK) {
-                if (currentPomodoro == 4) {
-                    currentPhase = Pomodoro.LARGE_BREAK;
-                } else {
-                    currentPhase = Pomodoro.BREAK;
-                }
-                ++currentPomodoro;
-            }
-//            onPomodoroFinished.phaseEnded(currentPhase);
-        }
-    }
-
-    public void startPhase() {
+    private void startPhase() {
+        Log.v(CLASS_TAG, "startPhase");
         int time;
         switch (currentPhase) {
             case Pomodoro.WORK:
@@ -122,7 +116,6 @@ public class Pomodoro {
         countDownTimer = new CountDownTimer(miliTime, 1000) {
             @Override
             public void onTick(long millisUntilFinished) {
-                Log.v("onTick", Long.toString(millisUntilFinished));
                 circleView.setTitleText(formatTime(millisUntilFinished));
             }
 
@@ -132,6 +125,32 @@ public class Pomodoro {
                 betweenPhase();
             }
         }.start();
+    }
+
+    private void betweenPhase() {
+        Log.v(CLASS_TAG, "betweenPhase");
+        if (currentPomodoro == numberOfPomodoros) {
+            finishSession();
+        } else {
+            if (currentPhase == Pomodoro.BREAK || currentPhase == Pomodoro.LARGE_BREAK) {
+                currentPhase = Pomodoro.WORK;
+            } else if (currentPhase == Pomodoro.WORK) {
+                if (currentPomodoro == 4) {
+                    currentPhase = Pomodoro.LARGE_BREAK;
+                } else {
+                    currentPhase = Pomodoro.BREAK;
+                }
+                ++currentPomodoro;
+            }
+            onPomodoroFinished.phaseEnded(key, currentPhase);
+            startPhase();
+        }
+    }
+
+    private void finishSession() {
+        Log.v(CLASS_TAG, "finishSession");
+        isRunning = false;
+        onPomodoroFinished.sessionEnded(key);
     }
 
     private String formatTime(long millisUntilFinished) {

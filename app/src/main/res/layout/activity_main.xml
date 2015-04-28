@@ -16,7 +16,7 @@
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
         android:background="?attr/colorPrimary"
-        app:pstsIndicatorColor="@color/orange"
+        app:pstsIndicatorColor="@color/colorAccent"
         app:pstsTextColorSelected="@color/white"
         app:pstsIndicatorHeight="6dp"
         style="@style/ToolbarStyle"/>

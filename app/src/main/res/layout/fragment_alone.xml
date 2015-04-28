@@ -18,7 +18,7 @@
         app:subtitleText=""
         app:titleColor="@color/black"
         app:titleSize="@dimen/circleView_title_size"
-        app:titleText="00:00" />
+        app:titleText="START" />
 
     <ListView
         android:id="@+id/listLocalSession"

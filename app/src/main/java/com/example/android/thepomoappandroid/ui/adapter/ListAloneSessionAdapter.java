@@ -60,8 +60,6 @@ public class ListAloneSessionAdapter extends RealmBaseAdapter<AloneSession> impl
         return convertView;
     }
 
-
-
     public RealmResults<AloneSession> getRealmResults() {
         return realmResults;
     }

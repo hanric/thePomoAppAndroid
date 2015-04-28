@@ -1,16 +1,23 @@
 package com.example.android.thepomoappandroid.ui.activity;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import com.astuetz.PagerSlidingTabStrip;
+import com.example.android.thepomoappandroid.Constants;
 import com.example.android.thepomoappandroid.R;
+import com.example.android.thepomoappandroid.Utils;
+import com.example.android.thepomoappandroid.api.response.LoginResponse;
 import com.example.android.thepomoappandroid.ui.adapter.MainFragmentPageAdapter;
+import com.example.android.thepomoappandroid.ui.dialog.LoginDialog;
 import com.example.android.thepomoappandroid.ui.fragment.AloneFragment;
 import com.example.android.thepomoappandroid.ui.fragment.GroupFragment;
 
@@ -18,10 +25,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class MainActivity extends ActionBarActivity {
-
-//    ArrayList<LocalSession> arrayLocalSessions;
-//    ListView listViewLocalSessions;
+public class MainActivity extends ActionBarActivity
+    implements LoginDialog.OnLoginFromDialog {
 
     Toolbar toolbar;
     private ViewPager pager;
@@ -82,5 +87,18 @@ public class MainActivity extends ActionBarActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onLoginFromDialog(LoginResponse loginResponse) {
+        Log.v("LOGIN_SUCCESS", loginResponse.toString());
+        SharedPreferences prefs = Utils.getInstance().getPrefs(this);
+        prefs.edit().putString(Constants.PREFS_TOKEN, loginResponse.getId()).apply();
+        prefs.edit().putInt(Constants.PREFS_USERID, loginResponse.getUserId()).apply();
+
+        Toast.makeText(this, "Login success!", Toast.LENGTH_SHORT).show();
+        if (!(pageAdapter.getItem(1) == null)) {
+            ((GroupFragment) pageAdapter.getItem(1)).refreshFragment();
+        }
     }
 }

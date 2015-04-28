@@ -1,18 +1,22 @@
-package com.example.android.thepomoappandroid.dto;
+package com.example.android.thepomoappandroid.api.request;
 
 import com.google.gson.annotations.Expose;
 
 //@Generated("org.jsonschema2pojo")
-public class GroupDTO {
+public class CreateGroupRequest {
 
     @Expose
     private String name;
     @Expose
     private String description;
     @Expose
-    private int adminId;
-    @Expose
     private int id;
+
+    public CreateGroupRequest(String name, String description) {
+        this.name = name;
+        this.description = description;
+        this.id = 0;
+    }
 
     /**
      * @return The name
@@ -40,20 +44,6 @@ public class GroupDTO {
      */
     public void setDescription(String description) {
         this.description = description;
-    }
-
-    /**
-     * @return The adminId
-     */
-    public int getAdminId() {
-        return adminId;
-    }
-
-    /**
-     * @param adminId The adminId
-     */
-    public void setAdminId(int adminId) {
-        this.adminId = adminId;
     }
 
     /**

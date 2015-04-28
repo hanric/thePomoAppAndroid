@@ -10,6 +10,7 @@
     
     <string name="toolbar_add_session">Add Session</string>
     <string name="toolbar_edit_session">Edit Session</string>
+    <string name="toolbar_add_group">Create Group</string>
 
     <!-- popup Login -->
     <string name="popup_login_required">To use the Pomodoro for Groups online features you need to login</string>
@@ -23,5 +24,14 @@
 
     <!-- popup Add alone session -->
     <string name="popup_add_alone_session_name">Name</string>
+
+    <!-- group Card -->
+    <string name="group_card_members">members in this team</string>
+
+    <!-- popup Add group -->
+    <string name="popup_add_group_name">Name of the group</string>
+    <string name="popup_add_group_description">Description</string>
+    <string name="popup_add_group_team">Select the team</string>
+
 
 </resources>

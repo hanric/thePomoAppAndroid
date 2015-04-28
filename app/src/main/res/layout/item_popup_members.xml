@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:orientation="horizontal"
+    android:paddingBottom="@dimen/popupMembers_item_paddingBottom"
+    android:paddingEnd="@dimen/popupMembers_item_paddingRight"
+    android:paddingLeft="@dimen/popupMembers_item_paddingLeft"
+    android:paddingRight="@dimen/popupMembers_item_paddingRight"
+    android:paddingStart="@dimen/popupMembers_item_paddingLeft"
+    android:paddingTop="@dimen/popupMembers_item_paddingTop">
+
+    <TextView
+        android:id="@+id/members_item_name"
+        style="@style/members_popup_name"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:drawableLeft="@drawable/ic_account_circle_grey600_48dp"
+        android:drawablePadding="@dimen/popupMembers_item_drawablePadding"
+        android:gravity="center_vertical"
+        android:text="Albert Mitjana" />
+
+    <TextView
+        android:id="@+id/members_item_admin"
+        style="@style/members_popup_admin"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/popupMembers_item_adminMarginLeft"
+        android:text="ADMIN" />
+
+</LinearLayout>

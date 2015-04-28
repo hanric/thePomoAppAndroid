@@ -21,4 +21,18 @@
     <dimen name="popupLogin_topText_marginBottom">14dp</dimen>
     <dimen name="popupLogin_std_marginBottom">6dp</dimen>
 
+    <!-- popup Members -->
+    <dimen name="popupMembers_item_paddingLeft">30dp</dimen>
+    <dimen name="popupMembers_item_paddingRight">18dp</dimen>
+    <dimen name="popupMembers_item_paddingTop">18dp</dimen>
+    <dimen name="popupMembers_item_paddingBottom">18dp</dimen>
+
+    <dimen name="popupMembers_item_drawablePadding">10dp</dimen>
+
+    <dimen name="popupMembers_item_adminMarginLeft">20dp</dimen>
+
+    <!-- popup add Group -->
+    <dimen name="popupAddGroup_padding">16dp</dimen>
+    <dimen name="popupAddGroup_drawablePadding">20dp</dimen>
+
 </resources>

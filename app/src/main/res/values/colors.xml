@@ -14,7 +14,12 @@
     <item name="black" type="color">#000000</item>
 
     <item name="colorPrimary" type="color">#00BBD3</item>
+    <item name="colorPrimaryDark" type="color">#0098A9</item>
+    <item name="colorAccent" type="color">#FFFF8C</item>
     <item name="secondaryGray" type="color">#757575</item>
+
+    <item name="cardSecond" type="color">#3687B2</item>
+    <item name="cardThird" type="color">#337888</item>
 
     <integer-array name="androidcolors">
         <item>@color/blue</item>

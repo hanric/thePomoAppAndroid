@@ -1,4 +1,4 @@
-package com.example.android.thepomoappandroid.dto;
+package com.example.android.thepomoappandroid.api.dto;
 
 import com.google.gson.annotations.Expose;
 

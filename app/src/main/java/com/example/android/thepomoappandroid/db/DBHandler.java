@@ -49,20 +49,32 @@ public class DBHandler {
     }
 
     public void updateAloneSession(final String name, final String newName, final int newNum) {
-        AloneSession aloneSession = getAloneSession(name);
-        realm.executeTransaction(new Realm.Transaction() {
-            @Override
-            public void execute(Realm realm) {
-                AloneSession aloneSession = realm.createObject(AloneSession.class);
-                aloneSession.setName(newName);
-                aloneSession.setNum(newNum);
-            }
-        });
+        try {
+            realm.executeTransaction(new Realm.Transaction() {
+                @Override
+                public void execute(Realm realm) {
+                    AloneSession aloneSession = getAloneSession(name);
+                    aloneSession.setName(newName);
+                    aloneSession.setNum(newNum);
+                }
+            });
+        } catch (RealmException e) {
+            throw e;
+        }
     }
 
-    public void deleteAloneSession(String name) {
-        AloneSession aloneSession = getAloneSession(name);
-        aloneSession.removeFromRealm();
+    public void deleteAloneSession(final String name) throws RealmException {
+        try {
+            realm.executeTransaction(new Realm.Transaction() {
+                @Override
+                public void execute(Realm realm) {
+                    AloneSession aloneSession = getAloneSession(name);
+                    aloneSession.removeFromRealm();
+                }
+            });
+        } catch (RealmException e) {
+            throw e;
+        }
     }
 
     public RealmResults<AloneSession> getAloneSessions() {

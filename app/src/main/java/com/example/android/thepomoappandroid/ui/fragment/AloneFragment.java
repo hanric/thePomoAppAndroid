@@ -8,7 +8,9 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.example.android.thepomoappandroid.Pomodoro;
 import com.example.android.thepomoappandroid.R;
 import com.example.android.thepomoappandroid.db.AloneSession;
 import com.example.android.thepomoappandroid.db.DBHandler;
@@ -18,16 +20,21 @@ import com.example.android.thepomoappandroid.ui.dialog.EditAloneSessionDialog;
 import com.github.pavlospt.CircleView;
 import com.melnykov.fab.FloatingActionButton;
 
-import java.util.ArrayList;
+import java.util.GregorianCalendar;
 
 /**
  * Created by Enric on 12/04/2015.
  */
-public class AloneFragment extends Fragment implements View.OnClickListener, ListView.OnItemClickListener {
+public class AloneFragment extends Fragment implements
+        View.OnClickListener,
+        ListView.OnItemClickListener,
+        Pomodoro.OnPomodoroFinished {
 
     private DBHandler dbHandler;
 
-    ArrayList<AloneSession> arrayAloneSessions;
+    private Pomodoro pomodoro;
+
+    private ListAloneSessionAdapter adapter;
 
     private ListView listViewLocalSessions;
     private FloatingActionButton fab;
@@ -50,9 +57,10 @@ public class AloneFragment extends Fragment implements View.OnClickListener, Lis
         View view = inflater.inflate(R.layout.fragment_alone, container, false);
 
         findViews(view);
+        pomodoro = new Pomodoro(circleView);
         setListeners();
 
-        ListAloneSessionAdapter adapter = new ListAloneSessionAdapter(getActivity(), R.id.listLocalSession, dbHandler.getAloneSessions(), true);
+        adapter = new ListAloneSessionAdapter(getActivity(), R.id.listLocalSession, dbHandler.getAloneSessions(), true);
         listViewLocalSessions.setAdapter(adapter);
         listViewLocalSessions.setOnItemClickListener(this);
         fab.attachToListView(listViewLocalSessions);
@@ -67,6 +75,8 @@ public class AloneFragment extends Fragment implements View.OnClickListener, Lis
 
     public void setListeners() {
         fab.setOnClickListener(this);
+        circleView.setOnClickListener(this);
+        pomodoro.setOnPomodoroFinished(this);
     }
 
     @Override
@@ -74,12 +84,10 @@ public class AloneFragment extends Fragment implements View.OnClickListener, Lis
         int id = v.getId();
         if (id == fab.getId()) {
             showAddAloneSessionDialog();
-//            Pomodoro pomodoro = new Pomodoro(circleView);
-//            GregorianCalendar workTime = new GregorianCalendar(0, 0, 0, 0, 25, 0);
-//            GregorianCalendar breakTime = new GregorianCalendar(0, 0, 0, 0, 5, 0);
-//            GregorianCalendar largeBreakTime = new GregorianCalendar(0, 0, 0, 0, 15, 0);
-//            pomodoro.setSession(workTime, breakTime, largeBreakTime, 3, null);
-//            pomodoro.startSession();
+        } else if (id == circleView.getId()) {
+            if (!pomodoro.isRunning()) {
+                startSession();
+            }
         }
     }
 
@@ -89,13 +97,40 @@ public class AloneFragment extends Fragment implements View.OnClickListener, Lis
         showEditAloneSessionDialog(name);
     }
 
-    public void showAddAloneSessionDialog() {
+    private void showAddAloneSessionDialog() {
         AddAloneSessionDialog addAloneSessionDialog = AddAloneSessionDialog.newInstance();
         addAloneSessionDialog.show(getFragmentManager(), "dialog");
     }
 
-    public void showEditAloneSessionDialog(String name) {
+    private void showEditAloneSessionDialog(String name) {
         EditAloneSessionDialog editAloneSessionDialog = EditAloneSessionDialog.newInstance(name);
         editAloneSessionDialog.show(getFragmentManager(), "dialog");
+    }
+
+    private void startSession() {
+        if (!adapter.isEmpty()) {
+            AloneSession aloneSession = adapter.getItem(0);
+            GregorianCalendar workTime = new GregorianCalendar(0, 0, 0, 0, 1, 0);
+            GregorianCalendar breakTime = new GregorianCalendar(0, 0, 0, 0, 1, 0);
+            GregorianCalendar largeBreakTime = new GregorianCalendar(0, 0, 0, 0, 1, 0);
+            pomodoro.setSession(aloneSession.getName(), workTime, breakTime, largeBreakTime, aloneSession.getNum(), null);
+            pomodoro.startSession();
+        }
+    }
+
+    @Override
+    public void phaseEnded(String key, int nextPhase) {
+        // TODO update the listView color or whatever
+        Toast.makeText(getActivity(), "phaseEnded", Toast.LENGTH_SHORT).show();
+        AloneSession aloneSession = dbHandler.getAloneSession(key);
+        // If the nextPhase is not WORK, that means that the WORK phase just happened
+        if (nextPhase != Pomodoro.WORK) {
+            dbHandler.updateAloneSession(aloneSession.getName(), aloneSession.getName(), aloneSession.getNum() -1);
+        }
+    }
+
+    @Override
+    public void sessionEnded(String key) {
+        dbHandler.deleteAloneSession(key);
     }
 }

@@ -21,4 +21,29 @@
         <item name="android:textSize">@dimen/base</item>
         <item name="android:textColor">@color/secondaryGray</item>
     </style>
+
+    <!-- Card -->
+    <style name="card_title" parent="Base.TextAppearance.AppCompat">
+        <item name="android:textSize">@dimen/bigger</item>
+        <item name="android:textColor">@color/white</item>
+    </style>
+
+    <style name="card_description" parent="Base.TextAppearance.AppCompat">
+        <item name="android:textSize">@dimen/base</item>
+        <item name="android:textColor">@color/white</item>
+    </style>
+
+    <style name="card_members" parent="Base.TextAppearance.AppCompat">
+        <item name="android:textSize">@dimen/small</item>
+        <item name="android:textColor">@color/white</item>
+    </style>
+
+    <!-- Members popup -->
+    <style name="members_popup_name" parent="std_Gray">
+        <item name="android:textColor">@color/black</item>
+    </style>
+
+    <style name="members_popup_admin" parent="std_Gray">
+        <item name="android:textColor">@color/colorPrimary</item>
+    </style>
 </resources>

@@ -11,27 +11,23 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Toast;
 
 import com.example.android.thepomoappandroid.R;
-import com.example.android.thepomoappandroid.db.DBHandler;
-
-import io.realm.exceptions.RealmException;
 
 /**
  * Created by Enric on 19/04/2015.
  */
-public class AddAloneSessionDialog extends DialogFragment implements Toolbar.OnMenuItemClickListener, View.OnClickListener {
-
-    protected DBHandler dbHandler;
+public class AddGroupDialog extends DialogFragment implements Toolbar.OnMenuItemClickListener, View.OnClickListener {
 
     protected Toolbar toolbar;
     protected EditText name;
-    protected EditText num;
+    protected EditText description;
+    protected Button buttonAddMembers;
 
-    public static AddAloneSessionDialog newInstance() {
-        AddAloneSessionDialog dialogFragment = new AddAloneSessionDialog();
+    public static AddGroupDialog newInstance() {
+        AddGroupDialog dialogFragment = new AddGroupDialog();
         dialogFragment.setStyle(0, R.style.DialogThemeFullScreen);
         return dialogFragment;
     }
@@ -39,17 +35,16 @@ public class AddAloneSessionDialog extends DialogFragment implements Toolbar.OnM
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        dbHandler = DBHandler.newInstance(getActivity());
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.popup_add_alone_session, container,
+        View view = inflater.inflate(R.layout.popup_add_group, container,
                 false);
         findViews(view);
         setListeners();
-        setupToolbar(R.string.toolbar_add_session);
+        setupToolbar(R.string.toolbar_add_group);
         getDialog().getWindow().requestFeature(Window.FEATURE_NO_TITLE);
         return view;
     }
@@ -64,14 +59,16 @@ public class AddAloneSessionDialog extends DialogFragment implements Toolbar.OnM
 
     protected void findViews(View view) {
         toolbar = (Toolbar) view.findViewById(R.id.toolbar);
-        name = (EditText) view.findViewById(R.id.popupAddAloneSession_name);
-        num = (EditText) view.findViewById(R.id.popupAddAloneSession_num);
+        name = (EditText) view.findViewById(R.id.popupAddGroup_name);
+        description = (EditText) view.findViewById(R.id.popupAddGroup_description);
+        buttonAddMembers = (Button) view.findViewById(R.id.popupAddGroup_addMembers);
     }
 
     protected void setListeners() {
         // Set an OnMenuItemClickListener to handle menu item clicks
         toolbar.setOnMenuItemClickListener(this);
         toolbar.setNavigationOnClickListener(this);
+        buttonAddMembers.setOnClickListener(this);
     }
 
     public void setupToolbar(int titleResId) {
@@ -86,23 +83,22 @@ public class AddAloneSessionDialog extends DialogFragment implements Toolbar.OnM
         int id = v.getId();
         if (id == toolbar.getChildAt(0).getId()) {
             dismiss();
+        } else if (id == buttonAddMembers.getId()) {
+            // TODO launch add members
         }
     }
 
     @Override
     public boolean onMenuItemClick(MenuItem menuItem) {
         if (menuItem.getItemId() == R.id.save) {
-            performSaveAction();
+            // TODO handle save group
+            String nameString = name.getText().toString();
+            String descriptionString = description.getText().toString();
+            if (!nameString.isEmpty() && !descriptionString.isEmpty()) {
+//                GroupsService.getInstance().create(getActivity(), nameString, descriptionString);
+                dismiss();
+            }
         }
         return false;
-    }
-
-    protected void performSaveAction() {
-        try {
-            dbHandler.createAloneSession(name.getText().toString(), Integer.parseInt(num.getText().toString()));
-            dismiss();
-        } catch (RealmException e) {
-            Toast.makeText(getActivity(), "TODO this name already exists", Toast.LENGTH_SHORT).show();
-        }
     }
 }
