@@ -21,6 +21,7 @@ public class GroupViewHolder extends RecyclerView.ViewHolder
     public TextView description;
     public TextView members;
     public TextView editButton;
+    public TextView deleteButton;
     public ImageView image;
 
     public GroupViewHolder(View view, ViewHolderClicks listener) {
@@ -32,10 +33,12 @@ public class GroupViewHolder extends RecyclerView.ViewHolder
         description = (TextView) view.findViewById(R.id.group_description);
         members = (TextView) view.findViewById(R.id.group_members);
         editButton = (TextView) view.findViewById(R.id.group_edit);
+        deleteButton = (TextView) view.findViewById(R.id.group_delete);
         image = (ImageView) view.findViewById(R.id.group_image);
 
         view.setOnClickListener(this);
         editButton.setOnClickListener(this);
+        deleteButton.setOnClickListener(this);
         members.setOnClickListener(this);
     }
 
@@ -44,6 +47,8 @@ public class GroupViewHolder extends RecyclerView.ViewHolder
         int id = v.getId();
         if (id == editButton.getId()) {
             listener.onEditClick(getPosition());
+        } else if (id == deleteButton.getId()) {
+            listener.onDeleteClick(getPosition());
         } else if (id == members.getId()) {
             listener.onMembersClick(getPosition());
         } else {
@@ -55,5 +60,6 @@ public class GroupViewHolder extends RecyclerView.ViewHolder
         void onEditClick(int position);
         void onCardClick(int position);
         void onMembersClick(int position);
+        void onDeleteClick(int position);
     }
 }

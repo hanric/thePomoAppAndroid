@@ -12,6 +12,7 @@ import com.example.android.thepomoappandroid.R;
 import com.example.android.thepomoappandroid.Utils;
 import com.example.android.thepomoappandroid.api.dto.GroupDTO;
 import com.example.android.thepomoappandroid.api.services.BaseService;
+import com.example.android.thepomoappandroid.api.services.GroupsService;
 import com.example.android.thepomoappandroid.api.services.PeopleService;
 import com.example.android.thepomoappandroid.ui.adapter.GroupAdapter;
 import com.example.android.thepomoappandroid.ui.dialog.AddGroupDialog;
@@ -26,7 +27,11 @@ import retrofit.RetrofitError;
  * Created by Enric on 13/04/2015.
  */
 public class GroupFragment extends Fragment implements
-        View.OnClickListener, BaseService.OnRetrofitError, PeopleService.OnGetGroups {
+        View.OnClickListener,
+        BaseService.OnRetrofitError,
+        PeopleService.OnGetGroups,
+        AddGroupDialog.OnCreateGroupFromDialog,
+        GroupsService.OnDeleteGroup {
 
     private LoginDialog loginDialog;
 
@@ -91,27 +96,54 @@ public class GroupFragment extends Fragment implements
         if (!loginDialog.isShown()) loginDialog.show(getFragmentManager(), "dialog");
     }
 
+    @Override
+    public void onClick(View v) {
+        int id = v.getId();
+        if (id == fab.getId()) {
+            AddGroupDialog.newInstance(this).show(getFragmentManager(), "dialog");
+        }
+    }
+
     public void refreshFragment() {
         Utils utils = Utils.getInstance();
         PeopleService.getInstance().getGroups(utils.getUserId(getActivity()), utils.getToken(getActivity()), this);
     }
 
-    @Override
-    public void onClick(View v) {
-        int id = v.getId();
-        if (id == fab.getId()) {
-            AddGroupDialog.newInstance().show(getFragmentManager(), "dialog");
-        }
-    }
+    /**
+     * ----------------------------------------------
+     * OnGetGroups
+     * ----------------------------------------------
+     */
 
     @Override
     public void onGetGroups(List<GroupDTO> groupDTOs) {
         adapter = new GroupAdapter(getActivity(), groupDTOs);
+        adapter.setOnDeleteGroup(this);
         recyclerView.setAdapter(adapter);
+    }
+
+    /**
+     * ----------------------------------------------
+     * OnDeleteGroup
+     * ----------------------------------------------
+     */
+
+    @Override
+    public void onDelete() {
+        refreshFragment();
     }
 
     @Override
     public void onError(RetrofitError error) {
 
+    }
+    /**
+     * ----------------------------------------------
+     * ----------------------------------------------
+     */
+
+    @Override
+    public void onCreateGroupFromDialog() {
+        refreshFragment();
     }
 }

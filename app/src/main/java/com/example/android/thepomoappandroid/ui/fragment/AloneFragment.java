@@ -54,7 +54,7 @@ public class AloneFragment extends Fragment implements
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_alone, container, false);
+        View view = inflater.inflate(R.layout.common_timer_layout, container, false);
 
         findViews(view);
         pomodoro = new Pomodoro(circleView);
@@ -70,7 +70,7 @@ public class AloneFragment extends Fragment implements
     public void findViews(View view) {
         listViewLocalSessions = (ListView) view.findViewById(R.id.listLocalSession);
         fab = (FloatingActionButton) view.findViewById(R.id.fab);
-        circleView = (CircleView) view.findViewById(R.id.aloneTimer);
+        circleView = (CircleView) view.findViewById(R.id.timer);
     }
 
     public void setListeners() {

@@ -31,6 +31,9 @@
 
     <dimen name="popupMembers_item_adminMarginLeft">20dp</dimen>
 
+    <!-- card group -->
+    <dimen name="cardGroup_button_margin">8dp</dimen>
+
     <!-- popup add Group -->
     <dimen name="popupAddGroup_padding">16dp</dimen>
     <dimen name="popupAddGroup_drawablePadding">20dp</dimen>

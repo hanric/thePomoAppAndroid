@@ -4,7 +4,9 @@ import com.example.android.thepomoappandroid.api.dto.GroupDTO;
 import com.example.android.thepomoappandroid.api.request.CreateGroupRequest;
 
 import retrofit.Callback;
+import retrofit.ResponseCallback;
 import retrofit.http.Body;
+import retrofit.http.DELETE;
 import retrofit.http.GET;
 import retrofit.http.POST;
 import retrofit.http.Path;
@@ -18,4 +20,7 @@ public interface GroupsInterface {
 
     @POST("/Groups")
     void create(@Body CreateGroupRequest createGroupRequest, Callback<GroupDTO> callback);
+
+    @DELETE("/Groups/{id}")
+    void delete(@Path("id") int id, ResponseCallback responseCallback);
 }

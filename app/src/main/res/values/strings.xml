@@ -32,6 +32,9 @@
     <string name="popup_add_group_name">Name of the group</string>
     <string name="popup_add_group_description">Description</string>
     <string name="popup_add_group_team">Select the team</string>
-
+    
+    <!-- popup Alert delete group -->
+    <string name="delete_group">Delete this group?</string>
+    <string name="delete_group_delete">Delete</string>
 
 </resources>

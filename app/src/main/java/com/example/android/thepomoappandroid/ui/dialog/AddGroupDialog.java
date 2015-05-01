@@ -15,20 +15,33 @@ import android.widget.Button;
 import android.widget.EditText;
 
 import com.example.android.thepomoappandroid.R;
+import com.example.android.thepomoappandroid.Utils;
+import com.example.android.thepomoappandroid.api.dto.GroupDTO;
+import com.example.android.thepomoappandroid.api.services.BaseService;
+import com.example.android.thepomoappandroid.api.services.GroupsService;
+
+import retrofit.RetrofitError;
 
 /**
  * Created by Enric on 19/04/2015.
  */
-public class AddGroupDialog extends DialogFragment implements Toolbar.OnMenuItemClickListener, View.OnClickListener {
+public class AddGroupDialog extends DialogFragment implements Toolbar.OnMenuItemClickListener, View.OnClickListener, BaseService.OnRetrofitError, GroupsService.OnCreateGroup {
 
     protected Toolbar toolbar;
     protected EditText name;
     protected EditText description;
     protected Button buttonAddMembers;
 
-    public static AddGroupDialog newInstance() {
+    private OnCreateGroupFromDialog onCreateGroupFromDialog;
+
+    public interface OnCreateGroupFromDialog {
+        void onCreateGroupFromDialog();
+    }
+
+    public static AddGroupDialog newInstance(OnCreateGroupFromDialog onCreateGroupFromDialog) {
         AddGroupDialog dialogFragment = new AddGroupDialog();
         dialogFragment.setStyle(0, R.style.DialogThemeFullScreen);
+        dialogFragment.onCreateGroupFromDialog = onCreateGroupFromDialog;
         return dialogFragment;
     }
 
@@ -95,10 +108,22 @@ public class AddGroupDialog extends DialogFragment implements Toolbar.OnMenuItem
             String nameString = name.getText().toString();
             String descriptionString = description.getText().toString();
             if (!nameString.isEmpty() && !descriptionString.isEmpty()) {
-//                GroupsService.getInstance().create(getActivity(), nameString, descriptionString);
+                String token = Utils.getInstance().getToken(getActivity());
+                GroupsService.getInstance().create(token, nameString, descriptionString, this);
                 dismiss();
             }
         }
         return false;
+    }
+
+    @Override
+    public void onCreate(GroupDTO groupDTO) {
+        onCreateGroupFromDialog.onCreateGroupFromDialog();
+        dismiss();
+    }
+
+    @Override
+    public void onError(RetrofitError error) {
+
     }
 }

@@ -106,6 +106,13 @@ public class LoginDialog extends DialogFragment implements
         PeopleService.getInstance().login(emailField, passwordField, this);
     }
 
+
+    /**
+     * ----------------------------------------------
+     * OnLogin
+     * ----------------------------------------------
+     */
+
     @Override
     public void onLogin(LoginResponse loginResponse) {
         SharedPreferences prefs = Utils.getInstance().getPrefs(getActivity());
@@ -118,4 +125,9 @@ public class LoginDialog extends DialogFragment implements
     public void onError(RetrofitError error) {
         Toast.makeText(getActivity(), "Incorrect user or password", Toast.LENGTH_SHORT).show();
     }
+
+    /**
+     * ----------------------------------------------
+     * ----------------------------------------------
+     */
 }

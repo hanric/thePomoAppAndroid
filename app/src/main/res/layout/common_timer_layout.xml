@@ -6,7 +6,7 @@
     android:gravity="center_horizontal">
 
     <com.github.pavlospt.CircleView
-        android:id="@+id/aloneTimer"
+        android:id="@+id/timer"
         android:layout_width="@dimen/circleView_size"
         android:layout_height="@dimen/circleView_size"
         android:layout_margin="@dimen/circleView_margin"
@@ -24,7 +24,7 @@
         android:id="@+id/listLocalSession"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/aloneTimer"/>
+        android:layout_below="@+id/timer"/>
 
     <com.melnykov.fab.FloatingActionButton
         android:id="@+id/fab"
