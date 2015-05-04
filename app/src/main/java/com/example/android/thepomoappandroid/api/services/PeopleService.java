@@ -4,9 +4,11 @@ import android.content.Context;
 
 import com.example.android.thepomoappandroid.Utils;
 import com.example.android.thepomoappandroid.api.dto.GroupDTO;
+import com.example.android.thepomoappandroid.api.dto.PersonDTO;
 import com.example.android.thepomoappandroid.api.dto.SettingDTO;
 import com.example.android.thepomoappandroid.api.interfaces.PeopleInterface;
 import com.example.android.thepomoappandroid.api.request.LoginRequest;
+import com.example.android.thepomoappandroid.api.request.RegisterRequest;
 import com.example.android.thepomoappandroid.api.response.LoginResponse;
 
 import java.util.List;
@@ -35,6 +37,14 @@ public class PeopleService extends BaseService {
         void onLogin(LoginResponse loginResponse);
     }
 
+    public interface OnRegister {
+        void onRegister(PersonDTO personDTO);
+    }
+
+    public interface OnLogout {
+        void onLogout();
+    }
+
     public interface OnGetGroups {
         void onGetGroups(List<GroupDTO> groupDTOs);
     }
@@ -55,10 +65,36 @@ public class PeopleService extends BaseService {
         });
     }
 
-    public void logout(Context context, ResponseCallback responseCallback) {
+    public void register(String email, String username, String password, final OnRegister onRegister) {
+        RegisterRequest registerRequest = new RegisterRequest(username, email, password);
+        PeopleInterface peopleInterface = restAdapter.create(PeopleInterface.class);
+        peopleInterface.register(registerRequest, new Callback<PersonDTO>() {
+            @Override
+            public void success(PersonDTO personDTO, Response response) {
+                if (onRegister != null) onRegister.onRegister(personDTO);
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+                if (onRegister != null) ((OnRetrofitError) onRegister).onError(error);
+            }
+        });
+    }
+
+    public void logout(Context context, final OnLogout onLogout) {
 //        setAuthInterceptor(context);
         PeopleInterface peopleInterface = restAdapter.create(PeopleInterface.class);
-        peopleInterface.logout(responseCallback);
+        peopleInterface.logout(new Callback<ResponseCallback>() {
+            @Override
+            public void success(ResponseCallback responseCallback, Response response) {
+                if (onLogout != null) onLogout.onLogout();
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+                if (onLogout != null) ((OnRetrofitError) onLogout).onError(error);
+            }
+        });
     }
 
     public void getGroups(int id, String token, final OnGetGroups onGetGroups) {

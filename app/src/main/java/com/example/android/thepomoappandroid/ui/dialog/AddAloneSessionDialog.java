@@ -78,7 +78,7 @@ public class AddAloneSessionDialog extends DialogFragment implements Toolbar.OnM
         toolbar.setNavigationIcon(R.drawable.ic_close_white_24dp);
         toolbar.setTitle(titleResId);
         // Inflate a menu to be displayed in the toolbar
-        toolbar.inflateMenu(R.menu.save_menu);
+        toolbar.inflateMenu(R.menu.menu_save);
     }
 
     @Override

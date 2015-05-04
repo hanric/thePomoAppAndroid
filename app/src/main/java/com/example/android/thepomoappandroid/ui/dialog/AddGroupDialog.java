@@ -32,16 +32,16 @@ public class AddGroupDialog extends DialogFragment implements Toolbar.OnMenuItem
     protected EditText description;
     protected Button buttonAddMembers;
 
-    private OnCreateGroupFromDialog onCreateGroupFromDialog;
+    protected OnActionGroupFromDialog onActionGroupFromDialog;
 
-    public interface OnCreateGroupFromDialog {
-        void onCreateGroupFromDialog();
+    public interface OnActionGroupFromDialog {
+        void onActionGroupFromDialog();
     }
 
-    public static AddGroupDialog newInstance(OnCreateGroupFromDialog onCreateGroupFromDialog) {
+    public static AddGroupDialog newInstance(OnActionGroupFromDialog onActionGroupFromDialog) {
         AddGroupDialog dialogFragment = new AddGroupDialog();
         dialogFragment.setStyle(0, R.style.DialogThemeFullScreen);
-        dialogFragment.onCreateGroupFromDialog = onCreateGroupFromDialog;
+        dialogFragment.onActionGroupFromDialog = onActionGroupFromDialog;
         return dialogFragment;
     }
 
@@ -88,7 +88,7 @@ public class AddGroupDialog extends DialogFragment implements Toolbar.OnMenuItem
         toolbar.setNavigationIcon(R.drawable.ic_close_white_24dp);
         toolbar.setTitle(titleResId);
         // Inflate a menu to be displayed in the toolbar
-        toolbar.inflateMenu(R.menu.save_menu);
+        toolbar.inflateMenu(R.menu.menu_save);
     }
 
     @Override
@@ -104,21 +104,24 @@ public class AddGroupDialog extends DialogFragment implements Toolbar.OnMenuItem
     @Override
     public boolean onMenuItemClick(MenuItem menuItem) {
         if (menuItem.getItemId() == R.id.save) {
-            // TODO handle save group
             String nameString = name.getText().toString();
             String descriptionString = description.getText().toString();
             if (!nameString.isEmpty() && !descriptionString.isEmpty()) {
-                String token = Utils.getInstance().getToken(getActivity());
-                GroupsService.getInstance().create(token, nameString, descriptionString, this);
-                dismiss();
+                actionGroup(nameString, descriptionString);
             }
         }
         return false;
     }
 
+    protected void actionGroup(String name, String description) {
+            String token = Utils.getInstance().getToken(getActivity());
+            GroupsService.getInstance().create(token, name, description, this);
+            dismiss();
+    }
+
     @Override
-    public void onCreate(GroupDTO groupDTO) {
-        onCreateGroupFromDialog.onCreateGroupFromDialog();
+    public void onCreateGroup(GroupDTO groupDTO) {
+        onActionGroupFromDialog.onActionGroupFromDialog();
         dismiss();
     }
 

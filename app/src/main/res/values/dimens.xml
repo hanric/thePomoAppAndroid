@@ -24,8 +24,8 @@
     <!-- popup Members -->
     <dimen name="popupMembers_item_paddingLeft">30dp</dimen>
     <dimen name="popupMembers_item_paddingRight">18dp</dimen>
-    <dimen name="popupMembers_item_paddingTop">18dp</dimen>
-    <dimen name="popupMembers_item_paddingBottom">18dp</dimen>
+    <dimen name="popupMembers_item_paddingTop">12dp</dimen>
+    <dimen name="popupMembers_item_paddingBottom">12dp</dimen>
 
     <dimen name="popupMembers_item_drawablePadding">10dp</dimen>
 

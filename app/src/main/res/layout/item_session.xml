@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:minHeight="@dimen/sb_minHeight"
+    android:orientation="horizontal"
+    android:padding="@dimen/sb_padding"
+    android:gravity="center_vertical"
+    android:background="@color/white">
+
+    <TextView
+        android:id="@+id/num"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/sb_background_3"
+        android:gravity="center"
+        style="@style/sb_num_text"
+        android:layout_marginRight="@dimen/sb_num_marginRight"
+        android:layout_marginEnd="@dimen/sb_num_marginRight"
+        android:text="2"/>
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_weight="1"
+        android:layout_height="match_parent"
+        android:gravity="center_vertical"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/header"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            style="@style/sb_header_text"
+            android:layout_marginBottom="1dp"
+            android:text="Rentar els plats"/>
+
+        <TextView
+            android:id="@+id/detail"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            style="@style/sb_detail_text"
+            android:text="2 Pomodoros"/>
+    </LinearLayout>
+
+</LinearLayout>

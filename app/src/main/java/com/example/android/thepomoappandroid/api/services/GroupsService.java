@@ -3,8 +3,11 @@ package com.example.android.thepomoappandroid.api.services;
 import android.content.Context;
 
 import com.example.android.thepomoappandroid.api.dto.GroupDTO;
+import com.example.android.thepomoappandroid.api.dto.SessionDTO;
 import com.example.android.thepomoappandroid.api.interfaces.GroupsInterface;
 import com.example.android.thepomoappandroid.api.request.CreateGroupRequest;
+
+import java.util.List;
 
 import retrofit.Callback;
 import retrofit.ResponseCallback;
@@ -26,11 +29,19 @@ public class GroupsService extends BaseService {
     }
 
     public interface OnCreateGroup {
-        void onCreate(GroupDTO groupDTO);
+        void onCreateGroup(GroupDTO groupDTO);
     }
 
     public interface OnDeleteGroup {
-        void onDelete();
+        void onDeleteGroup();
+    }
+
+    public interface OnUpdateGroup {
+        void onUpdateGroup();
+    }
+
+    public interface OnGetSessions {
+        void onGetSessions(List<SessionDTO> sessionDTOs);
     }
 
     public void findById(Context context, int id, Callback<GroupDTO> callback) {
@@ -46,7 +57,7 @@ public class GroupsService extends BaseService {
         groupsInterface.create(createGroupRequest, new Callback<GroupDTO>() {
             @Override
             public void success(GroupDTO groupDTO, Response response) {
-                if (onCreateGroup != null) onCreateGroup.onCreate(groupDTO);
+                if (onCreateGroup != null) onCreateGroup.onCreateGroup(groupDTO);
             }
 
             @Override
@@ -59,15 +70,48 @@ public class GroupsService extends BaseService {
     public void delete(String token, int id, final OnDeleteGroup onDeleteGroup) {
         setAuthInterceptor(token);
         GroupsInterface groupsInterface = restAdapter.create(GroupsInterface.class);
-        groupsInterface.delete(id, new ResponseCallback() {
+        groupsInterface.delete(id, new Callback<ResponseCallback>() {
             @Override
-            public void success(Response response) {
-                if (onDeleteGroup != null) onDeleteGroup.onDelete();
+            public void success(ResponseCallback responseCallback, Response response) {
+                if (onDeleteGroup != null) onDeleteGroup.onDeleteGroup();
             }
 
             @Override
             public void failure(RetrofitError error) {
                 if (onDeleteGroup != null) ((OnRetrofitError) onDeleteGroup).onError(error);
+            }
+        });
+    }
+
+    public void update(String token, int id, String name, String description, final OnUpdateGroup onUpdateGroup) {
+        setAuthInterceptor(token);
+        CreateGroupRequest createGroupRequest = new CreateGroupRequest(name, description);
+        GroupsInterface groupsInterface = restAdapter.create(GroupsInterface.class);
+        groupsInterface.update(id, createGroupRequest, new Callback<GroupDTO>() {
+            @Override
+            public void success(GroupDTO groupDTO, Response response) {
+                if (onUpdateGroup != null) onUpdateGroup.onUpdateGroup();
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+                if (onUpdateGroup != null) ((OnRetrofitError) onUpdateGroup).onError(error);
+            }
+        });
+    }
+
+    public void getSessions(String token, int id, final OnGetSessions onGetSessions) {
+        setAuthInterceptor(token);
+        GroupsInterface groupsInterface = restAdapter.create(GroupsInterface.class);
+        groupsInterface.getSessions(id, new Callback<List<SessionDTO>>() {
+            @Override
+            public void success(List<SessionDTO> sessionDTOs, Response response) {
+                if (onGetSessions != null) onGetSessions.onGetSessions(sessionDTOs);
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+                if (onGetSessions != null) ((OnRetrofitError) onGetSessions).onError(error);
             }
         });
     }

@@ -1,7 +1,9 @@
 package com.example.android.thepomoappandroid.ui.fragment;
 
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,6 +30,7 @@ import java.util.GregorianCalendar;
 public class AloneFragment extends Fragment implements
         View.OnClickListener,
         ListView.OnItemClickListener,
+        ListView.OnItemLongClickListener,
         Pomodoro.OnPomodoroFinished {
 
     private DBHandler dbHandler;
@@ -54,21 +57,22 @@ public class AloneFragment extends Fragment implements
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.common_timer_layout, container, false);
+        View view = inflater.inflate(R.layout.fragment_alone, container, false);
 
         findViews(view);
         pomodoro = new Pomodoro(circleView);
         setListeners();
 
-        adapter = new ListAloneSessionAdapter(getActivity(), R.id.listLocalSession, dbHandler.getAloneSessions(), true);
+        adapter = new ListAloneSessionAdapter(getActivity(), R.id.listSession, dbHandler.getAloneSessions(), true);
         listViewLocalSessions.setAdapter(adapter);
         listViewLocalSessions.setOnItemClickListener(this);
+        listViewLocalSessions.setOnItemLongClickListener(this);
         fab.attachToListView(listViewLocalSessions);
         return view;
     }
 
     public void findViews(View view) {
-        listViewLocalSessions = (ListView) view.findViewById(R.id.listLocalSession);
+        listViewLocalSessions = (ListView) view.findViewById(R.id.listSession);
         fab = (FloatingActionButton) view.findViewById(R.id.fab);
         circleView = (CircleView) view.findViewById(R.id.timer);
     }
@@ -93,8 +97,27 @@ public class AloneFragment extends Fragment implements
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        String name = ((TextView) view.findViewById(R.id.sb_header)).getText().toString();
+        String name = ((TextView) view.findViewById(R.id.header)).getText().toString();
         showEditAloneSessionDialog(name);
+    }
+
+    @Override
+    public boolean onItemLongClick(AdapterView<?> parent, final View view, int position, long id) {
+        new AlertDialog.Builder(getActivity())
+                .setMessage(getActivity().getString(R.string.delete_session))
+                .setPositiveButton(R.string.delete, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        String name = ((TextView) view.findViewById(R.id.header)).getText().toString();
+                        dbHandler.deleteAloneSession(name);
+                    }
+                })
+                .setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        // do nothing
+                    }
+                })
+                .show();
+        return true;
     }
 
     private void showAddAloneSessionDialog() {

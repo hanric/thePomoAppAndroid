@@ -30,7 +30,7 @@ public class GroupFragment extends Fragment implements
         View.OnClickListener,
         BaseService.OnRetrofitError,
         PeopleService.OnGetGroups,
-        AddGroupDialog.OnCreateGroupFromDialog,
+        AddGroupDialog.OnActionGroupFromDialog,
         GroupsService.OnDeleteGroup {
 
     private LoginDialog loginDialog;
@@ -129,7 +129,7 @@ public class GroupFragment extends Fragment implements
      */
 
     @Override
-    public void onDelete() {
+    public void onDeleteGroup() {
         refreshFragment();
     }
 
@@ -143,7 +143,7 @@ public class GroupFragment extends Fragment implements
      */
 
     @Override
-    public void onCreateGroupFromDialog() {
+    public void onActionGroupFromDialog() {
         refreshFragment();
     }
 }

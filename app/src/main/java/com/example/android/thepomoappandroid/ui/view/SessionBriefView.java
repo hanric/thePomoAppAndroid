@@ -30,11 +30,11 @@ public class SessionBriefView extends LinearLayout {
         a.recycle();
 
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        inflater.inflate(R.layout.session_brief_layout, this, true);
+        inflater.inflate(R.layout.item_session, this, true);
 
-        sbNum = (TextView) findViewById(R.id.sb_num);
-        sbHeader = (TextView) findViewById(R.id.sb_header);
-        sbDetail = (TextView) findViewById(R.id.sb_detail);
+        sbNum = (TextView) findViewById(R.id.num);
+        sbHeader = (TextView) findViewById(R.id.header);
+        sbDetail = (TextView) findViewById(R.id.detail);
 
         sbNum.setText(Integer.toString(numValue));
         sbNum.setBackgroundDrawable(numColor);

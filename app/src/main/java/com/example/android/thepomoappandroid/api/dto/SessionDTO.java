@@ -24,6 +24,18 @@ public class SessionDTO {
     @Expose
     private int settingId;
 
+    public SessionDTO(String name, int nPomos, String startTime, String endTime, int groupId, Integer settingId) {
+        this.name = name;
+        this.nPomos = nPomos;
+        this.startTime = startTime;
+        this.endTime = endTime;
+        this.groupId = groupId;
+        if (null != settingId) this.settingId = settingId;
+        isStopped = true;
+        isFinished = true;
+        this.id = 0;
+    }
+
     /**
      * @return The name
      */

@@ -1,6 +1,7 @@
 package com.example.android.thepomoappandroid.ui.dialog;
 
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
@@ -21,6 +22,7 @@ import com.example.android.thepomoappandroid.api.response.LoginResponse;
 import com.example.android.thepomoappandroid.api.services.BaseService;
 import com.example.android.thepomoappandroid.api.services.PeopleService;
 import com.example.android.thepomoappandroid.ui.activity.MainActivity;
+import com.example.android.thepomoappandroid.ui.activity.RegisterActivity;
 
 import retrofit.RetrofitError;
 
@@ -71,6 +73,7 @@ public class LoginDialog extends DialogFragment implements
 
     private void setListeners() {
         login.setOnClickListener(this);
+        register.setOnClickListener(this);
     }
 
     @Override
@@ -78,6 +81,9 @@ public class LoginDialog extends DialogFragment implements
         int id = v.getId();
         if (id == login.getId()) {
             login();
+        } else if (id == register.getId()) {
+            Intent intent = new Intent(getActivity(), RegisterActivity.class);
+            startActivityForResult(intent, RegisterActivity.REGISTER_OK);// Activity is started with requestCode 2
         }
     }
 
@@ -130,4 +136,12 @@ public class LoginDialog extends DialogFragment implements
      * ----------------------------------------------
      * ----------------------------------------------
      */
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == resultCode) {
+            //TODO LOGIN CORRECT
+        }
+    }
 }

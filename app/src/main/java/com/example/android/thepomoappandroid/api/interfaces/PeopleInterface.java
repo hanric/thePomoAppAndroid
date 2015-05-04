@@ -4,6 +4,7 @@ import com.example.android.thepomoappandroid.api.dto.GroupDTO;
 import com.example.android.thepomoappandroid.api.dto.PersonDTO;
 import com.example.android.thepomoappandroid.api.dto.SettingDTO;
 import com.example.android.thepomoappandroid.api.request.LoginRequest;
+import com.example.android.thepomoappandroid.api.request.RegisterRequest;
 import com.example.android.thepomoappandroid.api.response.LoginResponse;
 
 import java.util.List;
@@ -22,11 +23,14 @@ public interface PeopleInterface {
     @GET("/People/{id}")
     void findById(@Path("id") int id, Callback<PersonDTO> callback);
 
+    @POST("/People")
+    void register(@Body RegisterRequest registerRequest, Callback<PersonDTO> callback);
+
     @POST("/People/login")
     void login(@Body LoginRequest loginRequest, Callback<LoginResponse> callback);
 
     @POST("/People/logout")
-    void logout(ResponseCallback responseCallback);
+    void logout(Callback<ResponseCallback> callback);
 
     // /People/{id}/groups?filter={"include":["people"]}"
     @GET("/People/{id}/groups?filter=%7B%22include%22:%5B%22people%22%5D%7D")

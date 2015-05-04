@@ -17,8 +17,10 @@ import com.example.android.thepomoappandroid.Utils;
 import com.example.android.thepomoappandroid.api.dto.GroupDTO;
 import com.example.android.thepomoappandroid.api.services.GroupsService;
 import com.example.android.thepomoappandroid.ui.activity.GroupActivity;
-import com.example.android.thepomoappandroid.ui.activity.MainActivity;
+import com.example.android.thepomoappandroid.ui.adapter.holder.GroupViewHolder;
 import com.example.android.thepomoappandroid.ui.dialog.MembersDialog;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 import java.util.List;
 
@@ -28,8 +30,8 @@ import java.util.List;
 public class GroupAdapter extends RecyclerView.Adapter<GroupViewHolder>
     implements GroupViewHolder.ViewHolderClicks {
 
-    Context context;
-    GroupsService.OnDeleteGroup onDeleteGroup;
+    private Context context;
+    private GroupsService.OnDeleteGroup onDeleteGroup;
     private List<GroupDTO> groupList;
 
     public GroupAdapter(Context context, List<GroupDTO> groupList) {
@@ -71,13 +73,17 @@ public class GroupAdapter extends RecyclerView.Adapter<GroupViewHolder>
     }
 
     private void setBackgroundColor(CardView cardView, int i) {
-        int module = i%3;
+        int module = i%5;
         switch (module) {
-            case 0 : cardView.setCardBackgroundColor(context.getResources().getColor(R.color.colorPrimary));
+            case 0 : cardView.setCardBackgroundColor(context.getResources().getColor(R.color.card_1));
                 break;
-            case 1: cardView.setCardBackgroundColor(context.getResources().getColor(R.color.cardSecond));
+            case 1: cardView.setCardBackgroundColor(context.getResources().getColor(R.color.card_2));
                 break;
-            case 2: cardView.setCardBackgroundColor(context.getResources().getColor(R.color.cardThird));
+            case 2: cardView.setCardBackgroundColor(context.getResources().getColor(R.color.card_3));
+                break;
+            case 3: cardView.setCardBackgroundColor(context.getResources().getColor(R.color.card_4));
+                break;
+            case 4: cardView.setCardBackgroundColor(context.getResources().getColor(R.color.card_5));
                 break;
         }
     }
@@ -99,7 +105,7 @@ public class GroupAdapter extends RecyclerView.Adapter<GroupViewHolder>
     public void onDeleteClick(final int position) {
         new AlertDialog.Builder(context)
                 .setMessage(context.getString(R.string.delete_group))
-                .setPositiveButton(R.string.delete_group_delete, new DialogInterface.OnClickListener() {
+                .setPositiveButton(R.string.delete, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                         GroupsService.getInstance().delete(Utils.getInstance().getToken(context), groupList.get(position).getId(), onDeleteGroup);
                     }
@@ -120,7 +126,11 @@ public class GroupAdapter extends RecyclerView.Adapter<GroupViewHolder>
     @Override
     public void onCardClick(int position) {
         Intent intent = new Intent(context, GroupActivity.class);
-        ((MainActivity) context).startActivity(intent);
+        GroupDTO groupDTO = groupList.get(position);
+        Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
+        String jsonGroup = gson.toJson(groupDTO);
+        intent.putExtra(GroupActivity.EXTRA_GROUP, jsonGroup);
+        context.startActivity(intent);
     }
 
     @Override

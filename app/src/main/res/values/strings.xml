@@ -7,19 +7,25 @@
 
     <!-- menu & toolbar -->
     <string name="menu_save">Save</string>
-    
+    <string name="menu_exit">Exit</string>
+    <string name="menu_edit">Edit</string>
+
     <string name="toolbar_add_session">Add Session</string>
     <string name="toolbar_edit_session">Edit Session</string>
     <string name="toolbar_add_group">Create Group</string>
+    <string name="toolbar_edit_group">Edit Group</string>
 
-    <!-- popup Login -->
+    <!-- popup Login & register-->
     <string name="popup_login_required">To use the Pomodoro for Groups online features you need to login</string>
     <string name="popup_login_button">LOGIN</string>
+    <string name="popup_login_signup">SIGN UP</string>
     <string name="popup_login_register">Don\'t have an account yet? Sign Up here</string>
     <string name="popup_login_register_button">SIGN UP</string>
 
     <string name="popup_login_hint_email">Email</string>
     <string name="popup_login_hint_password">Password</string>
+    <string name="popup_login_hint_repeatPassword">Repeat password</string>
+    <string name="popup_login_hint_name">Username</string>
     <string name="popup_login_remember">Remember</string>
 
     <!-- popup Add alone session -->
@@ -35,6 +41,13 @@
     
     <!-- popup Alert delete group -->
     <string name="delete_group">Delete this group?</string>
-    <string name="delete_group_delete">Delete</string>
+
+    <!-- popup Alert delete session -->
+    <string name="delete_session">Delete this session?</string>
+
+    <!-- popup Members -->
+    <string name="popup_members_title">Members</string>
+
+    <string name="delete">Delete</string>
 
 </resources>

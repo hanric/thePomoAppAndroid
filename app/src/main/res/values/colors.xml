@@ -18,8 +18,21 @@
     <item name="colorAccent" type="color">#FFFF8C</item>
     <item name="secondaryGray" type="color">#757575</item>
 
-    <item name="cardSecond" type="color">#3687B2</item>
-    <item name="cardThird" type="color">#337888</item>
+    <item name="sb_1" type="color">#00BBD3</item>
+    <item name="sb_2" type="color">#25C5D9</item>
+    <item name="sb_3" type="color">#00A89B</item>
+    <item name="sb_4" type="color">#65BA69</item>
+    <item name="sb_5" type="color">#9BCB64</item>
+    <item name="sb_6" type="color">#D3E056</item>
+    <item name="sb_7" type="color">#FCD734</item>
+    <item name="sb_8" type="color">#FFA625</item>
+    <item name="sb_9" type="color">#FF6F42</item>
+
+    <item name="card_1" type="color">#00BBD3</item>
+    <item name="card_2" type="color">#5BA8DD</item>
+    <item name="card_3" type="color">#2B82B2</item>
+    <item name="card_4" type="color">#38708C</item>
+    <item name="card_5" type="color">#2B7E89</item>
 
     <integer-array name="androidcolors">
         <item>@color/blue</item>
@@ -35,8 +48,21 @@
         <item>@color/white</item>
         <item>@color/black</item>
 
-        <item>@color/colorPrimary</item>
-        <item>@color/secondaryGray</item>
+        <item>@color/sb_1</item>
+        <item>@color/sb_2</item>
+        <item>@color/sb_3</item>
+        <item>@color/sb_4</item>
+        <item>@color/sb_5</item>
+        <item>@color/sb_6</item>
+        <item>@color/sb_7</item>
+        <item>@color/sb_8</item>
+        <item>@color/sb_9</item>
+
+        <item>@color/card_1</item>
+        <item>@color/card_2</item>
+        <item>@color/card_3</item>
+        <item>@color/card_4</item>
+        <item>@color/card_5</item>
     </integer-array>
 
 </resources>

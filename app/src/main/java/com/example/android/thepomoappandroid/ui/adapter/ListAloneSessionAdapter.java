@@ -30,12 +30,12 @@ public class ListAloneSessionAdapter extends RealmBaseAdapter<AloneSession> impl
     public View getView(int position, View convertView, ViewGroup parent) {
         ViewHolder holder;
         if (convertView == null) {
-            convertView = inflater.inflate(R.layout.session_brief_layout, parent, false);
+            convertView = inflater.inflate(R.layout.item_session, parent, false);
 
             holder = new ViewHolder();
-            holder.sbNum = (TextView) convertView.findViewById(R.id.sb_num);
-            holder.sbHeader = (TextView) convertView.findViewById(R.id.sb_header);
-            holder.sbDetail = (TextView) convertView.findViewById(R.id.sb_detail);
+            holder.sbNum = (TextView) convertView.findViewById(R.id.num);
+            holder.sbHeader = (TextView) convertView.findViewById(R.id.header);
+            holder.sbDetail = (TextView) convertView.findViewById(R.id.detail);
 
             convertView.setTag(holder);
         } else {
@@ -43,15 +43,25 @@ public class ListAloneSessionAdapter extends RealmBaseAdapter<AloneSession> impl
         }
         AloneSession aloneSession = realmResults.get(position);
         holder.sbNum.setText(Integer.toString(aloneSession.getNum()));
-        int module = position%4;
+        int module = position%9;
         switch (module) {
-            case 0 : holder.sbNum.setBackgroundDrawable(context.getResources().getDrawable(R.drawable.sb_background_orange));
+            case 0 : holder.sbNum.setBackgroundDrawable(context.getResources().getDrawable(R.drawable.sb_background_1));
                 break;
-            case 1: holder.sbNum.setBackgroundDrawable(context.getResources().getDrawable(R.drawable.sb_background_blue));
+            case 1: holder.sbNum.setBackgroundDrawable(context.getResources().getDrawable(R.drawable.sb_background_2));
                 break;
-            case 2: holder.sbNum.setBackgroundDrawable(context.getResources().getDrawable(R.drawable.sb_background_red));
+            case 2: holder.sbNum.setBackgroundDrawable(context.getResources().getDrawable(R.drawable.sb_background_3));
                 break;
-            case 3: holder.sbNum.setBackgroundDrawable(context.getResources().getDrawable(R.drawable.sb_background_green));
+            case 3: holder.sbNum.setBackgroundDrawable(context.getResources().getDrawable(R.drawable.sb_background_4));
+                break;
+            case 4: holder.sbNum.setBackgroundDrawable(context.getResources().getDrawable(R.drawable.sb_background_5));
+                break;
+            case 5: holder.sbNum.setBackgroundDrawable(context.getResources().getDrawable(R.drawable.sb_background_6));
+                break;
+            case 6: holder.sbNum.setBackgroundDrawable(context.getResources().getDrawable(R.drawable.sb_background_7));
+                break;
+            case 7: holder.sbNum.setBackgroundDrawable(context.getResources().getDrawable(R.drawable.sb_background_8));
+                break;
+            case 8: holder.sbNum.setBackgroundDrawable(context.getResources().getDrawable(R.drawable.sb_background_9));
                 break;
         }
         holder.sbHeader.setText(aloneSession.getName());

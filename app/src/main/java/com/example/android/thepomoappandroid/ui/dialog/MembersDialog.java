@@ -38,6 +38,7 @@ public class MembersDialog extends DialogFragment {
                 false);
         linearLayout = (LinearLayout) view.findViewById(R.id.popup_members_ll);
         fillViews();
+        getDialog().setTitle(R.string.popup_members_title);
         return view;
     }
 
