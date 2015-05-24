@@ -2,6 +2,8 @@ package com.example.android.thepomoappandroid.db;
 
 import android.content.Context;
 
+import com.example.android.thepomoappandroid.api.dto.SessionDTO;
+
 import io.realm.Realm;
 import io.realm.RealmQuery;
 import io.realm.RealmResults;
@@ -27,19 +29,14 @@ public class DBHandler {
     }
 
     public void createAloneSession(final String name, final int num) throws RealmException {
-        try {
-            realm.executeTransaction(new Realm.Transaction() {
-                @Override
-                public void execute(Realm realm) {
-                    AloneSession aloneSession = realm.createObject(AloneSession.class);
-                    aloneSession.setName(name);
-                    aloneSession.setNum(num);
-                }
-            });
-        } catch (RealmException e) {
-            throw e;
-        }
-
+        realm.executeTransaction(new Realm.Transaction() {
+            @Override
+            public void execute(Realm realm) {
+                AloneSession aloneSession = realm.createObject(AloneSession.class);
+                aloneSession.setName(name);
+                aloneSession.setNum(num);
+            }
+        });
     }
 
     public AloneSession getAloneSession(String name) {
@@ -80,4 +77,69 @@ public class DBHandler {
     public RealmResults<AloneSession> getAloneSessions() {
         return realm.where(AloneSession.class).findAll();
     }
+
+
+    //Session
+
+    public void createSession(final SessionDTO sessionDTO) throws RealmException {
+        try {
+            realm.executeTransaction(new Realm.Transaction() {
+                @Override
+                public void execute(Realm realm) {
+                    Session session = realm.createObject(Session.class);
+                    session.setId(sessionDTO.getId());
+                    session.setName(sessionDTO.getName());
+                    session.setNPomos(sessionDTO.getNPomos());
+                    session.setStartTime(sessionDTO.getStartTime());
+                    session.setEndTime(sessionDTO.getEndTime());
+                    session.setGroupId(sessionDTO.getGroupId());
+                    session.setSettingId(sessionDTO.getSettingId());
+                }
+            });
+        } catch (RealmException e) {
+            throw e;
+        }
+
+    }
+
+    public Session getSession(int id) {
+        RealmQuery<Session> query = realm.where(Session.class);
+        query.equalTo("id", id);
+        return query.findFirst();
+    }
+//
+//    public void updateAloneSession(final String name, final String newName, final int newNum) {
+//        try {
+//            realm.executeTransaction(new Realm.Transaction() {
+//                @Override
+//                public void execute(Realm realm) {
+//                    AloneSession aloneSession = getAloneSession(name);
+//                    aloneSession.setName(newName);
+//                    aloneSession.setNum(newNum);
+//                }
+//            });
+//        } catch (RealmException e) {
+//            throw e;
+//        }
+//    }
+
+    public void deleteSession(final int id) throws RealmException {
+        try {
+            realm.executeTransaction(new Realm.Transaction() {
+                @Override
+                public void execute(Realm realm) {
+                    Session session = getSession(id);
+                    session.removeFromRealm();
+                }
+            });
+        } catch (RealmException e) {
+            throw e;
+        }
+    }
+
+    public RealmResults<Session> getSessions() {
+        return realm.where(Session.class).findAll();
+    }
+
+
 }

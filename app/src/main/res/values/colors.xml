@@ -34,6 +34,9 @@
     <item name="card_4" type="color">#38708C</item>
     <item name="card_5" type="color">#2B7E89</item>
 
+    <color name="mdtp_accent_color">#00BBD3</color>
+    <color name="mdtp_accent_color_dark">#0098A9</color>
+
     <integer-array name="androidcolors">
         <item>@color/blue</item>
         <item>@color/purple</item>

@@ -17,6 +17,7 @@ public class SessionViewHolder extends RecyclerView.ViewHolder
     public TextView num;
     public TextView header;
     public TextView detail;
+    public TextView startTime;
 
     public SessionViewHolder(View view, ViewHolderClicks listener) {
         super(view);
@@ -25,6 +26,7 @@ public class SessionViewHolder extends RecyclerView.ViewHolder
         num = (TextView) view.findViewById(R.id.num);
         header = (TextView) view.findViewById(R.id.header);
         detail = (TextView) view.findViewById(R.id.detail);
+        startTime = (TextView) view.findViewById(R.id.startTime);
 
         view.setOnClickListener(this);
         view.setOnLongClickListener(this);

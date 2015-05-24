@@ -5,6 +5,8 @@
 
     <string name="pomodoros">Pomodoros</string>
 
+    <string name="loading">Loading&#8230;</string>
+
     <!-- menu & toolbar -->
     <string name="menu_save">Save</string>
     <string name="menu_exit">Exit</string>
@@ -14,6 +16,13 @@
     <string name="toolbar_edit_session">Edit Session</string>
     <string name="toolbar_add_group">Create Group</string>
     <string name="toolbar_edit_group">Edit Group</string>
+
+    <!-- Notifications -->
+    <string name="notification_base_title">Something changed!</string>
+    <string name="notification_base_content">Something has changed recently</string>
+
+    <string name="notification_start_title">A session is about to start!</string>
+    <string name="notification_start_content">Click to see the details</string>
 
     <!-- popup Login & register-->
     <string name="popup_login_required">To use the Pomodoro for Groups online features you need to login</string>
@@ -28,8 +37,12 @@
     <string name="popup_login_hint_name">Username</string>
     <string name="popup_login_remember">Remember</string>
 
-    <!-- popup Add alone session -->
-    <string name="popup_add_alone_session_name">Name</string>
+    <!-- popup Add session -->
+    <string name="popup_add_session_name">Name of the session</string>
+    <string name="popup_add_session_number">Name</string>
+    <string name="popup_add_session_timeButton">Select start time</string>
+    <string name="popup_add_session_timeNotSelected">Start time not selected</string>
+
 
     <!-- group Card -->
     <string name="group_card_members">members in this team</string>

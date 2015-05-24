@@ -15,7 +15,7 @@ public class RegisterRequest {
 
     public RegisterRequest(String username, String email, String password) {
         this.username = username;
-        this.email = password;
+        this.email = email;
         this.password = password;
         this.id = 0;
     }

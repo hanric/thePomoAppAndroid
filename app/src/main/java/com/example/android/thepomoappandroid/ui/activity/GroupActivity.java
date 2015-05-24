@@ -15,19 +15,23 @@ import android.view.View;
 import com.example.android.thepomoappandroid.Pomodoro;
 import com.example.android.thepomoappandroid.R;
 import com.example.android.thepomoappandroid.Utils;
+import com.example.android.thepomoappandroid.alarm.AlarmUtils;
 import com.example.android.thepomoappandroid.api.dto.GroupDTO;
 import com.example.android.thepomoappandroid.api.dto.PersonDTO;
 import com.example.android.thepomoappandroid.api.dto.SessionDTO;
 import com.example.android.thepomoappandroid.api.services.BaseService;
 import com.example.android.thepomoappandroid.api.services.GroupsService;
 import com.example.android.thepomoappandroid.api.services.SessionsService;
+import com.example.android.thepomoappandroid.db.DBHandler;
 import com.example.android.thepomoappandroid.ui.adapter.SessionAdapter;
 import com.example.android.thepomoappandroid.ui.dialog.AddGroupDialog;
+import com.example.android.thepomoappandroid.ui.dialog.AddSessionDialog;
 import com.github.pavlospt.CircleView;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.melnykov.fab.FloatingActionButton;
 
+import java.util.GregorianCalendar;
 import java.util.List;
 
 import retrofit.RetrofitError;
@@ -41,7 +45,8 @@ public class GroupActivity extends AppCompatActivity implements
         GroupsService.OnDeleteGroup,
         SessionsService.OnDeleteSession,
         View.OnClickListener,
-        AddGroupDialog.OnActionGroupFromDialog {
+        AddGroupDialog.OnActionGroupFromDialog,
+        AddSessionDialog.OnActionFromSessionDialog {
 
     public static final String EXTRA_GROUP = "extra.group";
 
@@ -98,7 +103,7 @@ public class GroupActivity extends AppCompatActivity implements
 
     private void setUpToolbar() {
         setSupportActionBar(toolbar);
-        toolbar.setTitle(groupDTO.getName());
+        getSupportActionBar().setTitle(groupDTO.getName());
         toolbar.setSubtitle(formatSubtitle(groupDTO));
         toolbar.setNavigationIcon(R.drawable.ic_arrow_left_white_24dp);
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
@@ -169,6 +174,7 @@ public class GroupActivity extends AppCompatActivity implements
         sessionAdapter.setOnDeleteSession(this);
         recyclerView.setAdapter(sessionAdapter);
         fab.attachToRecyclerView(recyclerView);
+        refreshAlarms(sessionDTOs);
     }
 
     /**
@@ -202,12 +208,33 @@ public class GroupActivity extends AppCompatActivity implements
     }
 
     @Override
+    public void onActionFromSessionDialog() {
+        refreshActivity();
+    }
+
+    @Override
     public void onClick(View v) {
         int id = v.getId();
         if (id == fab.getId()) {
-            // TODO
-        } else if (id == toolbar.getChildAt(0).getId()) {
-            finish();
+            AddSessionDialog addSessionDialog = AddSessionDialog.newInstance(groupDTO.getId());
+            addSessionDialog.setOnActionFromSessionDialog(this);
+            addSessionDialog.show(getSupportFragmentManager(), "dialog");
+        }
+    }
+
+    private void refreshAlarms(List<SessionDTO> sessionDTOs) {
+        DBHandler dbHandler = DBHandler.newInstance(this);
+        for (SessionDTO sessionDTO : sessionDTOs) {
+            if (dbHandler.getSession(sessionDTO.getId()) == null) {
+                dbHandler.createSession(sessionDTO);
+                // Code for quick testing
+//                Date date = new Date();
+//                AlarmUtils.initAlarm(getApplicationContext(), date.getTime(), R.string.notification_base_title, R.string.notification_base_content);
+
+
+                GregorianCalendar startDate = Utils.getInstance().formatStringDate(sessionDTO.getStartTime());
+                AlarmUtils.initAlarm(getApplicationContext(), startDate.getTimeInMillis(), R.string.notification_start_title, R.string.notification_start_content);
+            }
         }
     }
 

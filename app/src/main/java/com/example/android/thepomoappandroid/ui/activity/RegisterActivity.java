@@ -1,5 +1,6 @@
 package com.example.android.thepomoappandroid.ui.activity;
 
+import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -26,6 +27,8 @@ public class RegisterActivity extends AppCompatActivity
     public static final int REGISTER_ERR = 0;
     public static final int NO_REGISTER = 0;
 
+    ProgressDialog progressDialog;
+
     private Toolbar toolbar;
     private EditText name;
     private EditText email;
@@ -36,7 +39,7 @@ public class RegisterActivity extends AppCompatActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_group);
+        setContentView(R.layout.activity_register);
         findViews();
         setListeners();
         setUpToolbar();
@@ -57,7 +60,7 @@ public class RegisterActivity extends AppCompatActivity
 
     private void setUpToolbar() {
         setSupportActionBar(toolbar);
-        toolbar.setTitle(R.string.popup_login_signup);
+        getSupportActionBar().setTitle(R.string.popup_login_signup);
         toolbar.setNavigationIcon(R.drawable.ic_arrow_left_white_24dp);
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
@@ -78,10 +81,10 @@ public class RegisterActivity extends AppCompatActivity
     }
 
     private void register() {
+        progressDialog = ProgressDialog.show(this, "", getResources().getString(R.string.loading));
         String nameString = name.getText().toString();
-        String emailString = name.getText().toString();
-        String passwordString = name.getText().toString();
-
+        String emailString = email.getText().toString();
+        String passwordString = password.getText().toString();
         PeopleService.getInstance().register(emailString, nameString, passwordString, this);
     }
 

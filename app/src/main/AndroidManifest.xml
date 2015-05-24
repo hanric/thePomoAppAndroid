@@ -3,11 +3,18 @@
     package="com.example.android.thepomoappandroid">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+
+    <permission android:name="com.example.android.thepomoappandroid.permission.C2D_MESSAGE"
+        android:protectionLevel="signature" />
+    <uses-permission android:name="com.example.android.thepomoappandroid.permission.C2D_MESSAGE" />
 
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
+        android:name=".App"
         android:theme="@style/AppTheme" >
         <activity
             android:name=".ui.activity.MainActivity"
@@ -22,6 +29,26 @@
         <activity android:name=".ui.activity.GroupActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait" />
+        <activity android:name=".ui.activity.RegisterActivity"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait" />
+        
+        <receiver android:name=".receiver.BootReceiver">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+            </intent-filter>
+        </receiver>
+
+        <receiver android:name=".receiver.AlarmReceiver" />
+
+        <receiver
+            android:name=".receiver.GcmReceiver"
+            android:permission="com.google.android.c2dm.permission.SEND" >
+            <intent-filter>
+                <action android:name="com.google.android.c2dm.intent.RECEIVE" />
+                <category android:name="com.example.android.thepomoappandroid" />
+            </intent-filter>
+        </receiver>
     </application>
 
 </manifest>

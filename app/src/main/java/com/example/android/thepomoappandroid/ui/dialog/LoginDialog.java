@@ -1,11 +1,13 @@
 package com.example.android.thepomoappandroid.ui.dialog;
 
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentManager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -33,6 +35,8 @@ public class LoginDialog extends DialogFragment implements
         View.OnClickListener, BaseService.OnRetrofitError, PeopleService.OnLogin {
 
     private boolean shown = false;
+
+    ProgressDialog progressDialog;
 
     private String emailText;
 
@@ -106,6 +110,7 @@ public class LoginDialog extends DialogFragment implements
     }
 
     private void login() {
+        progressDialog = ProgressDialog.show(getActivity(), "", getActivity().getResources().getString(R.string.loading));
         String emailField = email.getText().toString();
         emailText = emailField;
         String passwordField = password.getText().toString();
@@ -121,9 +126,15 @@ public class LoginDialog extends DialogFragment implements
 
     @Override
     public void onLogin(LoginResponse loginResponse) {
-        SharedPreferences prefs = Utils.getInstance().getPrefs(getActivity());
+        SharedPreferences prefs = Utils.getPrefs(getActivity());
         prefs.edit().putString(Constants.PREFS_EMAIL, emailText).apply();
+        if (progressDialog != null) progressDialog.dismiss();
         ((MainActivity) getActivity()).onLoginFromDialog(loginResponse);
+        if (Utils.checkPlayServices(getActivity())) {
+            Utils.updateRegistration(getActivity());
+        } else {
+            Log.i("logindialog", "No valid Google Play Services APK found.");
+        }
         dismiss();
     }
 

@@ -42,4 +42,12 @@
             android:text="2 Pomodoros"/>
     </LinearLayout>
 
+    <TextView
+        android:id="@+id/startTime"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="starts: 123123"
+        style="@style/sb_detail_text"
+        android:visibility="gone"/>
+
 </LinearLayout>

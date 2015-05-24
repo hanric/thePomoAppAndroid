@@ -30,10 +30,9 @@ public class SessionsService extends BaseService{
         void onCreateSession();
     }
 
-    public void create(String token, String name, int nPomos, String startTime, String endTime, int groupId, Integer settingId, final OnCreateSession onCreateSession) {
+    public void create(String token, SessionDTO sessionDTO, final OnCreateSession onCreateSession) {
         setAuthInterceptor(token);
         SessionsInterface sessionsInterface = restAdapter.create(SessionsInterface.class);
-        SessionDTO sessionDTO = new SessionDTO(name, nPomos, startTime, endTime, groupId, null);
         sessionsInterface.create(sessionDTO, new Callback<SessionDTO>() {
             @Override
             public void success(SessionDTO sessionDTO, Response response) {

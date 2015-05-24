@@ -52,6 +52,8 @@ public class SessionAdapter extends RecyclerView.Adapter<SessionViewHolder>
         setNumBackgroundColor(viewHolder.num, i);
         viewHolder.header.setText(sessionDTO.getName());
         viewHolder.detail.setText(formatDetailText(sessionDTO));
+        viewHolder.startTime.setVisibility(View.VISIBLE);
+        viewHolder.startTime.setText(sessionDTO.getStartTime());
     }
 
     private void setNumBackgroundColor(TextView textView, int i) {
