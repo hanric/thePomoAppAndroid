@@ -2,6 +2,7 @@ package com.example.android.thepomoappandroid.api.services;
 
 import com.example.android.thepomoappandroid.api.dto.SessionDTO;
 import com.example.android.thepomoappandroid.api.interfaces.SessionsInterface;
+import com.squareup.okhttp.Call;
 
 import retrofit.Callback;
 import retrofit.ResponseCallback;
@@ -22,43 +23,15 @@ public class SessionsService extends BaseService{
         super();
     }
 
-    public interface OnDeleteSession {
-        void onDeleteSession();
-    }
-
-    public interface OnCreateSession {
-        void onCreateSession();
-    }
-
-    public void create(String token, SessionDTO sessionDTO, final OnCreateSession onCreateSession) {
+    public void create(String token, SessionDTO sessionDTO, Callback<SessionDTO> callback) {
         setAuthInterceptor(token);
         SessionsInterface sessionsInterface = restAdapter.create(SessionsInterface.class);
-        sessionsInterface.create(sessionDTO, new Callback<SessionDTO>() {
-            @Override
-            public void success(SessionDTO sessionDTO, Response response) {
-                if (onCreateSession != null) onCreateSession.onCreateSession();
-            }
-
-            @Override
-            public void failure(RetrofitError error) {
-                if (onCreateSession != null) ((OnRetrofitError)onCreateSession).onError(error);
-            }
-        });
+        sessionsInterface.create(sessionDTO, callback);
     }
 
-    public void delete(String token, int id, final OnDeleteSession onDeleteSession) {
+    public void delete(String token, int id, Callback<ResponseCallback> callback) {
         setAuthInterceptor(token);
         SessionsInterface sessionsInterface = restAdapter.create(SessionsInterface.class);
-        sessionsInterface.delete(id, new Callback<ResponseCallback>() {
-            @Override
-            public void success(ResponseCallback responseCallback, Response response) {
-                if (onDeleteSession != null) onDeleteSession.onDeleteSession();
-            }
-
-            @Override
-            public void failure(RetrofitError error) {
-                if (onDeleteSession != null) ((OnRetrofitError) onDeleteSession).onError(error);
-            }
-        });
+        sessionsInterface.delete(id, callback);
     }
 }

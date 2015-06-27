@@ -8,6 +8,7 @@ import android.content.Intent;
 import com.example.android.thepomoappandroid.receiver.AlarmReceiver;
 
 import java.util.GregorianCalendar;
+import java.util.TimeZone;
 
 public class AlarmUtils {
 
@@ -16,11 +17,7 @@ public class AlarmUtils {
     private static void setAlarm(Context context, AlarmManager alarmManager, PendingIntent pendingIntent, long date) {
         int alarmType = AlarmManager.RTC_WAKEUP;
         long aMinute = 60 * 1000;
-        long twoHours = 2 * 3600 * 1000; //TODO this is just a workaround for timezone
-        long alarmTime = date - aMinute - twoHours;
-
-        GregorianCalendar gregorianCalendar = new GregorianCalendar();
-        gregorianCalendar.setTimeInMillis(alarmTime);
+        long alarmTime = date - aMinute;
         alarmManager.set(alarmType, alarmTime, pendingIntent);
     }
 
@@ -32,7 +29,7 @@ public class AlarmUtils {
      * @param idTitle   Resource id of the notification title
      * @param idContent Resource id of the notification content
      */
-    public static void initAlarm(Context context, long date, int idTitle, int idContent) {
+    public static void initAlarm(Context context, GregorianCalendar date, int idTitle, int idContent) {
         AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
 
         Intent alarmIntent = new Intent(context, AlarmReceiver.class);
@@ -41,7 +38,9 @@ public class AlarmUtils {
 
         PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 0, alarmIntent, 0);
 
-        setAlarm(context, alarmManager, pendingIntent, date);
+        date.setTimeZone(TimeZone.getDefault());
+
+        setAlarm(context, alarmManager, pendingIntent, date.getTimeInMillis());
     }
 
 }

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white"
@@ -26,44 +27,58 @@
                 android:drawableLeft="@drawable/ic_message_reply_black_18dp"
                 android:drawablePadding="@dimen/popupAddGroup_drawablePadding"
                 android:drawableStart="@drawable/ic_message_reply_black_18dp"
-                android:padding="@dimen/popupAddGroup_padding"
-                android:hint="@string/popup_add_session_name" />
+                android:hint="@string/popup_add_session_name"
+                android:padding="@dimen/popupAddGroup_padding" />
 
-            <EditText
-                android:id="@+id/popupAddSession_num"
-                android:layout_below="@+id/popupAddSession_name"
+            <LinearLayout
+                android:id="@+id/popupAddSession_numLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:drawableLeft="@drawable/ic_message_reply_black_18dp"
-                android:drawablePadding="@dimen/popupAddGroup_drawablePadding"
-                android:drawableStart="@drawable/ic_message_reply_black_18dp"
-                android:layout_marginBottom="10dp"
-                android:padding="@dimen/popupAddGroup_padding"
-                android:hint="TODONumber of Pomodoros" />
+                android:layout_below="@+id/popupAddSession_name"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:padding="@dimen/popupAddGroup_drawablePadding">
 
-            <Button
-                android:id="@+id/popupAddSession_timeButton"
-                android:layout_below="@+id/popupAddSession_num"
-                android:layout_width="wrap_content"
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/popup_add_session_number_info" />
+
+                <org.adw.library.widgets.discreteseekbar.DiscreteSeekBar
+                    android:id="@+id/popupAddSession_num"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:dsb_indicatorColor="@color/orange"
+                    app:dsb_max="10"
+                    app:dsb_min="1"
+                    app:dsb_progressColor="@color/colorPrimary"
+                    app:dsb_trackColor="@color/colorPrimaryDark" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/popupAddSession_timeLayout"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:padding="@dimen/popupAddGroup_padding"
-                android:layout_marginLeft="@dimen/popupAddGroup_padding"
-                android:layout_marginStart="@dimen/popupAddGroup_padding"
-                android:layout_marginRight="@dimen/popupAddGroup_padding"
-                android:layout_marginEnd="@dimen/popupAddGroup_padding"
+                android:layout_below="@+id/popupAddSession_numLayout"
+                android:padding="@dimen/popupAddGroup_drawablePadding">
 
-                android:text="@string/popup_add_session_timeButton"
-                style="@style/baseButton"/>
+                <Button
+                    android:id="@+id/popupAddSession_timeButton"
+                    style="@style/baseButton"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="@dimen/popupAddGroup_padding"
+                    android:layout_marginRight="@dimen/popupAddGroup_padding"
+                    android:layout_weight="1"
+                    android:padding="@dimen/popupAddGroup_padding"
+                    android:text="@string/popup_add_session_timeButton" />
 
-            <TextView
-                android:id="@+id/popupAddSession_timeText"
-                android:layout_toRightOf="@+id/popupAddSession_timeButton"
-                android:layout_toEndOf="@+id/popupAddSession_timeButton"
-                android:layout_alignBaseline="@+id/popupAddSession_timeButton"
-                android:paddingLeft="10dp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/popup_add_session_timeNotSelected"/>
+                <TextView
+                    android:id="@+id/popupAddSession_timeText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/popup_add_session_timeNotSelected" />
+            </LinearLayout>
 
         </RelativeLayout>
 

@@ -7,6 +7,12 @@
 
     <string name="loading">Loading&#8230;</string>
 
+    <!-- pomodoro -->
+    <string name="start">START</string>
+    <string name="state_working">WORK</string>
+    <string name="state_rest">REST</string>
+    <string name="state_large_rest">LARGE REST</string>
+
     <!-- menu & toolbar -->
     <string name="menu_save">Save</string>
     <string name="menu_exit">Exit</string>
@@ -39,6 +45,7 @@
 
     <!-- popup Add session -->
     <string name="popup_add_session_name">Name of the session</string>
+    <string name="popup_add_session_number_info">Sessions:</string>
     <string name="popup_add_session_number">Name</string>
     <string name="popup_add_session_timeButton">Select start time</string>
     <string name="popup_add_session_timeNotSelected">Start time not selected</string>
@@ -50,7 +57,7 @@
     <!-- popup Add group -->
     <string name="popup_add_group_name">Name of the group</string>
     <string name="popup_add_group_description">Description</string>
-    <string name="popup_add_group_team">Select the team</string>
+    <string name="popup_add_group_team">Add a member</string>
     
     <!-- popup Alert delete group -->
     <string name="delete_group">Delete this group?</string>
@@ -63,4 +70,16 @@
 
     <string name="delete">Delete</string>
 
+    <!-- popup add members -->
+    <string name="searchHint">Search username or email</string>
+
+    <!-- Notifications -->
+    <string name="session_new_title">Group %1$s</string>
+    <string name="session_new_content">Session %1$s was created</string>
+
+    <string name="session_updated_title">Group %1$s</string>
+    <string name="session_updated_content">Session %1$s was created</string>
+
+    <string name="group_added_title">Group %1$s</string>
+    <string name="group_added_content">You were added to this group</string>
 </resources>

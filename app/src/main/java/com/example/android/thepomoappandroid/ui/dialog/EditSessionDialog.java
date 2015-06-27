@@ -22,6 +22,8 @@ import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
 import com.wdullaer.materialdatetimepicker.time.RadialPickerLayout;
 import com.wdullaer.materialdatetimepicker.time.TimePickerDialog;
 
+import org.adw.library.widgets.discreteseekbar.DiscreteSeekBar;
+
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 
@@ -32,9 +34,7 @@ import retrofit.RetrofitError;
  */
 public class EditSessionDialog extends AddSessionDialog
         implements Toolbar.OnMenuItemClickListener,
-        View.OnClickListener,
-        BaseService.OnRetrofitError,
-        SessionsService.OnCreateSession {
+        View.OnClickListener {
 
     private GregorianCalendar timePicked;
 
@@ -76,7 +76,7 @@ public class EditSessionDialog extends AddSessionDialog
     protected void findViews(View view) {
         toolbar = (Toolbar) view.findViewById(R.id.toolbar);
         name = (EditText) view.findViewById(R.id.popupAddSession_name);
-        num = (EditText) view.findViewById(R.id.popupAddSession_num);
+        num = (DiscreteSeekBar) view.findViewById(R.id.popupAddSession_num);
         timeButton = (Button) view.findViewById(R.id.popupAddSession_timeButton);
         timeText = (TextView) view.findViewById(R.id.popupAddSession_timeText);
     }
@@ -141,21 +141,10 @@ public class EditSessionDialog extends AddSessionDialog
 
     @Override
     protected void performSaveAction() {
-        Utils utils = Utils.getInstance();
         String nameString = name.getText().toString();
-        int nPomos = Integer.parseInt(num.getText().toString());
+        int nPomos = num.getProgress();
         String startTime = timeText.getText().toString();
-        String endTime = utils.getEndTime(timePicked, nPomos, 25, 5, 15);
+        String endTime = Utils.getEndTime(timePicked, nPomos, 25, 5, 15);
 //        SessionsService.getInstance().create(utils.getToken(getActivity()), nameString, nPomos, startTime, endTime, groupId, null, this);
-    }
-
-    @Override
-    public void onCreateSession() {
-        onActionFromSessionDialog.onActionFromSessionDialog();
-    }
-
-    @Override
-    public void onError(RetrofitError error) {
-
     }
 }

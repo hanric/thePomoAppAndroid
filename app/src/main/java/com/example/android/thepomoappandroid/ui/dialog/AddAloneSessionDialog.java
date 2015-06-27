@@ -1,9 +1,9 @@
 package com.example.android.thepomoappandroid.ui.dialog;
 
+import android.app.DialogFragment;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
-import android.support.v4.app.DialogFragment;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -14,6 +14,7 @@ import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.example.android.thepomoappandroid.Pomodoro;
 import com.example.android.thepomoappandroid.R;
 import com.example.android.thepomoappandroid.db.DBHandler;
 
@@ -22,7 +23,7 @@ import io.realm.exceptions.RealmException;
 /**
  * Created by Enric on 19/04/2015.
  */
-public class AddAloneSessionDialog extends DialogFragment implements Toolbar.OnMenuItemClickListener, View.OnClickListener {
+public class  AddAloneSessionDialog extends DialogFragment implements Toolbar.OnMenuItemClickListener, View.OnClickListener {
 
     protected DBHandler dbHandler;
 
@@ -99,7 +100,7 @@ public class AddAloneSessionDialog extends DialogFragment implements Toolbar.OnM
 
     protected void performSaveAction() {
         try {
-            dbHandler.createAloneSession(name.getText().toString(), Integer.parseInt(num.getText().toString()));
+            dbHandler.createAloneSession(name.getText().toString(), Integer.parseInt(num.getText().toString()), Pomodoro.TO_START);
             dismiss();
         } catch (RealmException e) {
             Toast.makeText(getActivity(), "TODO this name already exists", Toast.LENGTH_SHORT).show();

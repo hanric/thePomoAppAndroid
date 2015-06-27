@@ -1,38 +1,92 @@
 package com.example.android.thepomoappandroid.ui.dialog;
 
+import android.app.DialogFragment;
+import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
-import android.support.v4.app.DialogFragment;
 import android.support.v7.widget.Toolbar;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
-import android.widget.Button;
+import android.widget.AdapterView;
+import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
+import android.widget.ListView;
 
 import com.example.android.thepomoappandroid.R;
 import com.example.android.thepomoappandroid.Utils;
 import com.example.android.thepomoappandroid.api.dto.GroupDTO;
-import com.example.android.thepomoappandroid.api.services.BaseService;
+import com.example.android.thepomoappandroid.api.dto.LinkPeopleDTO;
+import com.example.android.thepomoappandroid.api.dto.PersonDTO;
 import com.example.android.thepomoappandroid.api.services.GroupsService;
+import com.example.android.thepomoappandroid.api.services.PeopleService;
+import com.example.android.thepomoappandroid.ui.adapter.UserAdapter;
+import com.example.android.thepomoappandroid.ui.adapter.UserSearchAdapter;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import retrofit.Callback;
 import retrofit.RetrofitError;
+import retrofit.client.Response;
 
 /**
  * Created by Enric on 19/04/2015.
  */
-public class AddGroupDialog extends DialogFragment implements Toolbar.OnMenuItemClickListener, View.OnClickListener, BaseService.OnRetrofitError, GroupsService.OnCreateGroup {
+public class AddGroupDialog extends DialogFragment
+        implements Toolbar.OnMenuItemClickListener,
+        View.OnClickListener,
+        AdapterView.OnItemClickListener,
+        TextWatcher {
+
+    public static final String CLASS_TAG = AddGroupDialog.class.getSimpleName();
+
+    protected Context context;
 
     protected Toolbar toolbar;
     protected EditText name;
     protected EditText description;
-    protected Button buttonAddMembers;
+    private AutoCompleteTextView searchText;
+    private ListView selectedUsersListView;
+
+    private UserAdapter selectedUsersAdapter;
+    private UserSearchAdapter searchAdapter;
 
     protected OnActionGroupFromDialog onActionGroupFromDialog;
+
+    private Callback<List<PersonDTO>> findByFilterCallback = new Callback<List<PersonDTO>>() {
+        @Override
+        public void success(List<PersonDTO> personDTOs, Response response) {
+            Log.v(CLASS_TAG, "findByFilterCallback success");
+            searchAdapter.clear();
+            searchAdapter.addAll(personDTOs);
+            searchAdapter.notifyDataSetChanged();
+        }
+
+        @Override
+        public void failure(RetrofitError error) {
+            Log.v(CLASS_TAG, "findByFilterCallback failure");
+        }
+    };
+
+    private Callback<LinkPeopleDTO> linkPeopleCallback = new Callback<LinkPeopleDTO>() {
+        @Override
+        public void success(LinkPeopleDTO linkPeopleDTO, Response response) {
+            Log.v(CLASS_TAG, "linkPeopleCallback success");
+        }
+
+        @Override
+        public void failure(RetrofitError error) {
+            Log.v(CLASS_TAG, "linkPeopleCallback success");
+        }
+    };
 
     public interface OnActionGroupFromDialog {
         void onActionGroupFromDialog();
@@ -55,8 +109,10 @@ public class AddGroupDialog extends DialogFragment implements Toolbar.OnMenuItem
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.popup_add_group, container,
                 false);
+        context = getActivity();
         findViews(view);
         setListeners();
+        init();
         setupToolbar(R.string.toolbar_add_group);
         getDialog().getWindow().requestFeature(Window.FEATURE_NO_TITLE);
         return view;
@@ -74,14 +130,16 @@ public class AddGroupDialog extends DialogFragment implements Toolbar.OnMenuItem
         toolbar = (Toolbar) view.findViewById(R.id.toolbar);
         name = (EditText) view.findViewById(R.id.popupAddGroup_name);
         description = (EditText) view.findViewById(R.id.popupAddGroup_description);
-        buttonAddMembers = (Button) view.findViewById(R.id.popupAddGroup_addMembers);
+        searchText = (AutoCompleteTextView) view.findViewById(R.id.popupAddGroup_searchUser);
+        selectedUsersListView = (ListView) view.findViewById(R.id.selectedUsers);
     }
 
     protected void setListeners() {
         // Set an OnMenuItemClickListener to handle menu item clicks
         toolbar.setOnMenuItemClickListener(this);
         toolbar.setNavigationOnClickListener(this);
-        buttonAddMembers.setOnClickListener(this);
+        searchText.setOnItemClickListener(this);
+        searchText.addTextChangedListener(this);
     }
 
     public void setupToolbar(int titleResId) {
@@ -91,14 +149,46 @@ public class AddGroupDialog extends DialogFragment implements Toolbar.OnMenuItem
         toolbar.inflateMenu(R.menu.menu_save);
     }
 
+    private void init() {
+        selectedUsersAdapter = new UserAdapter(getActivity(), 0, new ArrayList<PersonDTO>());
+        searchAdapter = new UserSearchAdapter(getActivity(), 0, new ArrayList<PersonDTO>());
+        searchText.setAdapter(searchAdapter);
+        selectedUsersListView.setAdapter(selectedUsersAdapter);
+    }
+
     @Override
     public void onClick(View v) {
         int id = v.getId();
         if (id == toolbar.getChildAt(0).getId()) {
             dismiss();
-        } else if (id == buttonAddMembers.getId()) {
-            // TODO launch add members
         }
+    }
+
+    @Override
+    public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+        PersonDTO selected = searchAdapter.getItem(i);
+        searchText.dismissDropDown();
+        searchText.setText("");
+        searchAdapter.clear();
+        selectedUsersAdapter.add(selected);
+        selectedUsersAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+    }
+
+    @Override
+    public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+        if (charSequence.length() == searchText.getThreshold()) {
+            PeopleService.getInstance().findByFilter(Utils.getToken(getActivity()), charSequence.toString(), findByFilterCallback);
+        }
+    }
+
+    @Override
+    public void afterTextChanged(Editable editable) {
+
     }
 
     @Override
@@ -114,19 +204,23 @@ public class AddGroupDialog extends DialogFragment implements Toolbar.OnMenuItem
     }
 
     protected void actionGroup(String name, String description) {
-            String token = Utils.getInstance().getToken(getActivity());
-            GroupsService.getInstance().create(token, name, description, this);
-            dismiss();
-    }
+        String token = Utils.getToken(getActivity());
+        GroupsService.getInstance().create(token, name, description, new Callback<GroupDTO>() {
+            @Override
+            public void success(GroupDTO groupDTO, Response response) {
+                GroupsService groupsService = GroupsService.getInstance();
+                for (int i = 0; i < selectedUsersAdapter.getCount(); ++i) {
+                    groupsService.linkPeople(Utils.getToken(context), groupDTO.getId(), selectedUsersAdapter.getItem(i).getId(), linkPeopleCallback);
+                }
+                onActionGroupFromDialog.onActionGroupFromDialog();
+                dismiss();
+            }
 
-    @Override
-    public void onCreateGroup(GroupDTO groupDTO) {
-        onActionGroupFromDialog.onActionGroupFromDialog();
+            @Override
+            public void failure(RetrofitError error) {
+
+            }
+        });
         dismiss();
-    }
-
-    @Override
-    public void onError(RetrofitError error) {
-
     }
 }

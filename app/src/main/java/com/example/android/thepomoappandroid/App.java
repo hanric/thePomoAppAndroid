@@ -15,7 +15,7 @@ public class App extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-        JodaTimeAndroid.init(this);
+//        JodaTimeAndroid.init(this);
     }
 
     public RestAdapter getLoopBackAdapter() {
@@ -27,7 +27,7 @@ public class App extends Application {
             // server - create as many Adapters as you need.
             adapter = new RestAdapter(
                     getApplicationContext(),
-                    "http://localhost:3000/api/");
+                    "http://pomoapp.herokuapp.com/api/");
         }
         return adapter;
     }

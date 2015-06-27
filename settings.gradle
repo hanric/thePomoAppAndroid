@@ -1,1 +1,2 @@
-include ':app'
+include ':app', ':discreteSeekBar'
+project(':discreteSeekBar').projectDir = new File('libs/discreteSeekBar')

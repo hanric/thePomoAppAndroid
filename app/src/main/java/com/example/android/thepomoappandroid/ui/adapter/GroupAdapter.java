@@ -24,6 +24,9 @@ import com.google.gson.GsonBuilder;
 
 import java.util.List;
 
+import retrofit.Callback;
+import retrofit.ResponseCallback;
+
 /**
  * Created by Enric on 25/04/2015.
  */
@@ -31,7 +34,7 @@ public class GroupAdapter extends RecyclerView.Adapter<GroupViewHolder>
     implements GroupViewHolder.ViewHolderClicks {
 
     private Context context;
-    private GroupsService.OnDeleteGroup onDeleteGroup;
+    private Callback<ResponseCallback> onDeleteGroupCallback;
     private List<GroupDTO> groupList;
 
     public GroupAdapter(Context context, List<GroupDTO> groupList) {
@@ -92,8 +95,8 @@ public class GroupAdapter extends RecyclerView.Adapter<GroupViewHolder>
         return Integer.toString(groupDTO.getPeople().size()) + " " + context.getResources().getString(R.string.group_card_members);
     }
 
-    public void setOnDeleteGroup(GroupsService.OnDeleteGroup onDeleteGroup) {
-        this.onDeleteGroup = onDeleteGroup;
+    public void setOnDeleteGroupCallback(Callback<ResponseCallback> callback) {
+        this.onDeleteGroupCallback = callback;
     }
 
     @Override
@@ -107,7 +110,7 @@ public class GroupAdapter extends RecyclerView.Adapter<GroupViewHolder>
                 .setMessage(context.getString(R.string.delete_group))
                 .setPositiveButton(R.string.delete, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
-                        GroupsService.getInstance().delete(Utils.getInstance().getToken(context), groupList.get(position).getId(), onDeleteGroup);
+                        GroupsService.getInstance().delete(Utils.getToken(context), groupList.get(position).getId(), onDeleteGroupCallback);
                     }
                 })
                 .setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {

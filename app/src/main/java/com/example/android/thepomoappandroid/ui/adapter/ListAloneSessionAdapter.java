@@ -6,6 +6,7 @@ import android.view.ViewGroup;
 import android.widget.ListAdapter;
 import android.widget.TextView;
 
+import com.example.android.thepomoappandroid.Pomodoro;
 import com.example.android.thepomoappandroid.R;
 import com.example.android.thepomoappandroid.db.AloneSession;
 
@@ -21,6 +22,7 @@ public class ListAloneSessionAdapter extends RealmBaseAdapter<AloneSession> impl
         TextView sbNum;
         TextView sbHeader;
         TextView sbDetail;
+        TextView sbState;
     }
 
     public ListAloneSessionAdapter(Context context, int resId, RealmResults<AloneSession> realmResults, boolean automaticUpdate) {
@@ -36,6 +38,7 @@ public class ListAloneSessionAdapter extends RealmBaseAdapter<AloneSession> impl
             holder.sbNum = (TextView) convertView.findViewById(R.id.num);
             holder.sbHeader = (TextView) convertView.findViewById(R.id.header);
             holder.sbDetail = (TextView) convertView.findViewById(R.id.detail);
+            holder.sbState = (TextView) convertView.findViewById(R.id.state);
 
             convertView.setTag(holder);
         } else {
@@ -66,6 +69,25 @@ public class ListAloneSessionAdapter extends RealmBaseAdapter<AloneSession> impl
         }
         holder.sbHeader.setText(aloneSession.getName());
         holder.sbDetail.setText(Integer.toString(aloneSession.getNum()) + " " + context.getResources().getString(R.string.pomodoros));
+        switch (aloneSession.getState()) {
+            case Pomodoro.TO_START:
+                holder.sbState.setText("");
+                break;
+            case Pomodoro.WORK:
+                holder.sbState.setText(context.getString(R.string.state_working));
+                holder.sbState.setTextColor(context.getResources().getColor(R.color.red));
+                break;
+            case Pomodoro.BREAK:
+                holder.sbState.setText(context.getString(R.string.state_rest));
+                holder.sbState.setTextColor(context.getResources().getColor(R.color.green));
+                break;
+            case Pomodoro.LARGE_BREAK:
+                holder.sbState.setText(context.getString(R.string.state_large_rest));
+                holder.sbState.setTextColor(context.getResources().getColor(R.color.darkgreen));
+                break;
+            case Pomodoro.ENDED:
+                holder.sbState.setText("");
+        }
 
         return convertView;
     }

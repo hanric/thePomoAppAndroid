@@ -25,19 +25,22 @@ import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
 import com.wdullaer.materialdatetimepicker.time.RadialPickerLayout;
 import com.wdullaer.materialdatetimepicker.time.TimePickerDialog;
 
+import org.adw.library.widgets.discreteseekbar.DiscreteSeekBar;
+
 import java.util.Calendar;
 import java.util.GregorianCalendar;
+import java.util.TimeZone;
 
+import retrofit.Callback;
 import retrofit.RetrofitError;
+import retrofit.client.Response;
 
 /**
  * Created by Enric on 19/04/2015.
  */
 public class AddSessionDialog extends DialogFragment
         implements Toolbar.OnMenuItemClickListener,
-        View.OnClickListener,
-        BaseService.OnRetrofitError,
-        SessionsService.OnCreateSession {
+        View.OnClickListener {
 
     public static final String EXTRA_GROUP_ID = "extra.groupId";
 
@@ -49,7 +52,7 @@ public class AddSessionDialog extends DialogFragment
 
     protected Toolbar toolbar;
     protected EditText name;
-    protected EditText num;
+    protected DiscreteSeekBar num;
     protected Button timeButton;
     protected TextView timeText;
 
@@ -100,7 +103,7 @@ public class AddSessionDialog extends DialogFragment
     protected void findViews(View view) {
         toolbar = (Toolbar) view.findViewById(R.id.toolbar);
         name = (EditText) view.findViewById(R.id.popupAddSession_name);
-        num = (EditText) view.findViewById(R.id.popupAddSession_num);
+        num = (DiscreteSeekBar) view.findViewById(R.id.popupAddSession_num);
         timeButton = (Button) view.findViewById(R.id.popupAddSession_timeButton);
         timeText = (TextView) view.findViewById(R.id.popupAddSession_timeText);
     }
@@ -156,7 +159,7 @@ public class AddSessionDialog extends DialogFragment
                     public void onTimeSet(RadialPickerLayout radialPickerLayout, int i, int i1) {
                         timePicked.add(Calendar.HOUR, i);
                         timePicked.add(Calendar.MINUTE, i1);
-                        timeText.setText(Utils.getInstance().formatDate(timePicked));
+                        timeText.setText(Utils.formatDate(timePicked));
                     }
                 }, now.get(Calendar.HOUR), now.get(Calendar.MINUTE), false).show(getActivity().getFragmentManager(), "Timepickerdialog");
             }
@@ -164,25 +167,26 @@ public class AddSessionDialog extends DialogFragment
     }
 
     protected void performSaveAction() {
-        if (!name.getText().toString().isEmpty() && !num.getText().toString().isEmpty() && timeText.getText() != getActivity().getResources().getString(R.string.popup_add_session_timeNotSelected)) {
-            Utils utils = Utils.getInstance();
+        if (!name.getText().toString().isEmpty() && num.getProgress() != 0 && timeText.getText() != getActivity().getResources().getString(R.string.popup_add_session_timeNotSelected)) {
             String nameString = name.getText().toString();
-            int nPomos = Integer.parseInt(num.getText().toString());
-            String startTime = timeText.getText().toString();
-            String endTime = utils.getEndTime(timePicked, nPomos, 25, 5, 15);
+            int nPomos = num.getProgress();
+            GregorianCalendar timePickedGmt = (GregorianCalendar) timePicked.clone();
+            timePickedGmt.setTimeZone(TimeZone.getTimeZone("GMT"));
+            String startTime = Utils.formatDate(timePickedGmt);
+            String endTime = Utils.getEndTime(timePickedGmt, nPomos, 25, 5, 15);
             sessionDTO = new SessionDTO(nameString, nPomos, startTime, endTime, groupId, null);
-            SessionsService.getInstance().create(utils.getToken(getActivity()), sessionDTO, this);
+            SessionsService.getInstance().create(Utils.getToken(getActivity()), sessionDTO, new Callback<SessionDTO>() {
+                @Override
+                public void success(SessionDTO sessionDTO, Response response) {
+                    onActionFromSessionDialog.onActionFromSessionDialog();
+                    dismiss();
+                }
+
+                @Override
+                public void failure(RetrofitError error) {
+
+                }
+            });
         }
-    }
-
-    @Override
-    public void onCreateSession() {
-        onActionFromSessionDialog.onActionFromSessionDialog();
-        dismiss();
-    }
-
-    @Override
-    public void onError(RetrofitError error) {
-
     }
 }

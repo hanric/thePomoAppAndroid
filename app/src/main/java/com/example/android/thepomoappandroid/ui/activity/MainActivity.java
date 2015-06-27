@@ -1,8 +1,7 @@
 package com.example.android.thepomoappandroid.ui.activity;
 
-import android.content.SharedPreferences;
+import android.app.Fragment;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -12,10 +11,10 @@ import android.view.MenuItem;
 import android.widget.Toast;
 
 import com.astuetz.PagerSlidingTabStrip;
-import com.example.android.thepomoappandroid.Constants;
 import com.example.android.thepomoappandroid.R;
 import com.example.android.thepomoappandroid.Utils;
 import com.example.android.thepomoappandroid.api.response.LoginResponse;
+import com.example.android.thepomoappandroid.api.services.PeopleService;
 import com.example.android.thepomoappandroid.ui.adapter.MainFragmentPageAdapter;
 import com.example.android.thepomoappandroid.ui.dialog.LoginDialog;
 import com.example.android.thepomoappandroid.ui.fragment.AloneFragment;
@@ -23,6 +22,11 @@ import com.example.android.thepomoappandroid.ui.fragment.GroupFragment;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import retrofit.Callback;
+import retrofit.ResponseCallback;
+import retrofit.RetrofitError;
+import retrofit.client.Response;
 
 
 public class MainActivity extends AppCompatActivity
@@ -45,7 +49,7 @@ public class MainActivity extends AppCompatActivity
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle("Pomodoro for Groups");
 
-        pageAdapter = new MainFragmentPageAdapter(getSupportFragmentManager(), getFragments());
+        pageAdapter = new MainFragmentPageAdapter(getFragmentManager(), getFragments());
         pager.setAdapter(pageAdapter);
         tabs.setViewPager(pager);
         tabs.getWidth();
@@ -74,6 +78,18 @@ public class MainActivity extends AppCompatActivity
         return true;
     }
 
+
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        MenuItem logout = menu.findItem(R.id.logout);
+        if (Utils.isLoggedIn(this)) {
+            logout.setVisible(true);
+        } else {
+            logout.setVisible(false);
+        }
+        return true;
+    }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
@@ -82,23 +98,46 @@ public class MainActivity extends AppCompatActivity
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        if (id == R.id.logout) {
+            PeopleService.getInstance().logout(this, new Callback<ResponseCallback>() {
+                @Override
+                public void success(ResponseCallback callback, Response response) {
+                    handleLogout();
+                }
+
+                @Override
+                public void failure(RetrofitError error) {
+                    handleFailure();
+                }
+            });
             return true;
         }
 
         return super.onOptionsItemSelected(item);
     }
 
+    private void handleLogout() {
+        Utils.clearPreferences(this);
+        if (!(pageAdapter.getItem(1) == null)) {
+            ((GroupFragment) pageAdapter.getItem(1)).refreshFragment();
+        }
+        invalidateOptionsMenu();
+    }
+
+    private void handleFailure() {
+        Toast.makeText(this, "Something went wrong, retry later", Toast.LENGTH_LONG).show();
+    }
+
     @Override
     public void onLoginFromDialog(LoginResponse loginResponse) {
         Log.v("LOGIN_SUCCESS", loginResponse.toString());
-        SharedPreferences prefs = Utils.getInstance().getPrefs(this);
-        prefs.edit().putString(Constants.PREFS_TOKEN, loginResponse.getId()).apply();
-        prefs.edit().putInt(Constants.PREFS_USERID, loginResponse.getUserId()).apply();
+        Utils.setToken(this, loginResponse.getId());
+        Utils.setUserId(this, loginResponse.getUserId());
 
         Toast.makeText(this, "Login success!", Toast.LENGTH_SHORT).show();
         if (!(pageAdapter.getItem(1) == null)) {
             ((GroupFragment) pageAdapter.getItem(1)).refreshFragment();
         }
+        invalidateOptionsMenu();
     }
 }

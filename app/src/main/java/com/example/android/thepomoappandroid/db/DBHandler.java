@@ -28,13 +28,14 @@ public class DBHandler {
         realm = Realm.getInstance(context);
     }
 
-    public void createAloneSession(final String name, final int num) throws RealmException {
+    public void createAloneSession(final String name, final int num, final int state) throws RealmException {
         realm.executeTransaction(new Realm.Transaction() {
             @Override
             public void execute(Realm realm) {
                 AloneSession aloneSession = realm.createObject(AloneSession.class);
                 aloneSession.setName(name);
                 aloneSession.setNum(num);
+                aloneSession.setState(state);
             }
         });
     }
@@ -45,7 +46,7 @@ public class DBHandler {
         return query.findFirst();
     }
 
-    public void updateAloneSession(final String name, final String newName, final int newNum) {
+    public void updateAloneSession(final String name, final String newName, final int newNum, final int newState) {
         try {
             realm.executeTransaction(new Realm.Transaction() {
                 @Override
@@ -53,6 +54,7 @@ public class DBHandler {
                     AloneSession aloneSession = getAloneSession(name);
                     aloneSession.setName(newName);
                     aloneSession.setNum(newNum);
+                    aloneSession.setState(newState);
                 }
             });
         } catch (RealmException e) {

@@ -15,9 +15,11 @@ public class Pomodoro {
 
     private static final String CLASS_TAG = Pomodoro.class.getSimpleName();
 
-    public static final int WORK = 0;
-    public static final int BREAK = 1;
-    public static final int LARGE_BREAK = 2;
+    public static final int TO_START = 0;
+    public static final int WORK = 1;
+    public static final int BREAK = 2;
+    public static final int LARGE_BREAK = 3;
+    public static final int ENDED = 4;
 
 
     private CountDownTimer countDownTimer;
@@ -41,12 +43,12 @@ public class Pomodoro {
          * Listener for when a working phase has ended
          * @param nextPhase The following phase of the session
          */
-        public void phaseEnded(String key, int nextPhase);
+        void phaseEnded(String key, int nextPhase);
 
         /**
          * Listener for when the whole session has ended
          */
-        public void sessionEnded(String key);
+        void sessionEnded(String key);
     }
 
     public Pomodoro(CircleView circleView) {
@@ -99,14 +101,17 @@ public class Pomodoro {
         Log.v(CLASS_TAG, "startPhase");
         int time;
         switch (currentPhase) {
-            case Pomodoro.WORK:
+            case WORK:
                 time = workTime.get(Calendar.MINUTE);
+                circleView.setStrokeColor(circleView.getContext().getResources().getColor(R.color.red));
                 break;
-            case Pomodoro.BREAK:
+            case BREAK:
                 time = breakTime.get(Calendar.MINUTE);
+                circleView.setStrokeColor(circleView.getContext().getResources().getColor(R.color.green));
                 break;
-            case Pomodoro.LARGE_BREAK:
+            case LARGE_BREAK:
                 time = largeBreakTime.get(Calendar.MINUTE);
+                circleView.setStrokeColor(circleView.getContext().getResources().getColor(R.color.darkgreen));
                 break;
             default:
                 time = -1;
@@ -129,16 +134,16 @@ public class Pomodoro {
 
     private void betweenPhase() {
         Log.v(CLASS_TAG, "betweenPhase");
-        if (currentPomodoro == numberOfPomodoros) {
+        if (currentPomodoro == numberOfPomodoros && currentPhase == WORK) {
             finishSession();
         } else {
-            if (currentPhase == Pomodoro.BREAK || currentPhase == Pomodoro.LARGE_BREAK) {
-                currentPhase = Pomodoro.WORK;
-            } else if (currentPhase == Pomodoro.WORK) {
+            if (currentPhase == BREAK || currentPhase == LARGE_BREAK) {
+                currentPhase = WORK;
+            } else if (currentPhase == WORK) {
                 if (currentPomodoro == 4) {
-                    currentPhase = Pomodoro.LARGE_BREAK;
+                    currentPhase = LARGE_BREAK;
                 } else {
-                    currentPhase = Pomodoro.BREAK;
+                    currentPhase = BREAK;
                 }
                 ++currentPomodoro;
             }
@@ -150,6 +155,8 @@ public class Pomodoro {
     private void finishSession() {
         Log.v(CLASS_TAG, "finishSession");
         isRunning = false;
+        circleView.setStrokeColor(circleView.getContext().getResources().getColor(R.color.colorPrimary));
+        circleView.setTitleText(circleView.getContext().getResources().getString(R.string.start));
         onPomodoroFinished.sessionEnded(key);
     }
 

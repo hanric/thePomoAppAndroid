@@ -36,9 +36,9 @@ public class MembersDialog extends DialogFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.popup_members, container,
                 false);
+        getDialog().setTitle(R.string.popup_members_title);
         linearLayout = (LinearLayout) view.findViewById(R.id.popup_members_ll);
         fillViews();
-        getDialog().setTitle(R.string.popup_members_title);
         return view;
     }
 

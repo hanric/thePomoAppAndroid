@@ -2,52 +2,58 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:background="@color/white"
+    android:gravity="center_vertical"
     android:minHeight="@dimen/sb_minHeight"
     android:orientation="horizontal"
-    android:padding="@dimen/sb_padding"
-    android:gravity="center_vertical"
-    android:background="@color/white">
+    android:padding="@dimen/sb_padding">
 
     <TextView
         android:id="@+id/num"
+        style="@style/sb_num_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/sb_num_marginRight"
+        android:layout_marginRight="@dimen/sb_num_marginRight"
         android:background="@drawable/sb_background_3"
         android:gravity="center"
-        style="@style/sb_num_text"
-        android:layout_marginRight="@dimen/sb_num_marginRight"
-        android:layout_marginEnd="@dimen/sb_num_marginRight"
-        android:text="2"/>
+        android:text="2" />
 
     <LinearLayout
         android:layout_width="0dp"
-        android:layout_weight="1"
         android:layout_height="match_parent"
+        android:layout_weight="1"
         android:gravity="center_vertical"
         android:orientation="vertical">
 
         <TextView
             android:id="@+id/header"
+            style="@style/sb_header_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            style="@style/sb_header_text"
             android:layout_marginBottom="1dp"
-            android:text="Rentar els plats"/>
+            android:text="Rentar els plats" />
 
         <TextView
             android:id="@+id/detail"
+            style="@style/sb_detail_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            style="@style/sb_detail_text"
-            android:text="2 Pomodoros"/>
+            android:text="2 Pomodoros" />
     </LinearLayout>
 
     <TextView
+        android:id="@+id/state"
+        style="@style/std_Gray"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <TextView
         android:id="@+id/startTime"
+        style="@style/sb_detail_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="starts: 123123"
-        style="@style/sb_detail_text"
-        android:visibility="gone"/>
+        android:visibility="gone" />
 
 </LinearLayout>

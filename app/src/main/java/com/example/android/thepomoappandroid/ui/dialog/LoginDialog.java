@@ -1,12 +1,12 @@
 package com.example.android.thepomoappandroid.ui.dialog;
 
+import android.app.DialogFragment;
+import android.app.FragmentManager;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.support.v4.app.DialogFragment;
-import android.support.v4.app.FragmentManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,18 +21,21 @@ import com.example.android.thepomoappandroid.Constants;
 import com.example.android.thepomoappandroid.R;
 import com.example.android.thepomoappandroid.Utils;
 import com.example.android.thepomoappandroid.api.response.LoginResponse;
-import com.example.android.thepomoappandroid.api.services.BaseService;
 import com.example.android.thepomoappandroid.api.services.PeopleService;
 import com.example.android.thepomoappandroid.ui.activity.MainActivity;
 import com.example.android.thepomoappandroid.ui.activity.RegisterActivity;
 
+import retrofit.Callback;
 import retrofit.RetrofitError;
+import retrofit.client.Response;
 
 /**
  * Created by Enric on 13/04/2015.
  */
 public class LoginDialog extends DialogFragment implements
-        View.OnClickListener, BaseService.OnRetrofitError, PeopleService.OnLogin {
+        View.OnClickListener {
+
+    public static final String CLASS_TAG = LoginDialog.class.getSimpleName();
 
     private boolean shown = false;
 
@@ -114,18 +117,20 @@ public class LoginDialog extends DialogFragment implements
         String emailField = email.getText().toString();
         emailText = emailField;
         String passwordField = password.getText().toString();
-        PeopleService.getInstance().login(emailField, passwordField, this);
+        PeopleService.getInstance().login(emailField, passwordField, new Callback<LoginResponse>() {
+            @Override
+            public void success(LoginResponse loginResponse, Response response) {
+                handleLoginSuccess(loginResponse);
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+                Toast.makeText(getActivity(), "Incorrect user or password", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
-
-    /**
-     * ----------------------------------------------
-     * OnLogin
-     * ----------------------------------------------
-     */
-
-    @Override
-    public void onLogin(LoginResponse loginResponse) {
+    public void handleLoginSuccess(LoginResponse loginResponse) {
         SharedPreferences prefs = Utils.getPrefs(getActivity());
         prefs.edit().putString(Constants.PREFS_EMAIL, emailText).apply();
         if (progressDialog != null) progressDialog.dismiss();
@@ -133,20 +138,10 @@ public class LoginDialog extends DialogFragment implements
         if (Utils.checkPlayServices(getActivity())) {
             Utils.updateRegistration(getActivity());
         } else {
-            Log.i("logindialog", "No valid Google Play Services APK found.");
+            Log.i(CLASS_TAG, "No valid Google Play Services APK found.");
         }
         dismiss();
     }
-
-    @Override
-    public void onError(RetrofitError error) {
-        Toast.makeText(getActivity(), "Incorrect user or password", Toast.LENGTH_SHORT).show();
-    }
-
-    /**
-     * ----------------------------------------------
-     * ----------------------------------------------
-     */
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {

@@ -30,4 +30,10 @@ public interface Constants {
     int NOTIFICATION_SERVER_SESSION_ID = 1;
     int NOTIFICATION_START_ID = 2;
 
+    String GCM_MESSAGE = "message";
+    String GCM_DATA = "data";
+    String GCM_SESSION_NEW = "session_new";
+    String GCM_SESSION_UPDATED = "session_updated";
+    String GCM_GROUP_ADDED = "group_added";
+
 }

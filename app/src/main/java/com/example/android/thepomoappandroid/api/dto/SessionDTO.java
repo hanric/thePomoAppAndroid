@@ -32,7 +32,7 @@ public class SessionDTO {
         this.groupId = groupId;
         if (null != settingId) this.settingId = settingId;
         isStopped = true;
-        isFinished = true;
+        isFinished = false;
         this.id = 0;
     }
 

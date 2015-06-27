@@ -1,7 +1,7 @@
 package com.example.android.thepomoappandroid.ui.fragment;
 
+import android.app.Fragment;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -11,33 +11,44 @@ import android.view.ViewGroup;
 import com.example.android.thepomoappandroid.R;
 import com.example.android.thepomoappandroid.Utils;
 import com.example.android.thepomoappandroid.api.dto.GroupDTO;
-import com.example.android.thepomoappandroid.api.services.BaseService;
-import com.example.android.thepomoappandroid.api.services.GroupsService;
 import com.example.android.thepomoappandroid.api.services.PeopleService;
 import com.example.android.thepomoappandroid.ui.adapter.GroupAdapter;
 import com.example.android.thepomoappandroid.ui.dialog.AddGroupDialog;
 import com.example.android.thepomoappandroid.ui.dialog.LoginDialog;
 import com.melnykov.fab.FloatingActionButton;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import retrofit.Callback;
+import retrofit.ResponseCallback;
 import retrofit.RetrofitError;
+import retrofit.client.Response;
 
 /**
  * Created by Enric on 13/04/2015.
  */
 public class GroupFragment extends Fragment implements
         View.OnClickListener,
-        BaseService.OnRetrofitError,
-        PeopleService.OnGetGroups,
-        AddGroupDialog.OnActionGroupFromDialog,
-        GroupsService.OnDeleteGroup {
+        AddGroupDialog.OnActionGroupFromDialog {
 
     private LoginDialog loginDialog;
 
     private GroupAdapter adapter;
     private RecyclerView recyclerView;
     private FloatingActionButton fab;
+
+    private Callback<ResponseCallback> onDeleteGroupCallback = new Callback<ResponseCallback>() {
+        @Override
+        public void success(ResponseCallback callback, Response response) {
+            refreshFragment();
+        }
+
+        @Override
+        public void failure(RetrofitError error) {
+
+        }
+    };
 
     public static GroupFragment newInstance() {
         GroupFragment fragment = new GroupFragment();
@@ -51,8 +62,7 @@ public class GroupFragment extends Fragment implements
         loginDialog = LoginDialog.newInstance();
         findViews(view);
         setListeners();
-        setUpRecyclerView();
-        refreshFragment();
+        init();
         return view;
     }
 
@@ -65,6 +75,12 @@ public class GroupFragment extends Fragment implements
         fab.setOnClickListener(this);
     }
 
+    private void init() {
+        setUpRecyclerView();
+        refreshFragment();
+        setFabVisibility();
+    }
+
     private void setUpRecyclerView() {
         recyclerView.setHasFixedSize(true);
         LinearLayoutManager llm = new LinearLayoutManager(getActivity());
@@ -73,10 +89,18 @@ public class GroupFragment extends Fragment implements
         fab.attachToRecyclerView(recyclerView);
     }
 
+    private void setFabVisibility() {
+        if (Utils.isLoggedIn(getActivity())) {
+            fab.setVisibility(View.VISIBLE);
+        } else {
+            fab.setVisibility(View.GONE);
+        }
+    }
+
     @Override
     public void onResume() {
         super.onResume();
-        if (!Utils.getInstance().isLoggedIn(getActivity()) && getUserVisibleHint()) {
+        if (!Utils.isLoggedIn(getActivity()) && getUserVisibleHint()) {
             loadDialog();
         }
     }
@@ -84,7 +108,7 @@ public class GroupFragment extends Fragment implements
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
-        if (isVisibleToUser && getActivity() != null && !Utils.getInstance().isLoggedIn(getActivity())) {
+        if (isVisibleToUser && getActivity() != null && !Utils.isLoggedIn(getActivity())) {
             loadDialog();
         }
     }
@@ -105,42 +129,30 @@ public class GroupFragment extends Fragment implements
     }
 
     public void refreshFragment() {
-        Utils utils = Utils.getInstance();
-        PeopleService.getInstance().getGroups(utils.getUserId(getActivity()), utils.getToken(getActivity()), this);
+        if (!Utils.isLoggedIn(getActivity())) {
+            if (getUserVisibleHint()) loadDialog();
+            adapter = new GroupAdapter(getActivity(), new ArrayList<GroupDTO>());
+            recyclerView.setAdapter(adapter);
+        } else {
+            PeopleService.getInstance().getGroups(Utils.getUserId(getActivity()), Utils.getToken(getActivity()), new Callback<List<GroupDTO>>() {
+                @Override
+                public void success(List<GroupDTO> groupDTOs, Response response) {
+                    handleOnGetGroupsSuccess(groupDTOs);
+                }
+
+                @Override
+                public void failure(RetrofitError error) {
+
+                }
+            });
+        }
     }
 
-    /**
-     * ----------------------------------------------
-     * OnGetGroups
-     * ----------------------------------------------
-     */
-
-    @Override
-    public void onGetGroups(List<GroupDTO> groupDTOs) {
+    public void handleOnGetGroupsSuccess(List<GroupDTO> groupDTOs) {
         adapter = new GroupAdapter(getActivity(), groupDTOs);
-        adapter.setOnDeleteGroup(this);
+        adapter.setOnDeleteGroupCallback(onDeleteGroupCallback);
         recyclerView.setAdapter(adapter);
     }
-
-    /**
-     * ----------------------------------------------
-     * OnDeleteGroup
-     * ----------------------------------------------
-     */
-
-    @Override
-    public void onDeleteGroup() {
-        refreshFragment();
-    }
-
-    @Override
-    public void onError(RetrofitError error) {
-
-    }
-    /**
-     * ----------------------------------------------
-     * ----------------------------------------------
-     */
 
     @Override
     public void onActionGroupFromDialog() {

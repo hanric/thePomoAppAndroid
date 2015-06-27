@@ -1,8 +1,8 @@
 package com.example.android.thepomoappandroid.ui.fragment;
 
+import android.app.Fragment;
 import android.content.DialogInterface;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -137,6 +137,7 @@ public class AloneFragment extends Fragment implements
             GregorianCalendar breakTime = new GregorianCalendar(0, 0, 0, 0, 1, 0);
             GregorianCalendar largeBreakTime = new GregorianCalendar(0, 0, 0, 0, 1, 0);
             pomodoro.setSession(aloneSession.getName(), workTime, breakTime, largeBreakTime, aloneSession.getNum(), null);
+            dbHandler.updateAloneSession(aloneSession.getName(), aloneSession.getName(), aloneSession.getNum(), Pomodoro.WORK);
             pomodoro.startSession();
         }
     }
@@ -147,9 +148,11 @@ public class AloneFragment extends Fragment implements
         Toast.makeText(getActivity(), "phaseEnded", Toast.LENGTH_SHORT).show();
         AloneSession aloneSession = dbHandler.getAloneSession(key);
         // If the nextPhase is not WORK, that means that the WORK phase just happened
+        int newNum = aloneSession.getNum();
         if (nextPhase != Pomodoro.WORK) {
-            dbHandler.updateAloneSession(aloneSession.getName(), aloneSession.getName(), aloneSession.getNum() -1);
+            newNum = newNum -1;
         }
+        dbHandler.updateAloneSession(aloneSession.getName(), aloneSession.getName(), newNum, nextPhase);
     }
 
     @Override

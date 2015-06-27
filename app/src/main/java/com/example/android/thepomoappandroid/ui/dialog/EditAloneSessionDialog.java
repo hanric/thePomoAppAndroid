@@ -6,6 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 
+import com.example.android.thepomoappandroid.Pomodoro;
 import com.example.android.thepomoappandroid.R;
 import com.example.android.thepomoappandroid.db.AloneSession;
 
@@ -53,7 +54,8 @@ public class EditAloneSessionDialog extends AddAloneSessionDialog {
 
     @Override
     protected void performSaveAction() {
-        dbHandler.updateAloneSession(currentName, name.getText().toString(), Integer.parseInt(num.getText().toString()));
+        AloneSession aloneSession = dbHandler.getAloneSession(currentName);
+        dbHandler.updateAloneSession(currentName, name.getText().toString(), Integer.parseInt(num.getText().toString()), aloneSession.getState());
         dismiss();
     }
 }

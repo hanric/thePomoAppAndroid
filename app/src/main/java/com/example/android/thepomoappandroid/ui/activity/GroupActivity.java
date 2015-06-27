@@ -34,16 +34,15 @@ import com.melnykov.fab.FloatingActionButton;
 import java.util.GregorianCalendar;
 import java.util.List;
 
+import retrofit.Callback;
+import retrofit.ResponseCallback;
 import retrofit.RetrofitError;
+import retrofit.client.Response;
 
 /**
  * Created by Enric on 01/05/2015.
  */
 public class GroupActivity extends AppCompatActivity implements
-        BaseService.OnRetrofitError,
-        GroupsService.OnGetSessions,
-        GroupsService.OnDeleteGroup,
-        SessionsService.OnDeleteSession,
         View.OnClickListener,
         AddGroupDialog.OnActionGroupFromDialog,
         AddSessionDialog.OnActionFromSessionDialog {
@@ -60,6 +59,18 @@ public class GroupActivity extends AppCompatActivity implements
     private RecyclerView recyclerView;
     private FloatingActionButton fab;
     private CircleView circleView;
+
+    private Callback<ResponseCallback> onDeleteSessionCallback = new Callback<ResponseCallback>() {
+        @Override
+        public void success(ResponseCallback callback, Response response) {
+            refreshActivity();
+        }
+
+        @Override
+        public void failure(RetrofitError error) {
+
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -115,13 +126,31 @@ public class GroupActivity extends AppCompatActivity implements
     }
 
     public void refreshActivity() {
-        GroupsService.getInstance().getSessions(Utils.getInstance().getToken(this), groupDTO.getId(), this);
+        GroupsService.getInstance().getSessions(Utils.getToken(this), groupDTO.getId(), new Callback<List<SessionDTO>>() {
+            @Override
+            public void success(List<SessionDTO> sessionDTOs, Response response) {
+                handleGetSessions(sessionDTOs);
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+
+            }
+        });
+    }
+
+    public void handleGetSessions(List<SessionDTO> sessionDTOs) {
+        sessionAdapter = new SessionAdapter(this, sessionDTOs);
+        sessionAdapter.setOnDeleteSessionCallback(onDeleteSessionCallback);
+        recyclerView.setAdapter(sessionAdapter);
+        fab.attachToRecyclerView(recyclerView);
+        refreshAlarms(sessionDTOs);
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        int userId = Utils.getInstance().getUserId(this);
+        int userId = Utils.getUserId(this);
         if (userId == groupDTO.getAdminId()) {
             getMenuInflater().inflate(R.menu.menu_group_admin, menu);
         } else {
@@ -139,14 +168,24 @@ public class GroupActivity extends AppCompatActivity implements
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.edit) {
-            AddGroupDialog.newInstance(this).show(getSupportFragmentManager(), "dialog");
+            AddGroupDialog.newInstance(this).show(getFragmentManager(), "dialog");
         } else if (id == R.id.delete) {
             final GroupActivity groupActivity = this;
             new AlertDialog.Builder(this)
                     .setMessage(this.getString(R.string.delete_group))
                     .setPositiveButton(R.string.delete, new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int which) {
-                            GroupsService.getInstance().delete(Utils.getInstance().getToken(groupActivity), groupDTO.getId(), groupActivity);
+                            GroupsService.getInstance().delete(Utils.getToken(groupActivity), groupDTO.getId(), new Callback<ResponseCallback>() {
+                                @Override
+                                public void success(ResponseCallback callback, Response response) {
+                                    finish();
+                                }
+
+                                @Override
+                                public void failure(RetrofitError error) {
+
+                                }
+                            });
                         }
                     })
                     .setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
@@ -161,46 +200,6 @@ public class GroupActivity extends AppCompatActivity implements
         }
         return super.onOptionsItemSelected(item);
     }
-
-    /**
-     * ----------------------------------------------
-     * onGetSessions
-     * ----------------------------------------------
-     */
-
-    @Override
-    public void onGetSessions(List<SessionDTO> sessionDTOs) {
-        sessionAdapter = new SessionAdapter(this, sessionDTOs);
-        sessionAdapter.setOnDeleteSession(this);
-        recyclerView.setAdapter(sessionAdapter);
-        fab.attachToRecyclerView(recyclerView);
-        refreshAlarms(sessionDTOs);
-    }
-
-    /**
-     * ----------------------------------------------
-     * onGetSessions
-     * ----------------------------------------------
-     */
-
-    @Override
-    public void onDeleteGroup() {
-        finish();
-    }
-
-    @Override
-    public void onDeleteSession() {
-        refreshActivity();
-    }
-
-    @Override
-    public void onError(RetrofitError error) {
-
-    }
-    /**
-     * ----------------------------------------------
-     * ----------------------------------------------
-     */
 
     @Override
     public void onActionGroupFromDialog() {
@@ -227,13 +226,8 @@ public class GroupActivity extends AppCompatActivity implements
         for (SessionDTO sessionDTO : sessionDTOs) {
             if (dbHandler.getSession(sessionDTO.getId()) == null) {
                 dbHandler.createSession(sessionDTO);
-                // Code for quick testing
-//                Date date = new Date();
-//                AlarmUtils.initAlarm(getApplicationContext(), date.getTime(), R.string.notification_base_title, R.string.notification_base_content);
-
-
-                GregorianCalendar startDate = Utils.getInstance().formatStringDate(sessionDTO.getStartTime());
-                AlarmUtils.initAlarm(getApplicationContext(), startDate.getTimeInMillis(), R.string.notification_start_title, R.string.notification_start_content);
+                GregorianCalendar startDate = Utils.formatStringDate(sessionDTO.getStartTime());
+                AlarmUtils.initAlarm(getApplicationContext(), startDate, R.string.notification_start_title, R.string.notification_start_content);
             }
         }
     }

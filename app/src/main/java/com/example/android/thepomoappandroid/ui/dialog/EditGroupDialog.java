@@ -14,14 +14,14 @@ import com.example.android.thepomoappandroid.api.services.GroupsService;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+import retrofit.Callback;
 import retrofit.RetrofitError;
+import retrofit.client.Response;
 
 /**
  * Created by Enric on 02/05/2015.
  */
-public class EditGroupDialog extends AddGroupDialog
-    implements BaseService.OnRetrofitError,
-        GroupsService.OnUpdateGroup {
+public class EditGroupDialog extends AddGroupDialog {
 
     public static final String EXTRA_GROUP = "extra.group";
 
@@ -61,24 +61,18 @@ public class EditGroupDialog extends AddGroupDialog
 
     @Override
     protected void actionGroup(String name, String description) {
-        String token = Utils.getInstance().getToken(getActivity());
-        GroupsService.getInstance().update(token, groupDTO.getId(), name, description, this);
+        String token = Utils.getToken(getActivity());
+        GroupsService.getInstance().update(token, groupDTO.getId(), name, description, new Callback<GroupDTO>() {
+            @Override
+            public void success(GroupDTO groupDTO, Response response) {
+                onActionGroupFromDialog.onActionGroupFromDialog();
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+
+            }
+        });
         dismiss();
-    }
-
-    /**
-     * ----------------------------------------------
-     * onUpdateGroup
-     * ----------------------------------------------
-     */
-
-    @Override
-    public void onUpdateGroup() {
-        onActionGroupFromDialog.onActionGroupFromDialog();
-    }
-
-    @Override
-    public void onError(RetrofitError error) {
-
     }
 }

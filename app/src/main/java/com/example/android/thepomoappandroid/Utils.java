@@ -4,6 +4,9 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
+import android.text.Spannable;
+import android.text.SpannableString;
+import android.text.style.StyleSpan;
 import android.util.Log;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -18,6 +21,7 @@ import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 
 import java.io.IOException;
+import java.security.InvalidParameterException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
@@ -39,8 +43,17 @@ public class Utils {
         return context.getSharedPreferences(Constants.PREFS_KEY, Context.MODE_PRIVATE);
     }
 
+    public static void clearPreferences(Context context) {
+        getPrefs(context).edit().clear().commit();
+    }
+
     public static int getUserId(Context context) {
         return getPrefs(context).getInt(Constants.PREFS_USERID, 0);
+    }
+
+    public static void setUserId(Context context, int userId) {
+        SharedPreferences prefs = getPrefs(context);
+        prefs.edit().putInt(Constants.PREFS_USERID, userId).apply();
     }
 
     public static String getEmail(Context context) {
@@ -49,6 +62,11 @@ public class Utils {
 
     public static String getToken(Context context) {
         return getPrefs(context).getString(Constants.PREFS_TOKEN, "");
+    }
+
+    public static void setToken(Context context, String token) {
+        SharedPreferences prefs = getPrefs(context);
+        prefs.edit().putString(Constants.PREFS_TOKEN, token).apply();
     }
 
     public static boolean isLoggedIn(Context context) {
@@ -84,6 +102,19 @@ public class Utils {
                 DateTimeFormat.forPattern(DATE_PATTERN_FROM_SERVER).withOffsetParsed();
         DateTime dateTime = formatter.parseDateTime(date);
         return dateTime.toGregorianCalendar();
+    }
+
+    public static CharSequence formatNotification(Context context, int resId, String dynamic) {
+        String lineFormat = context.getString(resId);
+        int lineParamStartPos = lineFormat.indexOf("%1$s");
+        if (lineParamStartPos < 0) {
+            throw new InvalidParameterException("Something's wrong with your string! LINT could have caught that.");
+        }
+        String lineFormatted = context.getString(resId, dynamic);
+
+        Spannable sb = new SpannableString(lineFormatted);
+        sb.setSpan(new StyleSpan(android.graphics.Typeface.BOLD), lineParamStartPos, lineParamStartPos + dynamic.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        return sb;
     }
 
     /**

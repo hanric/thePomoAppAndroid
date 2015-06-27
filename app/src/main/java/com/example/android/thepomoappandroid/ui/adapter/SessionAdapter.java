@@ -17,6 +17,9 @@ import com.example.android.thepomoappandroid.ui.adapter.holder.SessionViewHolder
 
 import java.util.List;
 
+import retrofit.Callback;
+import retrofit.ResponseCallback;
+
 /**
  * Created by Enric on 02/05/2015.
  */
@@ -24,7 +27,7 @@ public class SessionAdapter extends RecyclerView.Adapter<SessionViewHolder>
     implements SessionViewHolder.ViewHolderClicks {
 
     private Context context;
-    private SessionsService.OnDeleteSession onDeleteSession;
+    private Callback<ResponseCallback> onDeleteSessionCallback;
     private List<SessionDTO> sessionList;
 
     public SessionAdapter(Context context, List<SessionDTO> sessionList) {
@@ -84,8 +87,8 @@ public class SessionAdapter extends RecyclerView.Adapter<SessionViewHolder>
         return Integer.toString(sessionDTO.getNPomos()) + " " + context.getResources().getString(R.string.pomodoros);
     }
 
-    public void setOnDeleteSession(SessionsService.OnDeleteSession onDeleteSession) {
-        this.onDeleteSession = onDeleteSession;
+    public void setOnDeleteSessionCallback(Callback<ResponseCallback> callback) {
+        this.onDeleteSessionCallback = callback;
     }
 
     @Override
@@ -99,7 +102,7 @@ public class SessionAdapter extends RecyclerView.Adapter<SessionViewHolder>
                 .setMessage(context.getString(R.string.delete_session))
                 .setPositiveButton(R.string.delete, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
-                        SessionsService.getInstance().delete(Utils.getInstance().getToken(context), sessionList.get(position).getId(), onDeleteSession);
+                        SessionsService.getInstance().delete(Utils.getToken(context), sessionList.get(position).getId(), onDeleteSessionCallback);
                     }
                 })
                 .setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {

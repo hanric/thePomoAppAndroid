@@ -13,15 +13,15 @@ import com.example.android.thepomoappandroid.api.dto.PersonDTO;
 import com.example.android.thepomoappandroid.api.services.BaseService;
 import com.example.android.thepomoappandroid.api.services.PeopleService;
 
+import retrofit.Callback;
 import retrofit.RetrofitError;
+import retrofit.client.Response;
 
 /**
  * Created by Enric on 04/05/2015.
  */
 public class RegisterActivity extends AppCompatActivity
-    implements View.OnClickListener,
-        BaseService.OnRetrofitError,
-        PeopleService.OnRegister {
+    implements View.OnClickListener {
 
     public static final int REGISTER_OK = 1;
     public static final int REGISTER_ERR = 0;
@@ -85,18 +85,18 @@ public class RegisterActivity extends AppCompatActivity
         String nameString = name.getText().toString();
         String emailString = email.getText().toString();
         String passwordString = password.getText().toString();
-        PeopleService.getInstance().register(emailString, nameString, passwordString, this);
-    }
+        PeopleService.getInstance().register(emailString, nameString, passwordString, new Callback<PersonDTO>() {
+            @Override
+            public void success(PersonDTO personDTO, Response response) {
+                setResult(REGISTER_OK);
+                finish();
+            }
 
-    @Override
-    public void onRegister(PersonDTO personDTO) {
-        setResult(REGISTER_OK);
-        finish();
-    }
-
-    @Override
-    public void onError(RetrofitError error) {
-        setResult(REGISTER_ERR);
-        finish();
+            @Override
+            public void failure(RetrofitError error) {
+                setResult(REGISTER_ERR);
+                finish();
+            }
+        });
     }
 }
