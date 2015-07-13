@@ -1,62 +1,58 @@
 package com.example.android.thepomoappandroid.ui.adapter;
 
 import android.content.Context;
-import android.content.DialogInterface;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.widget.RecyclerView;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ListAdapter;
 import android.widget.TextView;
 
 import com.example.android.thepomoappandroid.R;
-import com.example.android.thepomoappandroid.Utils;
-import com.example.android.thepomoappandroid.api.dto.SessionDTO;
-import com.example.android.thepomoappandroid.api.services.SessionsService;
-import com.example.android.thepomoappandroid.ui.adapter.holder.SessionViewHolder;
+import com.example.android.thepomoappandroid.db.Session;
 
-import java.util.List;
-
+import io.realm.RealmBaseAdapter;
+import io.realm.RealmResults;
 import retrofit.Callback;
 import retrofit.ResponseCallback;
 
 /**
  * Created by Enric on 02/05/2015.
  */
-public class SessionAdapter extends RecyclerView.Adapter<SessionViewHolder>
-    implements SessionViewHolder.ViewHolderClicks {
+public class SessionAdapter extends RealmBaseAdapter<Session> implements ListAdapter {
 
-    private Context context;
-    private Callback<ResponseCallback> onDeleteSessionCallback;
-    private List<SessionDTO> sessionList;
-
-    public SessionAdapter(Context context, List<SessionDTO> sessionList) {
-        this.context = context;
-        this.sessionList = sessionList;
+    private class ViewHolder {
+        public TextView num;
+        public TextView header;
+        public TextView detail;
+        public TextView startTime;
     }
 
-    @Override
-    public int getItemCount() {
-        return sessionList.size();
+    public SessionAdapter (Context context, int resId, RealmResults<Session> realmResults, boolean automaticUpdate) {
+        super(context, realmResults, automaticUpdate);
     }
 
-    @Override
-    public SessionViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
-        View itemView = LayoutInflater.
-                from(viewGroup.getContext()).
-                inflate(R.layout.item_session, viewGroup, false);
-        return new SessionViewHolder(itemView, this);
-    }
+    public View getView(int position, View convertView, ViewGroup parent) {
+        ViewHolder holder;
+        if (convertView == null) {
+            convertView = inflater.inflate(R.layout.item_session, parent, false);
 
-    @Override
-    public void onBindViewHolder(SessionViewHolder viewHolder, int i) {
-        SessionDTO sessionDTO = sessionList.get(i);
-        viewHolder.num.setText(Integer.toString(sessionDTO.getNPomos()));
-        setNumBackgroundColor(viewHolder.num, i);
-        viewHolder.header.setText(sessionDTO.getName());
-        viewHolder.detail.setText(formatDetailText(sessionDTO));
-        viewHolder.startTime.setVisibility(View.VISIBLE);
-        viewHolder.startTime.setText(sessionDTO.getStartTime());
+            holder = new ViewHolder();
+            holder.num = (TextView) convertView.findViewById(R.id.num);
+            holder.header = (TextView) convertView.findViewById(R.id.header);
+            holder.detail = (TextView) convertView.findViewById(R.id.detail);
+            holder.startTime = (TextView) convertView.findViewById(R.id.startTime);
+
+            convertView.setTag(holder);
+        } else {
+            holder = (ViewHolder) convertView.getTag();
+        }
+        Session session = realmResults.get(position);
+        holder.num.setText(Integer.toString(session.getNPomos()));
+        setNumBackgroundColor(holder.num, position);
+        holder.header.setText(session.getName());
+        holder.detail.setText(formatDetailText(session));
+        holder.startTime.setVisibility(View.VISIBLE);
+        holder.startTime.setText(session.getStartTime());
+        return convertView;
     }
 
     private void setNumBackgroundColor(TextView textView, int i) {
@@ -83,33 +79,7 @@ public class SessionAdapter extends RecyclerView.Adapter<SessionViewHolder>
         }
     }
 
-    private String formatDetailText(SessionDTO sessionDTO) {
-        return Integer.toString(sessionDTO.getNPomos()) + " " + context.getResources().getString(R.string.pomodoros);
-    }
-
-    public void setOnDeleteSessionCallback(Callback<ResponseCallback> callback) {
-        this.onDeleteSessionCallback = callback;
-    }
-
-    @Override
-    public void onViewClick(int position) {
-        // TODO show session detail
-    }
-
-    @Override
-    public void onLongViewClick(final int position) {
-        new AlertDialog.Builder(context)
-                .setMessage(context.getString(R.string.delete_session))
-                .setPositiveButton(R.string.delete, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        SessionsService.getInstance().delete(Utils.getToken(context), sessionList.get(position).getId(), onDeleteSessionCallback);
-                    }
-                })
-                .setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        // do nothing
-                    }
-                })
-                .show();
+    private String formatDetailText(Session session) {
+        return Integer.toString(session.getNPomos()) + " " + context.getResources().getString(R.string.pomodoros);
     }
 }

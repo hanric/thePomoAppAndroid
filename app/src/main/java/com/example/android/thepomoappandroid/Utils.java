@@ -3,6 +3,8 @@ package com.example.android.thepomoappandroid;
 import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.text.Spannable;
 import android.text.SpannableString;
@@ -37,6 +39,12 @@ public class Utils {
     }
 
     private Utils() {
+    }
+
+    public static boolean isNetworkAvailable(Context context) {
+        ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
     }
 
     public static SharedPreferences getPrefs(Context context) {
@@ -127,7 +135,7 @@ public class Utils {
         final RestAdapter adapter = app.getLoopBackAdapter();
 
         // 2. Create LocalInstallation instance
-        final LocalInstallation installation =  new LocalInstallation(context, adapter);
+        final LocalInstallation installation = new LocalInstallation(context, adapter);
 
         // 3. Update Installation properties that were not pre-filled
 
@@ -171,7 +179,7 @@ public class Utils {
 
     /**
      * Registers the application with GCM servers asynchronously.
-     * <p>
+     * <p/>
      * Stores the registration ID in the provided LocalInstallation
      */
     private static void registerInBackground(final LocalInstallation installation, final Context context) {
@@ -203,6 +211,7 @@ public class Utils {
 
     /**
      * Saves the Installation to the LoopBack server and reports the result.
+     *
      * @param installation
      */
     private static void saveInstallation(final LocalInstallation installation) {

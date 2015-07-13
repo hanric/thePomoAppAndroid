@@ -6,6 +6,7 @@ import retrofit.Callback;
 import retrofit.ResponseCallback;
 import retrofit.http.Body;
 import retrofit.http.DELETE;
+import retrofit.http.GET;
 import retrofit.http.POST;
 import retrofit.http.Path;
 
@@ -13,6 +14,9 @@ import retrofit.http.Path;
  * Created by Enric on 16/04/2015.
  */
 public interface SessionsInterface {
+
+    @GET("/Sessions/{id}")
+    void findById(@Path("id") int id, Callback<SessionDTO> callback);
 
     @POST("/Sessions")
     void create(@Body SessionDTO sessionDTO, Callback<SessionDTO> callback);

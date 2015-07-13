@@ -19,6 +19,7 @@ import com.example.android.thepomoappandroid.ui.adapter.MainFragmentPageAdapter;
 import com.example.android.thepomoappandroid.ui.dialog.LoginDialog;
 import com.example.android.thepomoappandroid.ui.fragment.AloneFragment;
 import com.example.android.thepomoappandroid.ui.fragment.GroupFragment;
+import com.example.android.thepomoappandroid.ui.fragment.PrefsFragment;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -60,6 +61,7 @@ public class MainActivity extends AppCompatActivity
 
         fragmentList.add(AloneFragment.newInstance());
         fragmentList.add(GroupFragment.newInstance());
+        fragmentList.add(PrefsFragment.newInstance());
 
         return fragmentList;
     }

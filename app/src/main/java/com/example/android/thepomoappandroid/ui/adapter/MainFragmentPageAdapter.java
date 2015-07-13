@@ -28,6 +28,7 @@ public class MainFragmentPageAdapter extends FragmentPagerAdapter {
         switch (position) {
             case 0 : return "Alone";
             case 1 : return "Group";
+            case 2 : return "Settings";
             default : return "default";
         }
     }

@@ -156,6 +156,6 @@ public class GroupFragment extends Fragment implements
 
     @Override
     public void onActionGroupFromDialog() {
-        refreshFragment();
+        init();
     }
 }

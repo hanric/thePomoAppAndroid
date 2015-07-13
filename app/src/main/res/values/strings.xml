@@ -49,6 +49,8 @@
     <string name="popup_add_session_number">Name</string>
     <string name="popup_add_session_timeButton">Select start time</string>
     <string name="popup_add_session_timeNotSelected">Start time not selected</string>
+    <string name="popup_add_session_err_after_date">You must select a date after %1$s, %2$s, %3$s</string>
+    <string name="popup_add_session_err_after_time">You must select a time after %1$s, %2$s</string>
 
 
     <!-- group Card -->
@@ -82,4 +84,7 @@
 
     <string name="group_added_title">Group %1$s</string>
     <string name="group_added_content">You were added to this group</string>
+
+    <!-- Error messages -->
+    <string name="error">There was an error, please try again later</string>
 </resources>

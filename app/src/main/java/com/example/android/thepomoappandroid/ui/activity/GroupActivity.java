@@ -11,6 +11,9 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ListView;
+import android.widget.Toast;
 
 import com.example.android.thepomoappandroid.Pomodoro;
 import com.example.android.thepomoappandroid.R;
@@ -19,10 +22,10 @@ import com.example.android.thepomoappandroid.alarm.AlarmUtils;
 import com.example.android.thepomoappandroid.api.dto.GroupDTO;
 import com.example.android.thepomoappandroid.api.dto.PersonDTO;
 import com.example.android.thepomoappandroid.api.dto.SessionDTO;
-import com.example.android.thepomoappandroid.api.services.BaseService;
 import com.example.android.thepomoappandroid.api.services.GroupsService;
 import com.example.android.thepomoappandroid.api.services.SessionsService;
 import com.example.android.thepomoappandroid.db.DBHandler;
+import com.example.android.thepomoappandroid.db.Session;
 import com.example.android.thepomoappandroid.ui.adapter.SessionAdapter;
 import com.example.android.thepomoappandroid.ui.dialog.AddGroupDialog;
 import com.example.android.thepomoappandroid.ui.dialog.AddSessionDialog;
@@ -34,6 +37,7 @@ import com.melnykov.fab.FloatingActionButton;
 import java.util.GregorianCalendar;
 import java.util.List;
 
+import io.realm.RealmResults;
 import retrofit.Callback;
 import retrofit.ResponseCallback;
 import retrofit.RetrofitError;
@@ -44,6 +48,7 @@ import retrofit.client.Response;
  */
 public class GroupActivity extends AppCompatActivity implements
         View.OnClickListener,
+        AdapterView.OnItemClickListener,
         AddGroupDialog.OnActionGroupFromDialog,
         AddSessionDialog.OnActionFromSessionDialog {
 
@@ -56,7 +61,7 @@ public class GroupActivity extends AppCompatActivity implements
     private SessionAdapter sessionAdapter;
 
     private Toolbar toolbar;
-    private RecyclerView recyclerView;
+    private ListView listView;
     private FloatingActionButton fab;
     private CircleView circleView;
 
@@ -68,7 +73,7 @@ public class GroupActivity extends AppCompatActivity implements
 
         @Override
         public void failure(RetrofitError error) {
-
+            showError();
         }
     };
 
@@ -80,16 +85,20 @@ public class GroupActivity extends AppCompatActivity implements
         Intent intent = getIntent();
         getArguments(intent);
         setListeners();
-        setUpRecyclerView();
+//        setUpRecyclerView();
         setUpToolbar();
         pomodoro = new Pomodoro(circleView);
 
-        refreshActivity();
+        if (Utils.isNetworkAvailable(this)) {
+            refreshActivity();
+        } else {
+            updateViewsFromLocalDB();
+        }
     }
 
     private void findViews() {
         toolbar = (Toolbar) findViewById(R.id.toolbar);
-        recyclerView = (RecyclerView) findViewById(R.id.listSession);
+        listView = (ListView) findViewById(R.id.listSession);
         fab = (FloatingActionButton) findViewById(R.id.fab);
         circleView = (CircleView) findViewById(R.id.timer);
     }
@@ -102,15 +111,16 @@ public class GroupActivity extends AppCompatActivity implements
 
     private void setListeners() {
         fab.setOnClickListener(this);
+        listView.setOnItemClickListener(this);
     }
 
-    private void setUpRecyclerView() {
-        recyclerView.setHasFixedSize(true);
-        LinearLayoutManager llm = new LinearLayoutManager(this);
-        llm.setOrientation(LinearLayoutManager.VERTICAL);
-        recyclerView.setLayoutManager(llm);
-        fab.attachToRecyclerView(recyclerView);
-    }
+//    private void setUpRecyclerView() {
+//        listView.setHasFixedSize(true);
+//        LinearLayoutManager llm = new LinearLayoutManager(this);
+//        llm.setOrientation(LinearLayoutManager.VERTICAL);
+//        listView.setLayoutManager(llm);
+//        fab.attachToRecyclerView(listView);
+//    }
 
     private void setUpToolbar() {
         setSupportActionBar(toolbar);
@@ -140,11 +150,8 @@ public class GroupActivity extends AppCompatActivity implements
     }
 
     public void handleGetSessions(List<SessionDTO> sessionDTOs) {
-        sessionAdapter = new SessionAdapter(this, sessionDTOs);
-        sessionAdapter.setOnDeleteSessionCallback(onDeleteSessionCallback);
-        recyclerView.setAdapter(sessionAdapter);
-        fab.attachToRecyclerView(recyclerView);
-        refreshAlarms(sessionDTOs);
+        syncLocalData(sessionDTOs);
+        updateViewsFromLocalDB();
     }
 
     @Override
@@ -221,7 +228,25 @@ public class GroupActivity extends AppCompatActivity implements
         }
     }
 
-    private void refreshAlarms(List<SessionDTO> sessionDTOs) {
+    @Override
+    public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+        final Session session = sessionAdapter.getItem(i);
+        new AlertDialog.Builder(this)
+                .setMessage(this.getString(R.string.delete_session))
+                .setPositiveButton(R.string.delete, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        deleteSession(session.getId());
+                    }
+                })
+                .setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        // do nothing
+                    }
+                })
+                .show();
+    }
+
+    private void syncLocalData(List<SessionDTO> sessionDTOs) {
         DBHandler dbHandler = DBHandler.newInstance(this);
         for (SessionDTO sessionDTO : sessionDTOs) {
             if (dbHandler.getSession(sessionDTO.getId()) == null) {
@@ -230,6 +255,17 @@ public class GroupActivity extends AppCompatActivity implements
                 AlarmUtils.initAlarm(getApplicationContext(), startDate, R.string.notification_start_title, R.string.notification_start_content);
             }
         }
+    }
+
+    private void updateViewsFromLocalDB() {
+        RealmResults<Session> sessionList = DBHandler.newInstance(this).getSessionsByGroup(groupDTO.getId());
+        sessionAdapter = new SessionAdapter(this, R.id.listSession, sessionList, true);
+        listView.setAdapter(sessionAdapter);
+        fab.attachToListView(listView);
+    }
+
+    private void deleteSession(int sessionId) {
+        SessionsService.getInstance().delete(Utils.getToken(this), sessionId, onDeleteSessionCallback);
     }
 
     private String formatSubtitle(GroupDTO groupDTO) {
@@ -243,5 +279,9 @@ public class GroupActivity extends AppCompatActivity implements
             ++i;
         }
         return subtitle;
+    }
+
+    private void showError() {
+        Toast.makeText(this, getString(R.string.error), Toast.LENGTH_SHORT).show();
     }
 }

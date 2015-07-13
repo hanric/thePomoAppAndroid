@@ -21,7 +21,6 @@ public class Pomodoro {
     public static final int LARGE_BREAK = 3;
     public static final int ENDED = 4;
 
-
     private CountDownTimer countDownTimer;
     private CircleView circleView;
     private String key;

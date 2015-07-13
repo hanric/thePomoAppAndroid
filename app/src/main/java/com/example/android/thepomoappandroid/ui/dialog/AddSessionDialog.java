@@ -14,13 +14,14 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.android.thepomoappandroid.R;
 import com.example.android.thepomoappandroid.Utils;
 import com.example.android.thepomoappandroid.api.dto.SessionDTO;
-import com.example.android.thepomoappandroid.api.services.BaseService;
 import com.example.android.thepomoappandroid.api.services.SessionsService;
 import com.example.android.thepomoappandroid.db.DBHandler;
+import com.example.android.thepomoappandroid.db.Session;
 import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
 import com.wdullaer.materialdatetimepicker.time.RadialPickerLayout;
 import com.wdullaer.materialdatetimepicker.time.TimePickerDialog;
@@ -29,6 +30,7 @@ import org.adw.library.widgets.discreteseekbar.DiscreteSeekBar;
 
 import java.util.Calendar;
 import java.util.GregorianCalendar;
+import java.util.List;
 import java.util.TimeZone;
 
 import retrofit.Callback;
@@ -49,6 +51,8 @@ public class AddSessionDialog extends DialogFragment
     protected DBHandler dbHandler;
 
     protected int groupId;
+
+    protected GregorianCalendar minimumDate;
 
     protected Toolbar toolbar;
     protected EditText name;
@@ -89,6 +93,7 @@ public class AddSessionDialog extends DialogFragment
         getArguments(getArguments());
         setupToolbar(R.string.toolbar_add_session);
         getDialog().getWindow().requestFeature(Window.FEATURE_NO_TITLE);
+        getMinimumDate();
         return view;
     }
 
@@ -136,7 +141,7 @@ public class AddSessionDialog extends DialogFragment
         if (id == toolbar.getChildAt(0).getId()) {
             dismiss();
         } else if (id == timeButton.getId()) {
-            handleTimePicking();
+            selectStartTime();
         }
     }
 
@@ -148,22 +153,53 @@ public class AddSessionDialog extends DialogFragment
         return false;
     }
 
-    private void handleTimePicking() {
-        final Calendar now = Calendar.getInstance();
+    private void getMinimumDate() {
+        List<Session> sessions = dbHandler.getSessionsByGroup(groupId);
+        minimumDate = new GregorianCalendar(); // minimumDate is now
+        for (Session session : sessions) {
+            GregorianCalendar sessionDate = Utils.formatStringDate(session.getEndTime());
+            if (sessionDate.after(minimumDate)) {
+                minimumDate = sessionDate;
+            }
+        }
+    }
+
+    private void selectStartTime() {
+        handleDatePicking();
+    }
+
+    private void handleDatePicking() {
         DatePickerDialog.newInstance(new DatePickerDialog.OnDateSetListener() {
             @Override
             public void onDateSet(DatePickerDialog datePickerDialog, int i, int i1, int i2) {
                 timePicked = new GregorianCalendar(i, i1, i2);
-                TimePickerDialog.newInstance(new TimePickerDialog.OnTimeSetListener() {
-                    @Override
-                    public void onTimeSet(RadialPickerLayout radialPickerLayout, int i, int i1) {
-                        timePicked.add(Calendar.HOUR, i);
-                        timePicked.add(Calendar.MINUTE, i1);
-                        timeText.setText(Utils.formatDate(timePicked));
-                    }
-                }, now.get(Calendar.HOUR), now.get(Calendar.MINUTE), false).show(getActivity().getFragmentManager(), "Timepickerdialog");
+                GregorianCalendar compareTime = new GregorianCalendar(minimumDate.get(Calendar.YEAR), minimumDate.get(Calendar.MONTH), minimumDate.get(Calendar.DAY_OF_MONTH));
+                if (timePicked.before(compareTime)) {
+                    String toastText = getString(R.string.popup_add_session_err_after_date, minimumDate.get(Calendar.YEAR), minimumDate.get(Calendar.MONTH), minimumDate.get(Calendar.DATE));
+                    Toast.makeText(getActivity(), toastText, Toast.LENGTH_LONG).show();
+                    selectStartTime();
+                } else {
+                    handleTimePicking();
+                }
             }
-        }, now.get(Calendar.YEAR), now.get(Calendar.MONTH), now.get(Calendar.DAY_OF_MONTH)).show(getActivity().getFragmentManager(), "Datepickerdialog");
+        }, minimumDate.get(Calendar.YEAR), minimumDate.get(Calendar.MONTH), minimumDate.get(Calendar.DAY_OF_MONTH)).show(getActivity().getFragmentManager(), "Datepickerdialog");
+    }
+
+    private void handleTimePicking() {
+        TimePickerDialog.newInstance(new TimePickerDialog.OnTimeSetListener() {
+            @Override
+            public void onTimeSet(RadialPickerLayout radialPickerLayout, int i, int i1) {
+                timePicked.add(Calendar.HOUR, i);
+                timePicked.add(Calendar.MINUTE, i1);
+                if (timePicked.before(minimumDate)) {
+                    String toastText = getString(R.string.popup_add_session_err_after_time, minimumDate.get(Calendar.HOUR), minimumDate.get(Calendar.MINUTE));
+                    Toast.makeText(getActivity(), toastText, Toast.LENGTH_LONG).show();
+                    handleTimePicking();
+                } else {
+                    timeText.setText(Utils.formatDate(timePicked));
+                }
+            }
+        }, minimumDate.get(Calendar.HOUR), minimumDate.get(Calendar.MINUTE), true).show(getActivity().getFragmentManager(), "Timepickerdialog");
     }
 
     protected void performSaveAction() {

@@ -131,7 +131,9 @@ public class DBHandler {
                 @Override
                 public void execute(Realm realm) {
                     Session session = getSession(id);
-                    session.removeFromRealm();
+                    if (session != null) {
+                        session.removeFromRealm();
+                    }
                 }
             });
         } catch (RealmException e) {
@@ -141,6 +143,12 @@ public class DBHandler {
 
     public RealmResults<Session> getSessions() {
         return realm.where(Session.class).findAll();
+    }
+
+    public RealmResults<Session> getSessionsByGroup(int groupId) {
+        return realm.where(Session.class)
+                .equalTo("groupId", groupId)
+                .findAll();
     }
 
 

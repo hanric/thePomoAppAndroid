@@ -23,6 +23,12 @@ public class SessionsService extends BaseService{
         super();
     }
 
+    public void findById(String token, int id, Callback<SessionDTO> callback) {
+        setAuthInterceptor(token);
+        SessionsInterface sessionsInterface = restAdapter.create(SessionsInterface.class);
+        sessionsInterface.findById(id, callback);
+    }
+
     public void create(String token, SessionDTO sessionDTO, Callback<SessionDTO> callback) {
         setAuthInterceptor(token);
         SessionsInterface sessionsInterface = restAdapter.create(SessionsInterface.class);

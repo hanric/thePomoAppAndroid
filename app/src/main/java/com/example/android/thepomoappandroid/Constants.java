@@ -34,6 +34,7 @@ public interface Constants {
     String GCM_DATA = "data";
     String GCM_SESSION_NEW = "session_new";
     String GCM_SESSION_UPDATED = "session_updated";
+    String GCM_SESSION_DELETED = "session_deleted";
     String GCM_GROUP_ADDED = "group_added";
 
 }
