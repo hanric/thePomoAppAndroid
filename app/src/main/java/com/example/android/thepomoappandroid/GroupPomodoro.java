@@ -87,7 +87,7 @@ public class GroupPomodoro extends Pomodoro {
                     " currentPomodoro: " + calculateResults.currentPomodoro +
                     " phaseNumber: " + calculateResults.phaseNumber +
                     " differenceInSeconds " + calculateResults.differenceInSeconds);
-            
+
             return -leftSeconds;
         }
         calculateResults.differenceInSeconds = leftSeconds;
