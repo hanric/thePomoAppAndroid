@@ -36,18 +36,6 @@ public class Session extends RealmObject {
         this.id = sessionDTO.getId();
     }
 
-//    public void fillSession(SessionDTO sessionDTO) {
-//        this.name = sessionDTO.getName();
-//        this.nPomos = sessionDTO.getNPomos();
-//        this.startTime = sessionDTO.getStartTime();
-//        this.endTime = sessionDTO.getEndTime();
-//        this.groupId = sessionDTO.getGroupId();
-//        this.settingId = sessionDTO.getSettingId();
-//        isStopped = sessionDTO.isIsStopped();
-//        isFinished = sessionDTO.isIsFinished();
-//        this.id = sessionDTO.getId();
-//    }
-
     /**
      * @return The name
      */

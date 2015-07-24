@@ -4,10 +4,14 @@ import android.content.Context;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListAdapter;
+import android.widget.Space;
 import android.widget.TextView;
 
 import com.example.android.thepomoappandroid.R;
+import com.example.android.thepomoappandroid.Utils;
 import com.example.android.thepomoappandroid.db.Session;
+
+import java.util.GregorianCalendar;
 
 import io.realm.RealmBaseAdapter;
 import io.realm.RealmResults;
@@ -32,7 +36,7 @@ public class SessionAdapter extends RealmBaseAdapter<Session> implements ListAda
 
     public View getView(int position, View convertView, ViewGroup parent) {
         ViewHolder holder;
-        if (convertView == null) {
+        if (convertView == null || convertView instanceof Space) {
             convertView = inflater.inflate(R.layout.item_session, parent, false);
 
             holder = new ViewHolder();
@@ -52,6 +56,12 @@ public class SessionAdapter extends RealmBaseAdapter<Session> implements ListAda
         holder.detail.setText(formatDetailText(session));
         holder.startTime.setVisibility(View.VISIBLE);
         holder.startTime.setText(session.getStartTime());
+
+        GregorianCalendar sessionEndTime = Utils.formatStringDate(session.getEndTime());
+        GregorianCalendar now = new GregorianCalendar();
+        if (sessionEndTime.before(now)) {
+            convertView = new Space(context);
+        }
         return convertView;
     }
 

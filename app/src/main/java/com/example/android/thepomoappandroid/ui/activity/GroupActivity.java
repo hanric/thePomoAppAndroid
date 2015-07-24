@@ -5,8 +5,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -15,6 +13,7 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.example.android.thepomoappandroid.GroupPomodoro;
 import com.example.android.thepomoappandroid.Pomodoro;
 import com.example.android.thepomoappandroid.R;
 import com.example.android.thepomoappandroid.Utils;
@@ -50,13 +49,14 @@ public class GroupActivity extends AppCompatActivity implements
         View.OnClickListener,
         AdapterView.OnItemClickListener,
         AddGroupDialog.OnActionGroupFromDialog,
-        AddSessionDialog.OnActionFromSessionDialog {
+        AddSessionDialog.OnActionFromSessionDialog,
+        Pomodoro.OnPomodoroFinished {
 
     public static final String EXTRA_GROUP = "extra.group";
 
     private GroupDTO groupDTO;
 
-    private Pomodoro pomodoro;
+    private GroupPomodoro pomodoro;
 
     private SessionAdapter sessionAdapter;
 
@@ -82,12 +82,11 @@ public class GroupActivity extends AppCompatActivity implements
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_group);
         findViews();
+        pomodoro = new GroupPomodoro(circleView);
         Intent intent = getIntent();
         getArguments(intent);
         setListeners();
-//        setUpRecyclerView();
         setUpToolbar();
-        pomodoro = new Pomodoro(circleView);
 
         if (Utils.isNetworkAvailable(this)) {
             refreshActivity();
@@ -112,15 +111,8 @@ public class GroupActivity extends AppCompatActivity implements
     private void setListeners() {
         fab.setOnClickListener(this);
         listView.setOnItemClickListener(this);
+        pomodoro.setOnPomodoroFinished(this);
     }
-
-//    private void setUpRecyclerView() {
-//        listView.setHasFixedSize(true);
-//        LinearLayoutManager llm = new LinearLayoutManager(this);
-//        llm.setOrientation(LinearLayoutManager.VERTICAL);
-//        listView.setLayoutManager(llm);
-//        fab.attachToRecyclerView(listView);
-//    }
 
     private void setUpToolbar() {
         setSupportActionBar(toolbar);
@@ -262,6 +254,39 @@ public class GroupActivity extends AppCompatActivity implements
         sessionAdapter = new SessionAdapter(this, R.id.listSession, sessionList, true);
         listView.setAdapter(sessionAdapter);
         fab.attachToListView(listView);
+        runFirstSession();
+    }
+
+    private void runFirstSession() {
+        if (!sessionAdapter.isEmpty()) {
+            boolean found = false;
+            Session session = new Session();
+            GregorianCalendar now = new GregorianCalendar();
+            for (int i = 0; i < sessionAdapter.getCount() && !found; ++i) {
+                if (Utils.formatStringDate(sessionAdapter.getItem(i).getStartTime()).before(now) && Utils.formatStringDate(sessionAdapter.getItem(i).getEndTime()).after(now)) {
+                    session = sessionAdapter.getItem(i);
+                    found = true;
+                }
+            }
+            if (found) {
+                GregorianCalendar workTime = new GregorianCalendar(0, 0, 0, 0, 25, 0);
+                GregorianCalendar breakTime = new GregorianCalendar(0, 0, 0, 0, 5, 0);
+                GregorianCalendar largeBreakTime = new GregorianCalendar(0, 0, 0, 0, 15, 0);
+                GregorianCalendar startDate = Utils.formatStringDate(session.getStartTime());
+                pomodoro.setSession(session.getName(), workTime, breakTime, largeBreakTime, session.getNPomos(), startDate); // it already starts the session
+            }
+        }
+    }
+
+    @Override
+    public void phaseEnded(String key, int nextPhase) {
+        Toast.makeText(this, "phaseEnded", Toast.LENGTH_SHORT).show();
+        // TODO update state to change colors of the session item
+    }
+
+    @Override
+    public void sessionEnded(String key) {
+        refreshActivity();
     }
 
     private void deleteSession(int sessionId) {

@@ -144,7 +144,6 @@ public class AloneFragment extends Fragment implements
 
     @Override
     public void phaseEnded(String key, int nextPhase) {
-        // TODO update the listView color or whatever
         Toast.makeText(getActivity(), "phaseEnded", Toast.LENGTH_SHORT).show();
         AloneSession aloneSession = dbHandler.getAloneSession(key);
         // If the nextPhase is not WORK, that means that the WORK phase just happened

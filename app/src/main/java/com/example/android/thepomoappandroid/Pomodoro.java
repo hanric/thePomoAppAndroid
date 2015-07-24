@@ -21,19 +21,19 @@ public class Pomodoro {
     public static final int LARGE_BREAK = 3;
     public static final int ENDED = 4;
 
-    private CountDownTimer countDownTimer;
-    private CircleView circleView;
-    private String key;
+    protected CountDownTimer countDownTimer;
+    protected CircleView circleView;
+    protected String key;
 
-    private GregorianCalendar workTime;
-    private GregorianCalendar breakTime;
-    private GregorianCalendar largeBreakTime;
-    private GregorianCalendar startDate;
-    private int numberOfPomodoros;
+    protected GregorianCalendar workTime;
+    protected GregorianCalendar breakTime;
+    protected GregorianCalendar largeBreakTime;
+    protected GregorianCalendar startDate;
+    protected int numberOfPomodoros;
 
-    private int currentPomodoro;
-    private int currentPhase;
-    private boolean isRunning;
+    protected int currentPomodoro;
+    protected int currentPhase;
+    protected boolean isRunning;
 
     private OnPomodoroFinished onPomodoroFinished;
 
@@ -84,6 +84,7 @@ public class Pomodoro {
     }
 
     /**
+     * setSession
      * startSession -> startPhase -> betweenPhase -> finishSession
      */
 
@@ -96,7 +97,7 @@ public class Pomodoro {
         startPhase();
     }
 
-    private void startPhase() {
+    protected void startPhase() {
         Log.v(CLASS_TAG, "startPhase");
         int time;
         switch (currentPhase) {
@@ -131,7 +132,7 @@ public class Pomodoro {
         }.start();
     }
 
-    private void betweenPhase() {
+    protected void betweenPhase() {
         Log.v(CLASS_TAG, "betweenPhase");
         if (currentPomodoro == numberOfPomodoros && currentPhase == WORK) {
             finishSession();
@@ -151,7 +152,7 @@ public class Pomodoro {
         }
     }
 
-    private void finishSession() {
+    protected void finishSession() {
         Log.v(CLASS_TAG, "finishSession");
         isRunning = false;
         circleView.setStrokeColor(circleView.getContext().getResources().getColor(R.color.colorPrimary));
@@ -159,7 +160,7 @@ public class Pomodoro {
         onPomodoroFinished.sessionEnded(key);
     }
 
-    private String formatTime(long millisUntilFinished) {
+    protected String formatTime(long millisUntilFinished) {
         long minutes = millisUntilFinished / (60 * 1000);
         long seconds = (millisUntilFinished - (minutes * 60 * 1000))/1000;
         String formatted = Long.toString(minutes) + ":";

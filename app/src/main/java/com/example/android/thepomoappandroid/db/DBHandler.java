@@ -2,7 +2,11 @@ package com.example.android.thepomoappandroid.db;
 
 import android.content.Context;
 
+import com.example.android.thepomoappandroid.Utils;
 import com.example.android.thepomoappandroid.api.dto.SessionDTO;
+
+import java.util.Calendar;
+import java.util.GregorianCalendar;
 
 import io.realm.Realm;
 import io.realm.RealmQuery;
