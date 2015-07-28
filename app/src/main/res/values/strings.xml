@@ -22,6 +22,8 @@
     <string name="toolbar_edit_session">Edit Session</string>
     <string name="toolbar_add_group">Create Group</string>
     <string name="toolbar_edit_group">Edit Group</string>
+    <string name="toolbar_add_setting">Add Setting</string>
+    <string name="toolbar_edit_setting">Edit Setting</string>
 
     <!-- Notifications -->
     <string name="notification_base_title">Something changed!</string>
@@ -74,6 +76,13 @@
 
     <!-- popup add members -->
     <string name="searchHint">Search username or email</string>
+
+    <!-- popup add setting -->
+    <string name="popup_add_setting_name">Name of the setting</string>
+    <string name="popup_add_session_work">Work minutes:</string>
+    <string name="popup_add_session_rest">Rest minutes:</string>
+    <string name="popup_add_session_large_rest">Large rest minutes:</string>
+
 
     <!-- Notifications -->
     <string name="session_new_title">Group %1$s</string>

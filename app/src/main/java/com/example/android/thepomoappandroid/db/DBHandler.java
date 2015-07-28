@@ -2,11 +2,10 @@ package com.example.android.thepomoappandroid.db;
 
 import android.content.Context;
 
-import com.example.android.thepomoappandroid.Utils;
 import com.example.android.thepomoappandroid.api.dto.SessionDTO;
+import com.example.android.thepomoappandroid.api.dto.SettingDTO;
 
-import java.util.Calendar;
-import java.util.GregorianCalendar;
+import java.util.UUID;
 
 import io.realm.Realm;
 import io.realm.RealmQuery;
@@ -155,5 +154,57 @@ public class DBHandler {
                 .findAll();
     }
 
+    // Setting
+
+    public void createSetting(final SettingDTO settingDTO) throws RealmException {
+        try {
+            realm.executeTransaction(new Realm.Transaction() {
+                @Override
+                public void execute(Realm realm) {
+                    Setting setting = realm.createObject(Setting.class);
+                    setting.setUuid(UUID.randomUUID().toString());
+                    setting.setId(settingDTO.getId());
+                    setting.setName(settingDTO.getName());
+                    setting.setWorkTime(settingDTO.getWorkTime());
+                    setting.setRestTime(settingDTO.getRestTime());
+                    setting.setLargeRestTime(settingDTO.getLargeRestTime());
+                    setting.setPersonId(settingDTO.getPersonId());
+                }
+            });
+        } catch (RealmException e) {
+            throw e;
+        }
+
+    }
+
+    public void createSetting(final String name, final int work, final int rest, final int largeRest) throws RealmException {
+        try {
+            realm.executeTransaction(new Realm.Transaction() {
+                @Override
+                public void execute(Realm realm) {
+                    Setting setting = realm.createObject(Setting.class);
+                    setting.setUuid(UUID.randomUUID().toString());
+                    setting.setId(-1);
+                    setting.setName(name);
+                    setting.setWorkTime(work);
+                    setting.setRestTime(rest);
+                    setting.setLargeRestTime(largeRest);
+                }
+            });
+        } catch (RealmException e) {
+            throw e;
+        }
+
+    }
+
+    public Setting getSetting(int id) {
+        RealmQuery<Setting> query = realm.where(Setting.class);
+        query.equalTo("id", id);
+        return query.findFirst();
+    }
+
+    public RealmResults<Setting> getSettings() {
+        return realm.where(Setting.class).findAll();
+    }
 
 }

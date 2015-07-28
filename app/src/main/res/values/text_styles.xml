@@ -46,4 +46,16 @@
     <style name="members_popup_admin" parent="std_Gray">
         <item name="android:textColor">@color/colorPrimary</item>
     </style>
+
+    <!-- Prefs -->
+    <style name="pref_name" parent="Base.TextAppearance.AppCompat">
+        <item name="android:textSize">@dimen/medium</item>
+        <item name="android:textColor">@color/black</item>
+    </style>
+
+    <style name="pref_time" parent="Base.TextAppearance.AppCompat">
+        <item name="android:textSize">@dimen/bigger</item>
+        <item name="android:textColor">@color/white</item>
+    </style>
+
 </resources>

@@ -18,6 +18,15 @@ public class SettingDTO {
     @Expose
     private int personId;
 
+    public SettingDTO(String name, int workTime, int restTime, int largeRestTime, int personId) {
+        this.name = name;
+        this.workTime = workTime;
+        this.restTime = restTime;
+        this.largeRestTime = largeRestTime;
+        this.personId = personId;
+        this.id = 0;
+    }
+
     /**
      * @return The name
      */

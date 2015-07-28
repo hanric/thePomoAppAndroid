@@ -38,4 +38,7 @@
     <dimen name="popupAddGroup_padding">16dp</dimen>
     <dimen name="popupAddGroup_drawablePadding">20dp</dimen>
 
+    <!-- prefs -->
+    <dimen name="pref_padding">10dp</dimen>
+
 </resources>

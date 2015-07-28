@@ -125,6 +125,9 @@ public class LoginDialog extends DialogFragment implements
 
             @Override
             public void failure(RetrofitError error) {
+                if (progressDialog != null) {
+                    progressDialog.dismiss();
+                }
                 Toast.makeText(getActivity(), "Incorrect user or password", Toast.LENGTH_SHORT).show();
             }
         });
@@ -133,7 +136,9 @@ public class LoginDialog extends DialogFragment implements
     public void handleLoginSuccess(LoginResponse loginResponse) {
         SharedPreferences prefs = Utils.getPrefs(getActivity());
         prefs.edit().putString(Constants.PREFS_EMAIL, emailText).apply();
-        if (progressDialog != null) progressDialog.dismiss();
+        if (progressDialog != null) {
+            progressDialog.dismiss();
+        }
         ((MainActivity) getActivity()).onLoginFromDialog(loginResponse);
         if (Utils.checkPlayServices(getActivity())) {
             Utils.updateRegistration(getActivity());

@@ -7,6 +7,7 @@ import retrofit.ResponseCallback;
 import retrofit.http.Body;
 import retrofit.http.DELETE;
 import retrofit.http.GET;
+import retrofit.http.POST;
 import retrofit.http.PUT;
 import retrofit.http.Path;
 
@@ -15,7 +16,7 @@ import retrofit.http.Path;
  */
 public interface SettingsInterface {
 
-    @GET("/Settings")
+    @POST("/Settings")
     void create(@Body SettingDTO settingDTO, Callback<SettingDTO> callback);
 
     @GET("/Settings/{id}")

@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="@dimen/pref_padding">
+
+    <TextView
+        android:id="@+id/prefName"
+        style="@style/pref_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignBaseline="@+id/prefLargeRest"
+        android:text="Pref 1" />
+
+    <TextView
+        android:id="@+id/prefLargeRest"
+        style="@style/pref_time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/sb_num_marginRight"
+        android:layout_marginRight="@dimen/sb_num_marginRight"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:background="@drawable/pref_background_large_break"
+        android:gravity="center"
+        android:text="15'" />
+
+    <TextView
+        android:id="@+id/prefRest"
+        style="@style/pref_time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/sb_num_marginRight"
+        android:layout_marginRight="@dimen/sb_num_marginRight"
+        android:layout_toLeftOf="@+id/prefLargeRest"
+        android:background="@drawable/pref_background_break"
+        android:gravity="center"
+        android:text="5'" />
+
+    <TextView
+        android:id="@+id/prefWork"
+        style="@style/pref_time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/sb_num_marginRight"
+        android:layout_marginRight="@dimen/sb_num_marginRight"
+        android:layout_toLeftOf="@+id/prefRest"
+        android:background="@drawable/pref_background_work"
+        android:gravity="center"
+        android:text="25'" />
+
+
+</RelativeLayout>

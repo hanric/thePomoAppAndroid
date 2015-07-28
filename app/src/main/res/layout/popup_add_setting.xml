@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:orientation="vertical">
+
+    <include
+        android:id="@+id/toolbar"
+        layout="@layout/toolbar" />
+
+    <!-- Trick to add shadow to the toolbar in pre-v21 versions -->
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <!-- **** Place Your Content Here **** -->
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <EditText
+                android:id="@+id/popupAddSetting_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:drawableLeft="@drawable/ic_message_reply_black_18dp"
+                android:drawablePadding="@dimen/popupAddGroup_drawablePadding"
+                android:drawableStart="@drawable/ic_message_reply_black_18dp"
+                android:hint="@string/popup_add_setting_name"
+                android:padding="@dimen/popupAddGroup_padding" />
+
+            <LinearLayout
+                android:id="@+id/popupAddSetting_workLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/popupAddSetting_name"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:padding="@dimen/popupAddGroup_drawablePadding">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/popup_add_session_work" />
+
+                <org.adw.library.widgets.discreteseekbar.DiscreteSeekBar
+                    android:id="@+id/popupAddSetting_work"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:dsb_indicatorColor="@color/orange"
+                    app:dsb_max="60"
+                    app:dsb_min="1"
+                    app:dsb_progressColor="@color/colorPrimary"
+                    app:dsb_trackColor="@color/colorPrimaryDark" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/popupAddSetting_restLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/popupAddSetting_workLayout"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:padding="@dimen/popupAddGroup_drawablePadding">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/popup_add_session_rest" />
+
+                <org.adw.library.widgets.discreteseekbar.DiscreteSeekBar
+                    android:id="@+id/popupAddSetting_rest"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:dsb_indicatorColor="@color/orange"
+                    app:dsb_max="30"
+                    app:dsb_min="1"
+                    app:dsb_progressColor="@color/colorPrimary"
+                    app:dsb_trackColor="@color/colorPrimaryDark" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/popupAddSetting_largeRestLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/popupAddSetting_restLayout"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:padding="@dimen/popupAddGroup_drawablePadding">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/popup_add_session_large_rest" />
+
+                <org.adw.library.widgets.discreteseekbar.DiscreteSeekBar
+                    android:id="@+id/popupAddSetting_largeRest"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:dsb_indicatorColor="@color/orange"
+                    app:dsb_max="60"
+                    app:dsb_min="1"
+                    app:dsb_progressColor="@color/colorPrimary"
+                    app:dsb_trackColor="@color/colorPrimaryDark" />
+            </LinearLayout>
+
+        </RelativeLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="5dp"
+            android:background="@drawable/toolbar_dropshadow" />
+    </FrameLayout>
+</LinearLayout>

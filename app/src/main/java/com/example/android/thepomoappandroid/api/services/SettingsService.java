@@ -22,8 +22,8 @@ public class SettingsService extends BaseService {
 
     public void create(String token, SettingDTO settingDTO, Callback<SettingDTO> callback) {
         setAuthInterceptor(token);
-        SettingsInterface sessionsInterface = restAdapter.create(SettingsInterface.class);
-        sessionsInterface.create(settingDTO, callback);
+        SettingsInterface settingsInterface = restAdapter.create(SettingsInterface.class);
+        settingsInterface.create(settingDTO, callback);
     }
 
     public void findById(String token, int id, Callback<SettingDTO> callback) {
