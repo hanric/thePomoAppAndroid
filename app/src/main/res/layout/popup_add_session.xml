@@ -80,6 +80,26 @@
                     android:text="@string/popup_add_session_timeNotSelected" />
             </LinearLayout>
 
+            <LinearLayout
+                android:id="@+id/popupAddSession_settingLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/popupAddSession_timeLayout"
+                android:orientation="vertical"
+                android:gravity="center_vertical"
+                android:padding="@dimen/popupAddGroup_drawablePadding">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/popup_add_session_setting_info" />
+
+                <Spinner
+                    android:id="@+id/popupAddSession_settingSpinner"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+            </LinearLayout>
+
         </RelativeLayout>
 
         <View

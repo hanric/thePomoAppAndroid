@@ -21,8 +21,10 @@ import com.example.android.thepomoappandroid.alarm.AlarmUtils;
 import com.example.android.thepomoappandroid.api.dto.GroupDTO;
 import com.example.android.thepomoappandroid.api.dto.PersonDTO;
 import com.example.android.thepomoappandroid.api.dto.SessionDTO;
+import com.example.android.thepomoappandroid.api.dto.SettingDTO;
 import com.example.android.thepomoappandroid.api.services.GroupsService;
 import com.example.android.thepomoappandroid.api.services.SessionsService;
+import com.example.android.thepomoappandroid.api.services.SettingsService;
 import com.example.android.thepomoappandroid.db.DBHandler;
 import com.example.android.thepomoappandroid.db.Session;
 import com.example.android.thepomoappandroid.ui.adapter.SessionAdapter;
@@ -269,11 +271,22 @@ public class GroupActivity extends AppCompatActivity implements
                 }
             }
             if (found) {
-                GregorianCalendar workTime = new GregorianCalendar(0, 0, 0, 0, 25, 0);
-                GregorianCalendar breakTime = new GregorianCalendar(0, 0, 0, 0, 5, 0);
-                GregorianCalendar largeBreakTime = new GregorianCalendar(0, 0, 0, 0, 15, 0);
-                GregorianCalendar startDate = Utils.formatStringDate(session.getStartTime());
-                pomodoro.setSession(session.getName(), workTime, breakTime, largeBreakTime, session.getNPomos(), startDate); // it already starts the session
+                final Session pomodoroSession = session;
+                SettingsService.getInstance().findById(Utils.getToken(this), session.getSettingId(), new Callback<SettingDTO>() {
+                    @Override
+                    public void success(SettingDTO settingDTO, Response response) {
+                        GregorianCalendar workTime = new GregorianCalendar(0, 0, 0, 0, settingDTO.getWorkTime(), 0);
+                        GregorianCalendar breakTime = new GregorianCalendar(0, 0, 0, 0, settingDTO.getRestTime(), 0);
+                        GregorianCalendar largeBreakTime = new GregorianCalendar(0, 0, 0, 0, settingDTO.getLargeRestTime(), 0);
+                        GregorianCalendar startDate = Utils.formatStringDate(pomodoroSession.getStartTime());
+                        pomodoro.setSession(pomodoroSession.getName(), workTime, breakTime, largeBreakTime, pomodoroSession.getNPomos(), startDate); // it already starts the session
+                    }
+
+                    @Override
+                    public void failure(RetrofitError error) {
+                        showError();
+                    }
+                });
             }
         }
     }
@@ -307,6 +320,6 @@ public class GroupActivity extends AppCompatActivity implements
     }
 
     private void showError() {
-        Toast.makeText(this, getString(R.string.error), Toast.LENGTH_SHORT).show();
+        Utils.showError(this);
     }
 }

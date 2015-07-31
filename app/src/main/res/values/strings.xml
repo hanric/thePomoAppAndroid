@@ -47,7 +47,8 @@
 
     <!-- popup Add session -->
     <string name="popup_add_session_name">Name of the session</string>
-    <string name="popup_add_session_number_info">Sessions:</string>
+    <string name="popup_add_session_number_info">Pomodoros:</string>
+    <string name="popup_add_session_setting_info">Setting:</string>
     <string name="popup_add_session_number">Name</string>
     <string name="popup_add_session_timeButton">Select start time</string>
     <string name="popup_add_session_timeNotSelected">Start time not selected</string>

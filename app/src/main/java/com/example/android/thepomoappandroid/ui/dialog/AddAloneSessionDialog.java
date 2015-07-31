@@ -12,24 +12,32 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.example.android.thepomoappandroid.Pomodoro;
 import com.example.android.thepomoappandroid.R;
 import com.example.android.thepomoappandroid.db.DBHandler;
+import com.example.android.thepomoappandroid.db.Setting;
+import com.example.android.thepomoappandroid.ui.adapter.SettingAdapter;
 
+import org.adw.library.widgets.discreteseekbar.DiscreteSeekBar;
+
+import io.realm.RealmResults;
 import io.realm.exceptions.RealmException;
 
 /**
  * Created by Enric on 19/04/2015.
  */
-public class  AddAloneSessionDialog extends DialogFragment implements Toolbar.OnMenuItemClickListener, View.OnClickListener {
+public class AddAloneSessionDialog extends DialogFragment implements Toolbar.OnMenuItemClickListener, View.OnClickListener {
 
     protected DBHandler dbHandler;
+    protected SettingAdapter settingAdapter;
 
     protected Toolbar toolbar;
     protected EditText name;
-    protected EditText num;
+    protected DiscreteSeekBar num;
+    protected Spinner settingsSpinner;
 
     public static AddAloneSessionDialog newInstance() {
         AddAloneSessionDialog dialogFragment = new AddAloneSessionDialog();
@@ -51,6 +59,7 @@ public class  AddAloneSessionDialog extends DialogFragment implements Toolbar.On
         findViews(view);
         setListeners();
         setupToolbar(R.string.toolbar_add_session);
+        initAdapter();
         getDialog().getWindow().requestFeature(Window.FEATURE_NO_TITLE);
         return view;
     }
@@ -66,7 +75,8 @@ public class  AddAloneSessionDialog extends DialogFragment implements Toolbar.On
     protected void findViews(View view) {
         toolbar = (Toolbar) view.findViewById(R.id.toolbar);
         name = (EditText) view.findViewById(R.id.popupAddAloneSession_name);
-        num = (EditText) view.findViewById(R.id.popupAddAloneSession_num);
+        num = (DiscreteSeekBar) view.findViewById(R.id.popupAddAloneSession_num);
+        settingsSpinner = (Spinner) view.findViewById(R.id.popupAddAloneSession_settingSpinner);
     }
 
     protected void setListeners() {
@@ -80,6 +90,12 @@ public class  AddAloneSessionDialog extends DialogFragment implements Toolbar.On
         toolbar.setTitle(titleResId);
         // Inflate a menu to be displayed in the toolbar
         toolbar.inflateMenu(R.menu.menu_save);
+    }
+
+    protected void initAdapter() {
+        RealmResults<Setting> results = DBHandler.newInstance(getActivity()).getSettings();
+        settingAdapter = new SettingAdapter(getActivity(), R.id.listView, results, true);
+        settingsSpinner.setAdapter(settingAdapter);
     }
 
     @Override
@@ -100,10 +116,12 @@ public class  AddAloneSessionDialog extends DialogFragment implements Toolbar.On
 
     protected void performSaveAction() {
         try {
-            dbHandler.createAloneSession(name.getText().toString(), Integer.parseInt(num.getText().toString()), Pomodoro.TO_START);
+            String sessionName = name.getText().toString();
+            String settingUuid = ((Setting) settingsSpinner.getSelectedItem()).getUuid();
+            dbHandler.createAloneSession(sessionName, num.getProgress(), Pomodoro.TO_START, settingUuid);
             dismiss();
         } catch (RealmException e) {
-            Toast.makeText(getActivity(), "TODO this name already exists", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), R.string.error, Toast.LENGTH_SHORT).show();
         }
     }
 }

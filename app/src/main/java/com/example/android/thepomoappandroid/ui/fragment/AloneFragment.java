@@ -16,6 +16,7 @@ import com.example.android.thepomoappandroid.Pomodoro;
 import com.example.android.thepomoappandroid.R;
 import com.example.android.thepomoappandroid.db.AloneSession;
 import com.example.android.thepomoappandroid.db.DBHandler;
+import com.example.android.thepomoappandroid.db.Setting;
 import com.example.android.thepomoappandroid.ui.adapter.ListAloneSessionAdapter;
 import com.example.android.thepomoappandroid.ui.dialog.AddAloneSessionDialog;
 import com.example.android.thepomoappandroid.ui.dialog.EditAloneSessionDialog;
@@ -133,9 +134,10 @@ public class AloneFragment extends Fragment implements
     private void startSession() {
         if (!adapter.isEmpty()) {
             AloneSession aloneSession = adapter.getItem(0);
-            GregorianCalendar workTime = new GregorianCalendar(0, 0, 0, 0, 1, 0);
-            GregorianCalendar breakTime = new GregorianCalendar(0, 0, 0, 0, 1, 0);
-            GregorianCalendar largeBreakTime = new GregorianCalendar(0, 0, 0, 0, 1, 0);
+            Setting setting = dbHandler.getSetting(aloneSession.getSettingUuid());
+            GregorianCalendar workTime = new GregorianCalendar(0, 0, 0, 0, setting.getWorkTime(), 0);
+            GregorianCalendar breakTime = new GregorianCalendar(0, 0, 0, 0, setting.getRestTime(), 0);
+            GregorianCalendar largeBreakTime = new GregorianCalendar(0, 0, 0, 0, setting.getLargeRestTime(), 0);
             pomodoro.setSession(aloneSession.getName(), workTime, breakTime, largeBreakTime, aloneSession.getNum(), null);
             dbHandler.updateAloneSession(aloneSession.getName(), aloneSession.getName(), aloneSession.getNum(), Pomodoro.WORK);
             pomodoro.startSession();

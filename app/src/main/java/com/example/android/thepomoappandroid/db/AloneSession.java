@@ -12,6 +12,7 @@ public class AloneSession extends RealmObject {
     private String name;
     private int num;
     private int state;
+    private String settingUuid;
 
     public int getNum() {
         return num;
@@ -35,5 +36,13 @@ public class AloneSession extends RealmObject {
 
     public void setState(int state) {
         this.state = state;
+    }
+
+    public String getSettingUuid() {
+        return settingUuid;
+    }
+
+    public void setSettingUuid(String settingUuid) {
+        this.settingUuid = settingUuid;
     }
 }

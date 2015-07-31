@@ -20,10 +20,14 @@ import android.widget.Toast;
 import com.example.android.thepomoappandroid.Constants;
 import com.example.android.thepomoappandroid.R;
 import com.example.android.thepomoappandroid.Utils;
+import com.example.android.thepomoappandroid.api.dto.SettingDTO;
 import com.example.android.thepomoappandroid.api.response.LoginResponse;
 import com.example.android.thepomoappandroid.api.services.PeopleService;
+import com.example.android.thepomoappandroid.db.DBHandler;
 import com.example.android.thepomoappandroid.ui.activity.MainActivity;
 import com.example.android.thepomoappandroid.ui.activity.RegisterActivity;
+
+import java.util.List;
 
 import retrofit.Callback;
 import retrofit.RetrofitError;
@@ -36,6 +40,8 @@ public class LoginDialog extends DialogFragment implements
         View.OnClickListener {
 
     public static final String CLASS_TAG = LoginDialog.class.getSimpleName();
+
+    private DBHandler dbHandler;
 
     private boolean shown = false;
 
@@ -66,7 +72,7 @@ public class LoginDialog extends DialogFragment implements
         findViews(view);
         setListeners();
         getDialog().getWindow().requestFeature(Window.FEATURE_NO_TITLE);
-
+        dbHandler = DBHandler.newInstance(getActivity());
         return view;
     }
 
@@ -136,14 +142,33 @@ public class LoginDialog extends DialogFragment implements
     public void handleLoginSuccess(LoginResponse loginResponse) {
         SharedPreferences prefs = Utils.getPrefs(getActivity());
         prefs.edit().putString(Constants.PREFS_EMAIL, emailText).apply();
-        if (progressDialog != null) {
-            progressDialog.dismiss();
-        }
         ((MainActivity) getActivity()).onLoginFromDialog(loginResponse);
         if (Utils.checkPlayServices(getActivity())) {
             Utils.updateRegistration(getActivity());
         } else {
             Log.i(CLASS_TAG, "No valid Google Play Services APK found.");
+        }
+        PeopleService.getInstance().getSettings(getActivity(), new Callback<List<SettingDTO>>() {
+            @Override
+            public void success(List<SettingDTO> settingDTOs, Response response) {
+                handleGetPrefsSuccess(settingDTOs);
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+                Utils.showError(getActivity());
+            }
+        });
+    }
+
+    public void handleGetPrefsSuccess(List<SettingDTO> settingDTOs) {
+        for (SettingDTO settingDTO : settingDTOs) {
+            if (dbHandler.getSetting(settingDTO.getId()) == null) {
+                dbHandler.createSetting(settingDTO);
+            }
+        }
+        if (progressDialog != null) {
+            progressDialog.dismiss();
         }
         dismiss();
     }

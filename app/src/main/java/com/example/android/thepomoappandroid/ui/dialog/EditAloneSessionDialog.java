@@ -49,13 +49,13 @@ public class EditAloneSessionDialog extends AddAloneSessionDialog {
     private void fillViews() {
         AloneSession aloneSession = dbHandler.getAloneSession(currentName);
         name.setText(aloneSession.getName());
-        num.setText(Integer.toString(aloneSession.getNum()));
+        num.setProgress(aloneSession.getNum());
     }
 
     @Override
     protected void performSaveAction() {
         AloneSession aloneSession = dbHandler.getAloneSession(currentName);
-        dbHandler.updateAloneSession(currentName, name.getText().toString(), Integer.parseInt(num.getText().toString()), aloneSession.getState());
+        dbHandler.updateAloneSession(currentName, name.getText().toString(), num.getProgress(), aloneSession.getState());
         dismiss();
     }
 }

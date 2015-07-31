@@ -13,6 +13,7 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -22,6 +23,8 @@ import com.example.android.thepomoappandroid.api.dto.SessionDTO;
 import com.example.android.thepomoappandroid.api.services.SessionsService;
 import com.example.android.thepomoappandroid.db.DBHandler;
 import com.example.android.thepomoappandroid.db.Session;
+import com.example.android.thepomoappandroid.db.Setting;
+import com.example.android.thepomoappandroid.ui.adapter.SettingAdapter;
 import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
 import com.wdullaer.materialdatetimepicker.time.RadialPickerLayout;
 import com.wdullaer.materialdatetimepicker.time.TimePickerDialog;
@@ -33,6 +36,7 @@ import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.TimeZone;
 
+import io.realm.RealmResults;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
@@ -49,6 +53,7 @@ public class AddSessionDialog extends DialogFragment
     protected SessionDTO sessionDTO;
 
     protected DBHandler dbHandler;
+    protected SettingAdapter settingAdapter;
 
     protected int groupId;
 
@@ -59,6 +64,7 @@ public class AddSessionDialog extends DialogFragment
     protected DiscreteSeekBar num;
     protected Button timeButton;
     protected TextView timeText;
+    protected Spinner settingsSpinner;
 
     private GregorianCalendar timePicked;
 
@@ -92,6 +98,7 @@ public class AddSessionDialog extends DialogFragment
         setListeners();
         getArguments(getArguments());
         setupToolbar(R.string.toolbar_add_session);
+        initSettingsAdapter();
         getDialog().getWindow().requestFeature(Window.FEATURE_NO_TITLE);
         getMinimumDate();
         return view;
@@ -111,6 +118,7 @@ public class AddSessionDialog extends DialogFragment
         num = (DiscreteSeekBar) view.findViewById(R.id.popupAddSession_num);
         timeButton = (Button) view.findViewById(R.id.popupAddSession_timeButton);
         timeText = (TextView) view.findViewById(R.id.popupAddSession_timeText);
+        settingsSpinner = (Spinner) view.findViewById(R.id.popupAddSession_settingSpinner);
     }
 
     protected void setListeners() {
@@ -129,6 +137,12 @@ public class AddSessionDialog extends DialogFragment
         toolbar.setTitle(titleResId);
         // Inflate a menu to be displayed in the toolbar
         toolbar.inflateMenu(R.menu.menu_save);
+    }
+
+    protected void initSettingsAdapter() {
+        RealmResults<Setting> results = DBHandler.newInstance(getActivity()).getOnlyOnlineSettings();
+        settingAdapter = new SettingAdapter(getActivity(), R.id.listView, results, true);
+        settingsSpinner.setAdapter(settingAdapter);
     }
 
     public void setOnActionFromSessionDialog(OnActionFromSessionDialog onActionFromSessionDialog) {
@@ -203,14 +217,15 @@ public class AddSessionDialog extends DialogFragment
     }
 
     protected void performSaveAction() {
-        if (!name.getText().toString().isEmpty() && num.getProgress() != 0 && timeText.getText() != getActivity().getResources().getString(R.string.popup_add_session_timeNotSelected)) {
-            String nameString = name.getText().toString();
-            int nPomos = num.getProgress();
+        String nameString = name.getText().toString();
+        int nPomos = num.getProgress();
+        Setting setting = ((Setting) settingsSpinner.getSelectedItem());
+        if (!nameString.isEmpty() && nPomos != 0 && timeText.getText() != getActivity().getResources().getString(R.string.popup_add_session_timeNotSelected)) {
             GregorianCalendar timePickedGmt = (GregorianCalendar) timePicked.clone();
             timePickedGmt.setTimeZone(TimeZone.getTimeZone("GMT"));
             String startTime = Utils.formatDate(timePickedGmt);
-            String endTime = Utils.getEndTime(timePickedGmt, nPomos, 25, 5, 15);
-            sessionDTO = new SessionDTO(nameString, nPomos, startTime, endTime, groupId, null);
+            String endTime = Utils.getEndTime(timePickedGmt, nPomos, setting.getWorkTime(), setting.getRestTime(), setting.getLargeRestTime());
+            sessionDTO = new SessionDTO(nameString, nPomos, startTime, endTime, groupId, setting.getId());
             SessionsService.getInstance().create(Utils.getToken(getActivity()), sessionDTO, new Callback<SessionDTO>() {
                 @Override
                 public void success(SessionDTO sessionDTO, Response response) {

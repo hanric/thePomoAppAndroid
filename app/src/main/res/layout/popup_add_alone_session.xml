@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white"
@@ -22,15 +23,58 @@
 
             <EditText
                 android:id="@+id/popupAddAloneSession_name"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="@string/popup_add_session_name" />
+                android:drawableLeft="@drawable/ic_message_reply_black_18dp"
+                android:drawablePadding="@dimen/popupAddGroup_drawablePadding"
+                android:drawableStart="@drawable/ic_message_reply_black_18dp"
+                android:hint="@string/popup_add_session_name"
+                android:padding="@dimen/popupAddGroup_padding" />
 
-            <EditText
-                android:id="@+id/popupAddAloneSession_num"
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:id="@+id/popupAddAloneSession_numLayout"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="TODONumber of Pomodoros" />
+                android:layout_below="@+id/popupAddSession_name"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:padding="@dimen/popupAddGroup_drawablePadding">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/popup_add_session_number_info" />
+
+                <org.adw.library.widgets.discreteseekbar.DiscreteSeekBar
+                    android:id="@+id/popupAddAloneSession_num"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:dsb_indicatorColor="@color/orange"
+                    app:dsb_max="10"
+                    app:dsb_min="1"
+                    app:dsb_progressColor="@color/colorPrimary"
+                    app:dsb_trackColor="@color/colorPrimaryDark" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/popupAddAloneSession_settingLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/popupAddSession_name"
+                android:orientation="vertical"
+                android:gravity="center_vertical"
+                android:padding="@dimen/popupAddGroup_drawablePadding">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/popup_add_session_setting_info" />
+
+                <Spinner
+                    android:id="@+id/popupAddAloneSession_settingSpinner"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+            </LinearLayout>
         </LinearLayout>
 
         <View

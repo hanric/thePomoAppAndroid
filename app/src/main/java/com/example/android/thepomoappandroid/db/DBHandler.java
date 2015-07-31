@@ -31,7 +31,7 @@ public class DBHandler {
         realm = Realm.getInstance(context);
     }
 
-    public void createAloneSession(final String name, final int num, final int state) throws RealmException {
+    public void createAloneSession(final String name, final int num, final int state, final String settingUuid) throws RealmException {
         realm.executeTransaction(new Realm.Transaction() {
             @Override
             public void execute(Realm realm) {
@@ -39,6 +39,7 @@ public class DBHandler {
                 aloneSession.setName(name);
                 aloneSession.setNum(num);
                 aloneSession.setState(state);
+                aloneSession.setSettingUuid(settingUuid);
             }
         });
     }
@@ -203,8 +204,19 @@ public class DBHandler {
         return query.findFirst();
     }
 
+    public Setting getSetting(String uuid) {
+        RealmQuery<Setting> query = realm.where(Setting.class);
+        query.equalTo("uuid", uuid);
+        return query.findFirst();
+    }
+
     public RealmResults<Setting> getSettings() {
         return realm.where(Setting.class).findAll();
     }
 
+    public RealmResults<Setting> getOnlyOnlineSettings() {
+        RealmQuery<Setting> query = realm.where(Setting.class);
+        query.notEqualTo("id", -1);
+        return query.findAll();
+    }
 }

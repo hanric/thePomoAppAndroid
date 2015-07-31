@@ -10,6 +10,7 @@ import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.style.StyleSpan;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
@@ -39,6 +40,10 @@ public class Utils {
     }
 
     private Utils() {
+    }
+
+    public static void showError(Context context) {
+        Toast.makeText(context, R.string.error, Toast.LENGTH_SHORT).show();
     }
 
     public static boolean isNetworkAvailable(Context context) {
