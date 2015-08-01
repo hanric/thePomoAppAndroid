@@ -41,14 +41,6 @@
             android:layout_marginBottom="@dimen/popupLogin_std_marginBottom"
             android:inputType="textPassword" />
 
-        <CheckBox
-            android:id="@+id/popup_login_remember"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="start"
-            android:layout_marginBottom="@dimen/popupLogin_std_marginBottom"
-            android:text="@string/popup_login_remember" />
-
         <Button
             android:id="@+id/popup_login_button"
             style="@style/baseButton"

@@ -4,6 +4,7 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
       <module fileurl="file://$PROJECT_DIR$/libs/discreteSeekBar/discreteSeekBar.iml" filepath="$PROJECT_DIR$/libs/discreteSeekBar/discreteSeekBar.iml" />
+      <module fileurl="file://$PROJECT_DIR$/libs/discreteSeekBar/discreteSeekBar.iml" filepath="$PROJECT_DIR$/libs/discreteSeekBar/discreteSeekBar.iml" />
       <module fileurl="file://$PROJECT_DIR$/thePomoAppAndroid.iml" filepath="$PROJECT_DIR$/thePomoAppAndroid.iml" />
     </modules>
   </component>

@@ -14,6 +14,7 @@ import com.astuetz.PagerSlidingTabStrip;
 import com.example.android.thepomoappandroid.R;
 import com.example.android.thepomoappandroid.Utils;
 import com.example.android.thepomoappandroid.api.response.LoginResponse;
+import com.example.android.thepomoappandroid.api.services.InstallationsService;
 import com.example.android.thepomoappandroid.api.services.PeopleService;
 import com.example.android.thepomoappandroid.ui.adapter.MainFragmentPageAdapter;
 import com.example.android.thepomoappandroid.ui.dialog.LoginDialog;
@@ -31,7 +32,7 @@ import retrofit.client.Response;
 
 
 public class MainActivity extends AppCompatActivity
-    implements LoginDialog.OnLoginFromDialog {
+        implements LoginDialog.OnLoginFromDialog {
 
     Toolbar toolbar;
     private ViewPager pager;
@@ -119,6 +120,20 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void handleLogout() {
+        InstallationsService.getInstance().delete(Utils.getInstallationId(this), new Callback<ResponseCallback>() {
+            @Override
+            public void success(ResponseCallback responseCallback, Response response) {
+                restart();
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+                handleFailure();
+            }
+        });
+    }
+
+    private void restart() {
         Utils.clearPreferences(this);
         if (!(pageAdapter.getItem(1) == null)) {
             ((GroupFragment) pageAdapter.getItem(1)).refreshFragment();
@@ -127,7 +142,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void handleFailure() {
-        Toast.makeText(this, "Something went wrong, retry later", Toast.LENGTH_LONG).show();
+        Utils.showError(this);
     }
 
     @Override

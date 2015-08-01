@@ -35,6 +35,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.melnykov.fab.FloatingActionButton;
 
+import java.util.ArrayList;
 import java.util.GregorianCalendar;
 import java.util.List;
 
@@ -55,6 +56,8 @@ public class GroupActivity extends AppCompatActivity implements
         Pomodoro.OnPomodoroFinished {
 
     public static final String EXTRA_GROUP = "extra.group";
+
+    private DBHandler dbHandler;
 
     private GroupDTO groupDTO;
 
@@ -84,17 +87,13 @@ public class GroupActivity extends AppCompatActivity implements
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_group);
         findViews();
+        dbHandler = DBHandler.newInstance(this);
         pomodoro = new GroupPomodoro(circleView);
         Intent intent = getIntent();
         getArguments(intent);
         setListeners();
         setUpToolbar();
-
-        if (Utils.isNetworkAvailable(this)) {
-            refreshActivity();
-        } else {
-            updateViewsFromLocalDB();
-        }
+        init();
     }
 
     private void findViews() {
@@ -127,6 +126,27 @@ public class GroupActivity extends AppCompatActivity implements
                 finish();
             }
         });
+    }
+
+    public void init() {
+        if (Utils.isNetworkAvailable(this)) {
+            refreshActivity();
+        } else {
+            updateViewsFromLocalDB();
+        }
+    }
+
+    private void clearOutdatedCachedSessions() {
+        RealmResults<Session> sessions = dbHandler.getSessionsByGroup(groupDTO.getId());
+        GregorianCalendar now = new GregorianCalendar();
+        ArrayList<Integer> listIdsToDelete = new ArrayList<>();
+        for (Session session : sessions) {
+            GregorianCalendar sessionEndDate = Utils.formatStringDate(session.getEndTime());
+            if (sessionEndDate.before(now)) {
+                listIdsToDelete.add(session.getId());
+            }
+        }
+        dbHandler.deleteBulkSessions(listIdsToDelete);
     }
 
     public void refreshActivity() {
@@ -252,6 +272,7 @@ public class GroupActivity extends AppCompatActivity implements
     }
 
     private void updateViewsFromLocalDB() {
+        clearOutdatedCachedSessions();
         RealmResults<Session> sessionList = DBHandler.newInstance(this).getSessionsByGroup(groupDTO.getId());
         sessionAdapter = new SessionAdapter(this, R.id.listSession, sessionList, true);
         listView.setAdapter(sessionAdapter);

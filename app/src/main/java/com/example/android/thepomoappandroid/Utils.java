@@ -82,6 +82,15 @@ public class Utils {
         prefs.edit().putString(Constants.PREFS_TOKEN, token).apply();
     }
 
+    public static int getInstallationId(Context context) {
+        return getPrefs(context).getInt(Constants.PREFS_INSTALLATION_ID, -1);
+    }
+
+    public static void setInstallationId(Context context, int id) {
+        SharedPreferences prefs = getPrefs(context);
+        prefs.edit().putInt(Constants.PREFS_INSTALLATION_ID, id).apply();
+    }
+
     public static boolean isLoggedIn(Context context) {
         String token = getToken(context);
         return (token != null && !token.isEmpty());
@@ -155,7 +164,7 @@ public class Utils {
         if (installation.getDeviceToken() != null) {
             // 5a. We have a valid GCM token, all we need to do now
             //     is to save the installation to the server
-            saveInstallation(installation);
+            saveInstallation(context, installation);
         } else {
             // 5b. We don't have a valid GCM token. Get one from GCM
             // and save the installation afterwards.
@@ -209,7 +218,7 @@ public class Utils {
 
             @Override
             protected void onPostExecute(final String msg) {
-                saveInstallation(installation);
+                saveInstallation(context, installation);
             }
         }.execute(null, null, null);
     }
@@ -219,12 +228,13 @@ public class Utils {
      *
      * @param installation
      */
-    private static void saveInstallation(final LocalInstallation installation) {
+    private static void saveInstallation(final Context context, final LocalInstallation installation) {
         installation.save(new VoidCallback() {
 
             @Override
             public void onSuccess() {
                 final Object id = installation.getId();
+                setInstallationId(context, (int) id);
                 final String msg = "Installation saved with id " + id;
                 Log.i("saveInstallation", msg);
             }

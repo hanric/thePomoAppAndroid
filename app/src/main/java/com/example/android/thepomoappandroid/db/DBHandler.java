@@ -5,6 +5,7 @@ import android.content.Context;
 import com.example.android.thepomoappandroid.api.dto.SessionDTO;
 import com.example.android.thepomoappandroid.api.dto.SettingDTO;
 
+import java.util.List;
 import java.util.UUID;
 
 import io.realm.Realm;
@@ -137,6 +138,24 @@ public class DBHandler {
                     Session session = getSession(id);
                     if (session != null) {
                         session.removeFromRealm();
+                    }
+                }
+            });
+        } catch (RealmException e) {
+            throw e;
+        }
+    }
+
+    public void deleteBulkSessions(final List<Integer> ids) {
+        try {
+            realm.executeTransaction(new Realm.Transaction() {
+                @Override
+                public void execute(Realm realm) {
+                    for (Integer id : ids) {
+                        Session session = getSession(id);
+                        if (session != null) {
+                            session.removeFromRealm();
+                        }
                     }
                 }
             });

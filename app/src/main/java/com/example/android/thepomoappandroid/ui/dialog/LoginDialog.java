@@ -13,7 +13,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.Button;
-import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -51,7 +50,6 @@ public class LoginDialog extends DialogFragment implements
 
     private EditText email;
     private EditText password;
-    private CheckBox remember;
     private Button login;
     private Button register;
 
@@ -79,7 +77,6 @@ public class LoginDialog extends DialogFragment implements
     private void findViews(View view) {
         email = (EditText) view.findViewById(R.id.popup_login_email);
         password = (EditText) view.findViewById(R.id.popup_login_password);
-        remember = (CheckBox) view.findViewById(R.id.popup_login_remember);
         login = (Button) view.findViewById(R.id.popup_login_button);
         register = (Button) view.findViewById(R.id.popup_login_register_button);
     }

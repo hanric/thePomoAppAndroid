@@ -22,7 +22,7 @@ android {
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
-    compile project (':discreteSeekBar')
+    compile 'org.adw.library:discrete-seekbar:1.0.0'
     compile 'com.android.support:appcompat-v7:22.2.0'
     compile 'com.github.pavlospt:circleview:1.2'
     compile 'com.melnykov:floatingactionbutton:1.3.0'
