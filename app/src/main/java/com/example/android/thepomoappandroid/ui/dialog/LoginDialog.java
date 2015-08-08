@@ -22,12 +22,16 @@ import com.example.android.thepomoappandroid.Utils;
 import com.example.android.thepomoappandroid.api.dto.SettingDTO;
 import com.example.android.thepomoappandroid.api.response.LoginResponse;
 import com.example.android.thepomoappandroid.api.services.PeopleService;
+import com.example.android.thepomoappandroid.api.services.SettingsService;
 import com.example.android.thepomoappandroid.db.DBHandler;
+import com.example.android.thepomoappandroid.db.Setting;
 import com.example.android.thepomoappandroid.ui.activity.MainActivity;
 import com.example.android.thepomoappandroid.ui.activity.RegisterActivity;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import io.realm.RealmResults;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
@@ -52,6 +56,7 @@ public class LoginDialog extends DialogFragment implements
     private EditText password;
     private Button login;
     private Button register;
+    private int numberOfOfflineSettings;
 
     public interface OnLoginFromDialog {
         void onLoginFromDialog(LoginResponse loginResponse);
@@ -115,6 +120,10 @@ public class LoginDialog extends DialogFragment implements
         return shown;
     }
 
+    /**
+     * login -> handleLoginSuccess -> postLocalSettingsWithoutUser -> handleSettingsPosted -> handleGetPrefsSuccess
+     */
+
     private void login() {
         progressDialog = ProgressDialog.show(getActivity(), "", getActivity().getResources().getString(R.string.loading));
         String emailField = email.getText().toString();
@@ -145,6 +154,47 @@ public class LoginDialog extends DialogFragment implements
         } else {
             Log.i(CLASS_TAG, "No valid Google Play Services APK found.");
         }
+        postLocalSettingsWithoutUser();
+    }
+
+    private void postLocalSettingsWithoutUser() {
+        // TODO for every setting in the local db with userId = -1, post
+        RealmResults<Setting> localSettings = dbHandler.getSettings();
+        List<Setting> settingsToPost = new ArrayList<>();
+        for (Setting setting : localSettings) {
+            if (setting.getId() == -1) {
+                settingsToPost.add(setting);
+            }
+        }
+        numberOfOfflineSettings = settingsToPost.size();
+        for (Setting setting : settingsToPost) {
+            SettingDTO settingDTO = new SettingDTO(setting.getName(), setting.getWorkTime(), setting.getRestTime(), setting.getLargeRestTime(), Utils.getUserId(getActivity()));
+            SettingsService.getInstance().create(Utils.getToken(getActivity()), settingDTO, new Callback<SettingDTO>() {
+                @Override
+                public void success(SettingDTO settingDTO, Response response) {
+                    --numberOfOfflineSettings;
+                    if (numberOfOfflineSettings == 0) {
+                        handleSettingsPosted();
+                    }
+                }
+
+                @Override
+                public void failure(RetrofitError error) {
+                    Utils.showError(getActivity());
+                    dismiss();
+                }
+            });
+        }
+        if (settingsToPost.size() == 0) {
+            handleSettingsPosted();
+        }
+    }
+
+    private void handleSettingsPosted() {
+        // delete all the local settings
+        dbHandler.deleteSettings();
+
+        // get all the settings from the server
         PeopleService.getInstance().getSettings(getActivity(), new Callback<List<SettingDTO>>() {
             @Override
             public void success(List<SettingDTO> settingDTOs, Response response) {
@@ -154,11 +204,13 @@ public class LoginDialog extends DialogFragment implements
             @Override
             public void failure(RetrofitError error) {
                 Utils.showError(getActivity());
+                dismiss();
             }
         });
     }
 
-    public void handleGetPrefsSuccess(List<SettingDTO> settingDTOs) {
+    private void handleGetPrefsSuccess(List<SettingDTO> settingDTOs) {
+
         for (SettingDTO settingDTO : settingDTOs) {
             if (dbHandler.getSetting(settingDTO.getId()) == null) {
                 dbHandler.createSetting(settingDTO);

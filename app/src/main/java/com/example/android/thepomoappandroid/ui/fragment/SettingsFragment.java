@@ -68,7 +68,7 @@ public class SettingsFragment extends Fragment
         listView.setOnItemLongClickListener(this);
     }
 
-    private void init() {
+    public void init() {
 
         fab.attachToListView(listView);
 
@@ -80,7 +80,6 @@ public class SettingsFragment extends Fragment
     }
 
     private void refreshFragment() {
-        // TODO get from server and save the new ones to local db
         PeopleService.getInstance().getSettings(getActivity(), new Callback<List<SettingDTO>>() {
             @Override
             public void success(List<SettingDTO> settingDTOs, Response response) {

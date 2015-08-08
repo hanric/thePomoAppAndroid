@@ -1,9 +1,10 @@
-<?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:gravity="center_horizontal"
     android:orientation="vertical"
-    android:gravity="center_horizontal">
+    tools:context=".RegisterActivity">
 
     <include
         android:id="@+id/toolbar"
@@ -20,46 +21,46 @@
             android:paddingBottom="@dimen/popupLogin_padding_topBottom"
             android:paddingLeft="@dimen/popupLogin_padding_leftRight"
             android:paddingRight="@dimen/popupLogin_padding_leftRight"
-            android:paddingTop="@dimen/popupLogin_padding_topBottom" >
+            android:paddingTop="@dimen/popupLogin_padding_topBottom">
 
             <EditText
                 android:id="@+id/register_name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="@dimen/popupLogin_std_marginBottom"
-                android:hint="@string/popup_login_hint_name"/>
+                android:hint="@string/popup_login_hint_name" />
 
             <EditText
                 android:id="@+id/register_email"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:inputType="textEmailAddress"
                 android:layout_marginBottom="@dimen/popupLogin_std_marginBottom"
-                android:hint="@string/popup_login_hint_email"/>
+                android:hint="@string/popup_login_hint_email"
+                android:inputType="textEmailAddress" />
 
             <EditText
                 android:id="@+id/register_password"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:inputType="textPassword"
                 android:layout_marginBottom="@dimen/popupLogin_std_marginBottom"
-                android:hint="@string/popup_login_hint_password"/>
+                android:hint="@string/popup_login_hint_password"
+                android:inputType="textPassword" />
 
             <EditText
                 android:id="@+id/register_confirmPassword"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:inputType="textPassword"
                 android:layout_marginBottom="@dimen/popupLogin_std_marginBottom"
-                android:hint="@string/popup_login_hint_repeatPassword"/>
+                android:hint="@string/popup_login_hint_repeatPassword"
+                android:inputType="textPassword" />
 
             <Button
                 android:id="@+id/register_button"
+                style="@style/baseButton"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                style="@style/baseButton"
                 android:layout_marginTop="@dimen/popupLogin_topText_marginBottom"
-                android:text="@string/popup_login_signup"/>
+                android:text="@string/popup_login_signup" />
         </LinearLayout>
 
         <View

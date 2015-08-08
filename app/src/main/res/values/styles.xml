@@ -13,6 +13,10 @@
              which is used to tint widgets -->
         <item name="colorAccent">@color/colorAccent</item>
 
+        <item name="colorControlNormal">@color/colorPrimary</item>
+        <item name="colorControlActivated">@color/colorPrimaryDark</item>
+        <item name="colorControlHighlight">@color/colorAccent</item>
+
         <item name="android:dialogTheme">@style/DialogTheme</item>
 
         <item name="android:actionMenuTextColor">@color/white</item>

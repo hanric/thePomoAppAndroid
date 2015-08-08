@@ -19,6 +19,8 @@ import com.melnykov.fab.FloatingActionButton;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import retrofit.Callback;
 import retrofit.ResponseCallback;
@@ -37,6 +39,7 @@ public class GroupFragment extends Fragment implements
     private GroupAdapter adapter;
     private RecyclerView recyclerView;
     private FloatingActionButton fab;
+    private Timer popupLoginTimer;
 
     private Callback<ResponseCallback> onDeleteGroupCallback = new Callback<ResponseCallback>() {
         @Override
@@ -110,6 +113,10 @@ public class GroupFragment extends Fragment implements
         super.setUserVisibleHint(isVisibleToUser);
         if (isVisibleToUser && getActivity() != null && !Utils.isLoggedIn(getActivity())) {
             loadDialog();
+        } else if (!isVisibleToUser) {
+            if (popupLoginTimer != null) {
+                popupLoginTimer.cancel();
+            }
         }
     }
 
@@ -117,7 +124,15 @@ public class GroupFragment extends Fragment implements
         if (loginDialog == null) {
             loginDialog = LoginDialog.newInstance();
         }
-        if (!loginDialog.isShown()) loginDialog.show(getFragmentManager(), "dialog");
+        if (!loginDialog.isShown()) {
+            popupLoginTimer = new Timer();
+            popupLoginTimer.schedule(new TimerTask() {
+                @Override
+                public void run() {
+                    loginDialog.show(getFragmentManager(), "dialog");
+                }
+            }, 400);
+        }
     }
 
     @Override

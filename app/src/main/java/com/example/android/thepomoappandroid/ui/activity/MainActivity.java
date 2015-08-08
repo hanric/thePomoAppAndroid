@@ -137,6 +137,7 @@ public class MainActivity extends AppCompatActivity
         Utils.clearPreferences(this);
         if (!(pageAdapter.getItem(1) == null)) {
             ((GroupFragment) pageAdapter.getItem(1)).refreshFragment();
+            ((SettingsFragment) pageAdapter.getItem(2)).init();
         }
         invalidateOptionsMenu();
     }

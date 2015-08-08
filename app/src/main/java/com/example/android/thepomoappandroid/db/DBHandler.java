@@ -238,4 +238,17 @@ public class DBHandler {
         query.notEqualTo("id", -1);
         return query.findAll();
     }
+
+    public void deleteSettings() {
+        try {
+            realm.executeTransaction(new Realm.Transaction() {
+                @Override
+                public void execute(Realm realm) {
+                    realm.clear(Setting.class);
+                }
+            });
+        } catch (RealmException e) {
+            throw e;
+        }
+    }
 }
