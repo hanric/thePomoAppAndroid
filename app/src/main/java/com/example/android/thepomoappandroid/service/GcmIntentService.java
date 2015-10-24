@@ -108,7 +108,6 @@ public class GcmIntentService extends IntentService {
             gcmMessage = extras.getString(Constants.GCM_MESSAGE);
             if (data.has("groupId")) {
                 groupId = data.getString("groupId");
-
             }
             if (data.has("groupName")) {
                 groupName = data.getString("groupName");

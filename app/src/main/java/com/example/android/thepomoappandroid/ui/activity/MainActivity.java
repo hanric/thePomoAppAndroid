@@ -49,9 +49,9 @@ public class MainActivity extends AppCompatActivity
         findViews();
 
         setSupportActionBar(toolbar);
-        getSupportActionBar().setTitle("Pomodoro for Groups");
+        getSupportActionBar().setTitle(getString(R.string.app_name));
 
-        pageAdapter = new MainFragmentPageAdapter(getFragmentManager(), getFragments());
+        pageAdapter = new MainFragmentPageAdapter(getFragmentManager(), getFragments(), this);
         pager.setAdapter(pageAdapter);
         tabs.setViewPager(pager);
         tabs.getWidth();
@@ -84,10 +84,14 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
+        MenuItem email = menu.findItem(R.id.email);
         MenuItem logout = menu.findItem(R.id.logout);
         if (Utils.isLoggedIn(this)) {
+            email.setVisible(true);
+            email.setTitle(Utils.getEmail(this));
             logout.setVisible(true);
         } else {
+            email.setVisible(false);
             logout.setVisible(false);
         }
         return true;
@@ -136,7 +140,7 @@ public class MainActivity extends AppCompatActivity
     private void restart() {
         Utils.clearPreferences(this);
         if (!(pageAdapter.getItem(1) == null)) {
-            ((GroupFragment) pageAdapter.getItem(1)).refreshFragment();
+            ((GroupFragment) pageAdapter.getItem(1)).init();
             ((SettingsFragment) pageAdapter.getItem(2)).init();
         }
         invalidateOptionsMenu();
@@ -154,7 +158,7 @@ public class MainActivity extends AppCompatActivity
 
         Toast.makeText(this, "Login success!", Toast.LENGTH_SHORT).show();
         if (!(pageAdapter.getItem(1) == null)) {
-            ((GroupFragment) pageAdapter.getItem(1)).refreshFragment();
+            ((GroupFragment) pageAdapter.getItem(1)).init();
         }
         invalidateOptionsMenu();
     }

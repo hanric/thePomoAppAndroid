@@ -60,13 +60,6 @@ public class GroupPomodoro extends Pomodoro {
     private long countPhase() {
         long leftSeconds = 0;
         int auxPhase = calculateResults.currentPhase;
-
-        Log.v(CLASS_TAG, "countPhase, " + "entering call: " + "currentPhase: " + calculateResults.currentPhase +
-                " currentPomodoro: " + calculateResults.currentPomodoro +
-                " phaseNumber: " + calculateResults.phaseNumber +
-                " differenceInSeconds " + calculateResults.differenceInSeconds);
-
-
         if (calculateResults.phaseNumber % 2 != 0) { // WORK
             int workSeconds = workTime.get(Calendar.MINUTE) * 60;
             leftSeconds = calculateResults.differenceInSeconds - workSeconds;
@@ -83,17 +76,11 @@ public class GroupPomodoro extends Pomodoro {
         }
         calculateResults.currentPhase = auxPhase;
         if (leftSeconds <= 0) {
-            Log.v(CLASS_TAG, "countPhase, " + "leftSeconds<=0: " + "currentPhase: " + calculateResults.currentPhase +
-                    " currentPomodoro: " + calculateResults.currentPomodoro +
-                    " phaseNumber: " + calculateResults.phaseNumber +
-                    " differenceInSeconds " + calculateResults.differenceInSeconds);
-
             return -leftSeconds;
         }
         calculateResults.differenceInSeconds = leftSeconds;
         ++calculateResults.phaseNumber;
-        countPhase();
-        return 0;
+        return countPhase();
     }
 
 //    /**

@@ -1,10 +1,109 @@
 <resources>
-    <!-- popup Login -->
-    <string name="popup_login_required">Para utilitzar las funcionalidades online de Pomodoro for Groups tienes que hacer login</string>
+    <string name="app_name">Tik Tak Team</string>
+
+    <string name="action_settings">Ajustes</string>
+
+    <string name="pomodoros">Pomodoros</string>
+
+    <string name="loading">Cargando&#8230;</string>
+
+    <!-- group card -->
+    <string name="cardEdit">EDITAR</string>
+    <string name="cardDelete">ELIMINAR</string>
+
+    <!-- tabs -->
+    <string name="tabAlone">SOLO</string>
+    <string name="tabGroup">GRUPO</string>
+    <string name="tabSettings">AJUSTES</string>
+
+    <!-- pomodoro -->
+    <string name="start">INICIO</string>
+    <string name="state_working">TRABAJO</string>
+    <string name="state_rest">DESCANSO</string>
+    <string name="state_large_rest">DESCANSO LARGO</string>
+
+    <!-- menu & toolbar -->
+    <string name="menu_save">Guardar</string>
+    <string name="menu_exit">Salir</string>
+    <string name="menu_edit">Editar</string>
+
+    <string name="toolbar_add_session">Añadir Sesión</string>
+    <string name="toolbar_edit_session">Editar Sesión</string>
+    <string name="toolbar_add_group">Crear grupo</string>
+    <string name="toolbar_edit_group">Editar grupo</string>
+    <string name="toolbar_add_setting">Añadir ajuste</string>
+    <string name="toolbar_edit_setting">Editar ajuste</string>
+
+    <!-- Notifications -->
+    <string name="notification_base_title">¡Algo ha cambiado!</string>
+    <string name="notification_base_content">Algo ha cambiado recientemente</string>
+
+    <string name="notification_start_title">¡Una sesión está a punto de empezar!</string>
+    <string name="notification_start_content">Pulsa para ver los detalles</string>
+
+    <!-- popup Login & register-->
+    <string name="popup_login_required">Para utilizar las funcionalidades online de Tik Tak Team debes hacer login</string>
     <string name="popup_login_button">LOGIN</string>
-    <string name="popup_login_register">¿Todavía no tienes una cuenta? Registrate aquí</string>
+    <string name="popup_login_signup">REGISTRARSE</string>
+    <string name="popup_login_register">¿Todavía no tienes una cuenta? Regístrate aquí</string>
     <string name="popup_login_register_button">REGISTRARSE</string>
 
+    <string name="popup_login_hint_email">Email</string>
+    <string name="popup_login_hint_password">Contraseña</string>
+    <string name="popup_login_hint_repeatPassword">Repetir contraseña</string>
+    <string name="popup_login_hint_name">Nombre de usuario</string>
     <string name="popup_login_remember">Recordar</string>
 
+    <!-- popup Add session -->
+    <string name="popup_add_session_name">Nombre de la sesión</string>
+    <string name="popup_add_session_number_info">Pomodoros:</string>
+    <string name="popup_add_session_setting_info">Ajuste:</string>
+    <string name="popup_add_session_number">Nombre</string>
+    <string name="popup_add_session_timeButton">Seleccione tiempo de inicio</string>
+    <string name="popup_add_session_timeNotSelected">Tiempo de inicio no seleccionado</string>
+    <string name="popup_add_session_err_after_date">Debes seleccionar una fecha posterior a %1$s, %2$s, %3$s</string>
+    <string name="popup_add_session_err_after_time">Debes seleccionar una hora posterior a %1$s, %2$s</string>
+
+
+    <!-- group Card -->
+    <string name="group_card_members">miembros en este equipo</string>
+
+    <!-- popup Add group -->
+    <string name="popup_add_group_name">Nombre del grupo</string>
+    <string name="popup_add_group_description">Descripción</string>
+    <string name="popup_add_group_team">Añadir un miembro</string>
+
+    <!-- popup Alert delete group -->
+    <string name="delete_group">¿Borrar este grupo?</string>
+
+    <!-- popup Alert delete session -->
+    <string name="delete_session">¿Borrar esta sesión?</string>
+
+    <!-- popup Members -->
+    <string name="popup_members_title">Miembros</string>
+
+    <string name="delete">Borrar</string>
+
+    <!-- popup add members -->
+    <string name="searchHint">Busque por nombre de usuario o email</string>
+
+    <!-- popup add setting -->
+    <string name="popup_add_setting_name">Nombre del ajuste</string>
+    <string name="popup_add_session_work">Minutos de trabajo:</string>
+    <string name="popup_add_session_rest">Minutos de descanso:</string>
+    <string name="popup_add_session_large_rest">Minutos de descanso largo:</string>
+
+
+    <!-- Notifications -->
+    <string name="session_new_title">Grupo %1$s</string>
+    <string name="session_new_content">La sesión %1$s ha sido creada</string>
+
+    <string name="session_updated_title">Grupo %1$s</string>
+    <string name="session_updated_content">La sesión %1$s ha sido creada</string>
+
+    <string name="group_added_title">Grupo %1$s</string>
+    <string name="group_added_content">Has sido añadido a este grupo</string>
+
+    <!-- Error messages -->
+    <string name="error">Ha habido un error, por favor prueba más tarde</string>
 </resources>

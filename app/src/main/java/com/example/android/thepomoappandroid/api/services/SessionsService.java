@@ -2,12 +2,9 @@ package com.example.android.thepomoappandroid.api.services;
 
 import com.example.android.thepomoappandroid.api.dto.SessionDTO;
 import com.example.android.thepomoappandroid.api.interfaces.SessionsInterface;
-import com.squareup.okhttp.Call;
 
 import retrofit.Callback;
 import retrofit.ResponseCallback;
-import retrofit.RetrofitError;
-import retrofit.client.Response;
 
 /**
  * Created by Enric on 22/04/2015.

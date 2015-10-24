@@ -12,6 +12,8 @@ import android.text.style.StyleSpan;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.example.android.thepomoappandroid.api.dto.SessionDTO;
+import com.example.android.thepomoappandroid.db.Session;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
@@ -124,6 +126,16 @@ public class Utils {
                 DateTimeFormat.forPattern(DATE_PATTERN_FROM_SERVER).withOffsetParsed();
         DateTime dateTime = formatter.parseDateTime(date);
         return dateTime.toGregorianCalendar();
+    }
+
+    public static boolean isSessionOld(SessionDTO sessionDTO) {
+        GregorianCalendar now = new GregorianCalendar();
+        return (Utils.formatStringDate(sessionDTO.getEndTime()).before(now));
+    }
+
+    public static boolean isSessionOld(Session session) {
+        GregorianCalendar now = new GregorianCalendar();
+        return (Utils.formatStringDate(session.getEndTime()).before(now));
     }
 
     public static CharSequence formatNotification(Context context, int resId, String dynamic) {

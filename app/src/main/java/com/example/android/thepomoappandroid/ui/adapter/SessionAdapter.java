@@ -54,7 +54,7 @@ public class SessionAdapter extends RealmBaseAdapter<Session> implements ListAda
         setNumBackgroundColor(holder.num, position);
         holder.header.setText(session.getName());
         holder.detail.setText(formatDetailText(session));
-        holder.startTime.setVisibility(View.VISIBLE);
+        holder.startTime.setVisibility(View.GONE);
         holder.startTime.setText(session.getStartTime());
 
         GregorianCalendar sessionEndTime = Utils.formatStringDate(session.getEndTime());

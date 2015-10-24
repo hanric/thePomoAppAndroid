@@ -78,7 +78,7 @@ public class GroupFragment extends Fragment implements
         fab.setOnClickListener(this);
     }
 
-    private void init() {
+    public void init() {
         setUpRecyclerView();
         refreshFragment();
         setFabVisibility();
@@ -143,7 +143,7 @@ public class GroupFragment extends Fragment implements
         }
     }
 
-    public void refreshFragment() {
+    private void refreshFragment() {
         if (!Utils.isLoggedIn(getActivity())) {
             if (getUserVisibleHint()) loadDialog();
             adapter = new GroupAdapter(getActivity(), new ArrayList<GroupDTO>());

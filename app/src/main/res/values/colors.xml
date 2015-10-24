@@ -15,7 +15,7 @@
 
     <item name="colorPrimary" type="color">#00BBD3</item>
     <item name="colorPrimaryDark" type="color">#0098A9</item>
-    <item name="colorAccent" type="color">#FFFF8C</item>
+    <item name="colorAccent" type="color">#F7EF2D</item>
     <item name="secondaryGray" type="color">#757575</item>
 
     <item name="sb_1" type="color">#00BBD3</item>

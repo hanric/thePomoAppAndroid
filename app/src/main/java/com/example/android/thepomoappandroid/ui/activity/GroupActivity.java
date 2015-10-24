@@ -34,6 +34,7 @@ import com.github.pavlospt.CircleView;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.melnykov.fab.FloatingActionButton;
+import com.squareup.okhttp.internal.Util;
 
 import java.util.ArrayList;
 import java.util.GregorianCalendar;
@@ -263,7 +264,7 @@ public class GroupActivity extends AppCompatActivity implements
     private void syncLocalData(List<SessionDTO> sessionDTOs) {
         DBHandler dbHandler = DBHandler.newInstance(this);
         for (SessionDTO sessionDTO : sessionDTOs) {
-            if (dbHandler.getSession(sessionDTO.getId()) == null) {
+            if (dbHandler.getSession(sessionDTO.getId()) == null && !Utils.isSessionOld(sessionDTO)) {
                 dbHandler.createSession(sessionDTO);
                 GregorianCalendar startDate = Utils.formatStringDate(sessionDTO.getStartTime());
                 AlarmUtils.initAlarm(getApplicationContext(), startDate, R.string.notification_start_title, R.string.notification_start_content);

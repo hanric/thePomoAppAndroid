@@ -70,7 +70,9 @@ public class SettingsFragment extends Fragment
 
     public void init() {
 
-        fab.attachToListView(listView);
+        if (fab != null && listView != null) {
+            fab.attachToListView(listView);
+        }
 
         if (Utils.isNetworkAvailable(getActivity())) {
             refreshFragment();

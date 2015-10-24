@@ -219,6 +219,7 @@ public class LoginDialog extends DialogFragment implements
         if (progressDialog != null) {
             progressDialog.dismiss();
         }
+
         dismiss();
     }
 
