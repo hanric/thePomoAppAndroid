@@ -2,6 +2,8 @@ package com.example.android.thepomoappandroid;
 
 import android.app.Application;
 
+import com.squareup.otto.Bus;
+import com.squareup.otto.ThreadEnforcer;
 import com.strongloop.android.loopback.RestAdapter;
 
 import net.danlew.android.joda.JodaTimeAndroid;
@@ -11,6 +13,8 @@ import net.danlew.android.joda.JodaTimeAndroid;
  */
 public class App extends Application {
     RestAdapter adapter;
+
+    public static Bus bus = new Bus(ThreadEnforcer.MAIN);
 
     @Override
     public void onCreate() {

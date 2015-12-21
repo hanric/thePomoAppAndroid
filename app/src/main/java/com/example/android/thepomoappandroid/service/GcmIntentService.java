@@ -143,8 +143,6 @@ public class GcmIntentService extends IntentService {
     private void doAction() {
         if (gcmMessage.equals(Constants.GCM_SESSION_NEW) || gcmMessage.equals(Constants.GCM_SESSION_UPDATED) || gcmMessage.equals(Constants.GCM_GROUP_ADDED)) {
             notifyAndUpdateLocalDB();
-        } else if (gcmMessage.equals(Constants.GCM_SESSION_DELETED)) {
-            deleteNotificationFromLocalDB();
         }
     }
 
@@ -163,10 +161,6 @@ public class GcmIntentService extends IntentService {
                 Log.w(TAG, error.getMessage());
             }
         });
-    }
-
-    private void deleteNotificationFromLocalDB() {
-        DBHandler.newInstance(getApplicationContext()).deleteSession(Integer.parseInt(sessionId));
     }
 
     private void sendNotification(GroupDTO groupDTO) {
@@ -219,7 +213,7 @@ public class GcmIntentService extends IntentService {
         if (dbHandler.getSession(sessionDTO.getId()) == null) {
             dbHandler.createSession(sessionDTO);
             GregorianCalendar startDate = Utils.formatStringDate(sessionDTO.getStartTime());
-            AlarmUtils.initAlarm(getApplicationContext(), startDate, R.string.notification_start_title, R.string.notification_start_content);
+            AlarmUtils.initAlarm(getApplicationContext(), startDate, R.string.notification_start_title, R.string.notification_start_content, true);
         }
     }
 }

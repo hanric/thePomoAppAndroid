@@ -49,9 +49,9 @@ public class EditGroupDialog extends AddGroupDialog {
     }
 
     private void getArguments(Bundle bundle) {
-        String jsonGroup = bundle.getString(EXTRA_GROUP);
+//        String jsonGroup = bundle.getString(EXTRA_GROUP);
         Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
-        groupDTO = gson.fromJson(jsonGroup, GroupDTO.class);
+//        groupDTO = gson.fromJson(jsonGroup, GroupDTO.class);
     }
 
     private void fillViews() {

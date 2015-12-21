@@ -14,10 +14,13 @@ public class AlarmUtils {
 
     private static final String CLASS_TAG = AlarmUtils.class.getSimpleName();
 
-    private static void setAlarm(Context context, AlarmManager alarmManager, PendingIntent pendingIntent, long date) {
+    private static void setAlarm(Context context, AlarmManager alarmManager, PendingIntent pendingIntent, long date, boolean aMinuteBefore) {
         int alarmType = AlarmManager.RTC_WAKEUP;
         long aMinute = 60 * 1000;
-        long alarmTime = date - aMinute;
+        long alarmTime = date;
+        if (aMinuteBefore) {
+            alarmTime -= aMinute;
+        }
         alarmManager.set(alarmType, alarmTime, pendingIntent);
     }
 
@@ -29,7 +32,7 @@ public class AlarmUtils {
      * @param idTitle   Resource id of the notification title
      * @param idContent Resource id of the notification content
      */
-    public static void initAlarm(Context context, GregorianCalendar date, int idTitle, int idContent) {
+    public static void initAlarm(Context context, GregorianCalendar date, int idTitle, int idContent, boolean aMinuteBefore) {
         AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
 
         Intent alarmIntent = new Intent(context, AlarmReceiver.class);
@@ -40,7 +43,7 @@ public class AlarmUtils {
 
         date.setTimeZone(TimeZone.getDefault());
 
-        setAlarm(context, alarmManager, pendingIntent, date.getTimeInMillis());
+        setAlarm(context, alarmManager, pendingIntent, date.getTimeInMillis(), aMinuteBefore);
     }
 
 }

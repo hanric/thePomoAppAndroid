@@ -13,9 +13,11 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.example.android.thepomoappandroid.App;
 import com.example.android.thepomoappandroid.GroupPomodoro;
 import com.example.android.thepomoappandroid.Pomodoro;
 import com.example.android.thepomoappandroid.R;
+import com.example.android.thepomoappandroid.SessionStartBusEvent;
 import com.example.android.thepomoappandroid.Utils;
 import com.example.android.thepomoappandroid.alarm.AlarmUtils;
 import com.example.android.thepomoappandroid.api.dto.GroupDTO;
@@ -30,11 +32,14 @@ import com.example.android.thepomoappandroid.db.Session;
 import com.example.android.thepomoappandroid.ui.adapter.SessionAdapter;
 import com.example.android.thepomoappandroid.ui.dialog.AddGroupDialog;
 import com.example.android.thepomoappandroid.ui.dialog.AddSessionDialog;
+import com.example.android.thepomoappandroid.ui.dialog.EditGroupDialog;
 import com.github.pavlospt.CircleView;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.melnykov.fab.FloatingActionButton;
 import com.squareup.okhttp.internal.Util;
+import com.squareup.otto.Bus;
+import com.squareup.otto.Subscribe;
 
 import java.util.ArrayList;
 import java.util.GregorianCalendar;
@@ -71,6 +76,8 @@ public class GroupActivity extends AppCompatActivity implements
     private FloatingActionButton fab;
     private CircleView circleView;
 
+    private Bus bus;
+
     private Callback<ResponseCallback> onDeleteSessionCallback = new Callback<ResponseCallback>() {
         @Override
         public void success(ResponseCallback callback, Response response) {
@@ -86,6 +93,7 @@ public class GroupActivity extends AppCompatActivity implements
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        App.bus.register(this);
         setContentView(R.layout.activity_group);
         findViews();
         dbHandler = DBHandler.newInstance(this);
@@ -190,7 +198,7 @@ public class GroupActivity extends AppCompatActivity implements
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.edit) {
-            AddGroupDialog.newInstance(this).show(getFragmentManager(), "dialog");
+            EditGroupDialog.newInstance(this).show(getFragmentManager(), "dialog");
         } else if (id == R.id.delete) {
             final GroupActivity groupActivity = this;
             new AlertDialog.Builder(this)
@@ -267,7 +275,12 @@ public class GroupActivity extends AppCompatActivity implements
             if (dbHandler.getSession(sessionDTO.getId()) == null && !Utils.isSessionOld(sessionDTO)) {
                 dbHandler.createSession(sessionDTO);
                 GregorianCalendar startDate = Utils.formatStringDate(sessionDTO.getStartTime());
-                AlarmUtils.initAlarm(getApplicationContext(), startDate, R.string.notification_start_title, R.string.notification_start_content);
+
+                // about to start notification (aMinuteBefore = true)
+//                AlarmUtils.initAlarm(getApplicationContext(), startDate, R.string.notification_start_title, R.string.notification_start_content, true);
+
+                // trigger Bus (aMinuteBefore = false)
+                AlarmUtils.initAlarm(getApplicationContext(), startDate, -1, sessionDTO.getGroupId(), false);
             }
         }
     }
@@ -317,6 +330,13 @@ public class GroupActivity extends AppCompatActivity implements
     public void phaseEnded(String key, int nextPhase) {
         Toast.makeText(this, "phaseEnded", Toast.LENGTH_SHORT).show();
         // TODO update state to change colors of the session item
+    }
+
+    @Subscribe
+    public void getSessionEvent(SessionStartBusEvent event) {
+        if (event.getGroupId() == groupDTO.getId()) {
+            updateViewsFromLocalDB();
+        }
     }
 
     @Override

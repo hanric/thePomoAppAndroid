@@ -9,7 +9,9 @@ import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.support.v4.app.NotificationCompat;
 
+import com.example.android.thepomoappandroid.App;
 import com.example.android.thepomoappandroid.R;
+import com.example.android.thepomoappandroid.SessionStartBusEvent;
 
 import java.util.Collections;
 import java.util.List;
@@ -28,16 +30,20 @@ public class AlarmReceiver extends BroadcastReceiver {
     public void onReceive(Context context, Intent intent) {
         if (null != intent.getExtras()) {
             int idTitle = intent.getExtras().getInt(TITLE_ID, -1);
-            if (idTitle >= 0) {
-                title = context.getResources().getString(idTitle);
+            if (idTitle == -1) {
+                int idContent = intent.getExtras().getInt(CONTENT_ID, -1); // workaround, not a well named variable
+                triggerBus(context, idContent);
+            } else {
+                if (idTitle >= 0) {
+                    title = context.getResources().getString(idTitle);
+                }
+                int idContent = intent.getExtras().getInt(CONTENT_ID, -1);
+                if (idContent >= 0) {
+                    content = context.getResources().getString(idContent);
+                }
+                sendNotification(context);
             }
-            int idContent = intent.getExtras().getInt(CONTENT_ID, -1);
-            if (idContent >= 0) {
-                content = context.getResources().getString(idContent);
-            }
-
         }
-        sendNotification(context);
     }
 
     private void sendNotification(Context context) {
@@ -54,6 +60,10 @@ public class AlarmReceiver extends BroadcastReceiver {
 
         NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
         notificationManager.notify(101, builder.build());
+    }
+
+    private void triggerBus(Context context, int groupId) {
+        App.bus.post(new SessionStartBusEvent(groupId));
     }
 
     /**

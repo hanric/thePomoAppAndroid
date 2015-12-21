@@ -203,8 +203,8 @@ public class AddSessionDialog extends DialogFragment
         TimePickerDialog.newInstance(new TimePickerDialog.OnTimeSetListener() {
             @Override
             public void onTimeSet(RadialPickerLayout radialPickerLayout, int i, int i1) {
-                timePicked.add(Calendar.HOUR, i);
-                timePicked.add(Calendar.MINUTE, i1);
+                timePicked.set(Calendar.HOUR, i);
+                timePicked.set(Calendar.MINUTE, i1);
                 if (timePicked.before(minimumDate)) {
                     String toastText = getString(R.string.popup_add_session_err_after_time, minimumDate.get(Calendar.HOUR), minimumDate.get(Calendar.MINUTE));
                     Toast.makeText(getActivity(), toastText, Toast.LENGTH_LONG).show();

@@ -30,7 +30,7 @@ public class BootReceiver extends BroadcastReceiver {
         List<Session> sessions =  DBHandler.newInstance(context).getSessions();
         for (Session session : sessions) {
             GregorianCalendar startDate = Utils.formatStringDate(session.getStartTime());
-            AlarmUtils.initAlarm(context, startDate, R.string.notification_start_title, R.string.notification_start_content);
+            AlarmUtils.initAlarm(context, startDate, R.string.notification_start_title, R.string.notification_start_content, true);
         }
     }
 
