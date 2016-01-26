@@ -18,25 +18,28 @@
         <!-- **** Place Your Content Here **** -->
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:padding="@dimen/basePadding">
 
-            <EditText
-                android:id="@+id/popupAddSession_name"
+            <android.support.design.widget.TextInputLayout
+                android:id="@+id/popupAddSession_name_textInput"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:drawableLeft="@drawable/ic_message_reply_black_18dp"
-                android:drawablePadding="@dimen/popupAddGroup_drawablePadding"
-                android:drawableStart="@drawable/ic_message_reply_black_18dp"
-                android:hint="@string/popup_add_session_name"
-                android:padding="@dimen/popupAddGroup_padding" />
+                android:layout_height="wrap_content">
+
+                <EditText
+                    android:id="@+id/popupAddSession_name"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/popup_add_session_name" />
+            </android.support.design.widget.TextInputLayout>
 
             <LinearLayout
                 android:id="@+id/popupAddSession_numLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/popupAddSession_name"
-                android:orientation="horizontal"
+                android:layout_below="@+id/popupAddSession_name_textInput"
                 android:gravity="center_vertical"
+                android:orientation="horizontal"
                 android:padding="@dimen/popupAddGroup_drawablePadding">
 
                 <TextView
@@ -85,8 +88,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/popupAddSession_timeLayout"
-                android:orientation="vertical"
                 android:gravity="center_vertical"
+                android:orientation="vertical"
                 android:padding="@dimen/popupAddGroup_drawablePadding">
 
                 <TextView

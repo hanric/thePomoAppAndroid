@@ -4,6 +4,7 @@ import android.app.DialogFragment;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.support.design.widget.TextInputLayout;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -20,8 +21,16 @@ import com.example.android.thepomoappandroid.R;
 import com.example.android.thepomoappandroid.db.DBHandler;
 import com.example.android.thepomoappandroid.db.Setting;
 import com.example.android.thepomoappandroid.ui.adapter.SettingAdapter;
+import com.mobsandgeeks.saripaar.ValidationError;
+import com.mobsandgeeks.saripaar.Validator;
+import com.mobsandgeeks.saripaar.adapter.ViewDataAdapter;
+import com.mobsandgeeks.saripaar.annotation.Length;
+import com.mobsandgeeks.saripaar.annotation.NotEmpty;
+import com.mobsandgeeks.saripaar.exception.ConversionException;
 
 import org.adw.library.widgets.discreteseekbar.DiscreteSeekBar;
+
+import java.util.List;
 
 import io.realm.RealmResults;
 import io.realm.exceptions.RealmException;
@@ -29,12 +38,20 @@ import io.realm.exceptions.RealmException;
 /**
  * Created by Enric on 19/04/2015.
  */
-public class AddAloneSessionDialog extends DialogFragment implements Toolbar.OnMenuItemClickListener, View.OnClickListener {
+public class AddAloneSessionDialog extends DialogFragment
+        implements Toolbar.OnMenuItemClickListener,
+        View.OnClickListener,
+        Validator.ValidationListener {
 
     protected DBHandler dbHandler;
     protected SettingAdapter settingAdapter;
 
     protected Toolbar toolbar;
+
+    private Validator validator;
+
+    @NotEmpty(sequence = 1, messageResId = R.string.emptyFieldError)
+    @Length(sequence = 2, min = 3, max = 20, messageResId = R.string.sessionNameError)
     protected EditText name;
     protected DiscreteSeekBar num;
     protected Spinner settingsSpinner;
@@ -48,6 +65,16 @@ public class AddAloneSessionDialog extends DialogFragment implements Toolbar.OnM
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        validator = new Validator(this);
+        validator.setValidationListener(this);
+        validator.registerAdapter(TextInputLayout.class,
+                new ViewDataAdapter<TextInputLayout, String>() {
+                    @Override
+                    public String getData(TextInputLayout flet) throws ConversionException {
+                        return flet.getEditText().getText().toString();
+                    }
+                }
+        );
         dbHandler = DBHandler.newInstance(getActivity());
     }
 
@@ -109,9 +136,31 @@ public class AddAloneSessionDialog extends DialogFragment implements Toolbar.OnM
     @Override
     public boolean onMenuItemClick(MenuItem menuItem) {
         if (menuItem.getItemId() == R.id.save) {
-            performSaveAction();
+            validator.validate();
         }
         return false;
+    }
+
+    @Override
+    public void onValidationFailed(List<ValidationError> errors) {
+        ((TextInputLayout) name.getParent()).setError(null);
+        ((TextInputLayout) name.getParent()).setErrorEnabled(false);
+        for (ValidationError error : errors) {
+            View view = error.getView();
+            String message = error.getFailedRules().get(0).getMessage(getActivity());
+
+            // Display error messages ;)
+            if (view instanceof EditText) {
+                ((TextInputLayout) view.getParent()).setError(message);
+            } else {
+                Toast.makeText(getActivity(), message, Toast.LENGTH_LONG).show();
+            }
+        }
+    }
+
+    @Override
+    public void onValidationSucceeded() {
+        performSaveAction();
     }
 
     protected void performSaveAction() {

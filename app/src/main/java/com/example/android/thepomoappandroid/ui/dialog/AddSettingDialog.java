@@ -4,6 +4,7 @@ import android.app.DialogFragment;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.support.design.widget.TextInputLayout;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -19,8 +20,16 @@ import com.example.android.thepomoappandroid.Utils;
 import com.example.android.thepomoappandroid.api.dto.SettingDTO;
 import com.example.android.thepomoappandroid.api.services.SettingsService;
 import com.example.android.thepomoappandroid.db.DBHandler;
+import com.mobsandgeeks.saripaar.ValidationError;
+import com.mobsandgeeks.saripaar.Validator;
+import com.mobsandgeeks.saripaar.adapter.ViewDataAdapter;
+import com.mobsandgeeks.saripaar.annotation.Length;
+import com.mobsandgeeks.saripaar.annotation.NotEmpty;
+import com.mobsandgeeks.saripaar.exception.ConversionException;
 
 import org.adw.library.widgets.discreteseekbar.DiscreteSeekBar;
+
+import java.util.List;
 
 import retrofit.Callback;
 import retrofit.RetrofitError;
@@ -31,7 +40,8 @@ import retrofit.client.Response;
  */
 public class AddSettingDialog extends DialogFragment
         implements Toolbar.OnMenuItemClickListener,
-        View.OnClickListener {
+        View.OnClickListener,
+        Validator.ValidationListener {
 
 //    public static final String EXTRA_GROUP_ID = "extra.groupId";
 
@@ -40,7 +50,13 @@ public class AddSettingDialog extends DialogFragment
     protected DBHandler dbHandler;
 
     protected Toolbar toolbar;
+
+    private Validator validator;
+
+    @NotEmpty(sequence = 1, messageResId = R.string.emptyFieldError)
+    @Length(sequence = 2, min = 3, max = 20, messageResId = R.string.sessionNameError)
     protected EditText name;
+
     protected DiscreteSeekBar work;
     protected DiscreteSeekBar rest;
     protected DiscreteSeekBar largeRest;
@@ -63,6 +79,16 @@ public class AddSettingDialog extends DialogFragment
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        validator = new Validator(this);
+        validator.setValidationListener(this);
+        validator.registerAdapter(TextInputLayout.class,
+                new ViewDataAdapter<TextInputLayout, String>() {
+                    @Override
+                    public String getData(TextInputLayout flet) throws ConversionException {
+                        return flet.getEditText().getText().toString();
+                    }
+                }
+        );
         dbHandler = DBHandler.newInstance(getActivity());
     }
 
@@ -127,9 +153,31 @@ public class AddSettingDialog extends DialogFragment
     @Override
     public boolean onMenuItemClick(MenuItem menuItem) {
         if (menuItem.getItemId() == R.id.save) {
-            performSaveAction();
+            validator.validate();
         }
         return false;
+    }
+
+    @Override
+    public void onValidationSucceeded() {
+        performSaveAction();
+    }
+
+    @Override
+    public void onValidationFailed(List<ValidationError> errors) {
+        ((TextInputLayout) name.getParent()).setError(null);
+        ((TextInputLayout) name.getParent()).setErrorEnabled(false);
+        for (ValidationError error : errors) {
+            View view = error.getView();
+            String message = error.getFailedRules().get(0).getMessage(getActivity());
+
+            // Display error messages ;)
+            if (view instanceof EditText) {
+                ((TextInputLayout) view.getParent()).setError(message);
+            } else {
+                Toast.makeText(getActivity(), message, Toast.LENGTH_LONG).show();
+            }
+        }
     }
 
     protected void performSaveAction() {

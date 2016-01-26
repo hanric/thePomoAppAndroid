@@ -67,6 +67,8 @@
 
     <!-- group Card -->
     <string name="group_card_members">miembros en este equipo</string>
+    <string name="group_card_edit">EDITAR</string>
+    <string name="group_card_delete">ELIMINAR</string>
 
     <!-- popup Add group -->
     <string name="popup_add_group_name">Nombre del grupo</string>
@@ -106,4 +108,12 @@
 
     <!-- Error messages -->
     <string name="error">Ha habido un error, por favor prueba más tarde</string>
+    <string name="emptyFieldError">El campo es obligatorio</string>
+    <string name="emailError">Email inválido</string>
+    <string name="passwordError">Contraseña inválida</string>
+    <string name="confirmPasswordError">Las contraseñas no coinciden</string>
+    <string name="usernameError">Nombre de usuario inválido</string>
+    <string name="sessionNameError">Nombre de sesión inválido</string>
+    <string name="groupNameError">Nombre de grupo inválido</string>
+    <string name="groupDescriptionError">Descripción inválida</string>
 </resources>

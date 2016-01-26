@@ -40,9 +40,7 @@ public class GcmIntentService extends IntentService {
 
     public static final String LOGTAG = GcmIntentService.class.getSimpleName();
 
-    public static final int NOTIFICATION_ID = 1;
     private NotificationManager mNotificationManager;
-    NotificationCompat.Builder builder;
 
     private String gcmMessage;
     private String groupId;

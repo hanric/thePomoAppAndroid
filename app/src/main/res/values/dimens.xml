@@ -1,4 +1,6 @@
 <resources>
+
+    <dimen name="basePadding">16dp</dimen>
     <!-- Default screen margins, per the Android Design guidelines. -->
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
@@ -16,10 +18,11 @@
 
     <!-- popup Login -->
     <dimen name="popupLogin_padding_leftRight">20dp</dimen>
-    <dimen name="popupLogin_padding_topBottom">32dp</dimen>
-    <dimen name="popupLogin_separatorMargin">24dp</dimen>
+    <dimen name="popupLogin_padding_topBottom">20dp</dimen>
+    <dimen name="popupLogin_separatorMargin">20dp</dimen>
     <dimen name="popupLogin_topText_marginBottom">14dp</dimen>
     <dimen name="popupLogin_std_marginBottom">6dp</dimen>
+    <dimen name="popupLogin_minRegisterHeight">140dp</dimen>
 
     <!-- popup Members -->
     <dimen name="popupMembers_item_paddingLeft">30dp</dimen>

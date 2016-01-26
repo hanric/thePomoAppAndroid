@@ -13,6 +13,7 @@ import com.example.android.thepomoappandroid.api.services.BaseService;
 import com.example.android.thepomoappandroid.api.services.GroupsService;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.squareup.okhttp.internal.Util;
 
 import retrofit.Callback;
 import retrofit.RetrofitError;
@@ -27,10 +28,14 @@ public class EditGroupDialog extends AddGroupDialog {
 
     private GroupDTO groupDTO;
 
-    public static EditGroupDialog newInstance(OnActionGroupFromDialog onActionGroupFromDialog) {
+    public static EditGroupDialog newInstance(OnActionGroupFromDialog onActionGroupFromDialog, GroupDTO groupDTO) {
         EditGroupDialog dialogFragment = new EditGroupDialog();
         dialogFragment.setStyle(0, R.style.DialogThemeFullScreen);
         dialogFragment.onActionGroupFromDialog = onActionGroupFromDialog;
+        Bundle bundle = new Bundle();
+        Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
+        bundle.putString(EXTRA_GROUP, gson.toJson(groupDTO));
+        dialogFragment.setArguments(bundle);
         return dialogFragment;
     }
 
@@ -49,9 +54,9 @@ public class EditGroupDialog extends AddGroupDialog {
     }
 
     private void getArguments(Bundle bundle) {
-//        String jsonGroup = bundle.getString(EXTRA_GROUP);
+        String jsonGroup = bundle.getString(EXTRA_GROUP);
         Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
-//        groupDTO = gson.fromJson(jsonGroup, GroupDTO.class);
+        groupDTO = gson.fromJson(jsonGroup, GroupDTO.class);
     }
 
     private void fillViews() {

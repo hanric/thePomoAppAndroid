@@ -13,33 +13,43 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="7"
         android:layout_marginBottom="@dimen/popupLogin_separatorMargin"
+        android:layout_weight="7.5"
         android:orientation="vertical">
 
         <TextView
+            style="@style/std_Gray"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:gravity="center"
             android:layout_marginBottom="@dimen/popupLogin_topText_marginBottom"
-            android:text="@string/popup_login_required"
-            style="@style/std_Gray"/>
+            android:gravity="center"
+            android:text="@string/popup_login_required" />
 
-        <EditText
-            android:id="@+id/popup_login_email"
+        <android.support.design.widget.TextInputLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="@string/popup_login_hint_email"
-            android:layout_marginBottom="@dimen/popupLogin_std_marginBottom"
-            android:inputType="textEmailAddress" />
+            android:layout_height="wrap_content">
 
-        <EditText
-            android:id="@+id/popup_login_password"
+            <EditText
+                android:id="@+id/popup_login_email"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/popupLogin_std_marginBottom"
+                android:hint="@string/popup_login_hint_email"
+                android:inputType="textEmailAddress" />
+        </android.support.design.widget.TextInputLayout>
+
+        <android.support.design.widget.TextInputLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="@string/popup_login_hint_password"
-            android:layout_marginBottom="@dimen/popupLogin_std_marginBottom"
-            android:inputType="textPassword" />
+            android:layout_height="wrap_content">
+
+            <EditText
+                android:id="@+id/popup_login_password"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/popupLogin_std_marginBottom"
+                android:hint="@string/popup_login_hint_password"
+                android:inputType="textPassword" />
+        </android.support.design.widget.TextInputLayout>
 
         <Button
             android:id="@+id/popup_login_button"
@@ -54,18 +64,19 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="3"
+        android:layout_weight="2.5"
+        android:minHeight="@dimen/popupLogin_minRegisterHeight"
         android:gravity="bottom"
         android:orientation="vertical">
 
         <TextView
+            style="@style/std_Gray"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:gravity="center"
             android:layout_marginBottom="@dimen/popupLogin_topText_marginBottom"
-            android:text="@string/popup_login_register"
-            style="@style/std_Gray"/>
+            android:gravity="center"
+            android:text="@string/popup_login_register" />
 
         <Button
             android:id="@+id/popup_login_register_button"

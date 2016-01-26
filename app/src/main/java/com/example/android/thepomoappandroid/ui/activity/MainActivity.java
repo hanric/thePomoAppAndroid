@@ -13,9 +13,11 @@ import android.widget.Toast;
 import com.astuetz.PagerSlidingTabStrip;
 import com.example.android.thepomoappandroid.R;
 import com.example.android.thepomoappandroid.Utils;
+import com.example.android.thepomoappandroid.api.dto.SettingDTO;
 import com.example.android.thepomoappandroid.api.response.LoginResponse;
 import com.example.android.thepomoappandroid.api.services.InstallationsService;
 import com.example.android.thepomoappandroid.api.services.PeopleService;
+import com.example.android.thepomoappandroid.db.DBHandler;
 import com.example.android.thepomoappandroid.ui.adapter.MainFragmentPageAdapter;
 import com.example.android.thepomoappandroid.ui.dialog.LoginDialog;
 import com.example.android.thepomoappandroid.ui.fragment.AloneFragment;
@@ -46,6 +48,8 @@ public class MainActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        openAppProcess();
+
         findViews();
 
         setSupportActionBar(toolbar);
@@ -55,6 +59,14 @@ public class MainActivity extends AppCompatActivity
         pager.setAdapter(pageAdapter);
         tabs.setViewPager(pager);
         tabs.getWidth();
+    }
+
+    private void openAppProcess() {
+        if (Utils.isFirstTimeOpened(this)) {
+            SettingDTO baseSetting = new SettingDTO("base", 25, 5, 15, 0);
+            baseSetting.setId(0);
+            DBHandler.newInstance(this).createSetting(baseSetting);
+        }
     }
 
     private List<Fragment> getFragments() {

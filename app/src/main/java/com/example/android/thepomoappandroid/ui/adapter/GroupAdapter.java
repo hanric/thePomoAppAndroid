@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
@@ -18,7 +19,9 @@ import com.example.android.thepomoappandroid.api.dto.GroupDTO;
 import com.example.android.thepomoappandroid.api.services.GroupsService;
 import com.example.android.thepomoappandroid.ui.activity.GroupActivity;
 import com.example.android.thepomoappandroid.ui.adapter.holder.GroupViewHolder;
+import com.example.android.thepomoappandroid.ui.dialog.EditGroupDialog;
 import com.example.android.thepomoappandroid.ui.dialog.MembersDialog;
+import com.example.android.thepomoappandroid.ui.fragment.GroupFragment;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -33,12 +36,14 @@ import retrofit.ResponseCallback;
 public class GroupAdapter extends RecyclerView.Adapter<GroupViewHolder>
     implements GroupViewHolder.ViewHolderClicks {
 
+    private GroupFragment groupFragment;
     private Context context;
     private Callback<ResponseCallback> onDeleteGroupCallback;
     private List<GroupDTO> groupList;
 
-    public GroupAdapter(Context context, List<GroupDTO> groupList) {
-        this.context = context;
+    public GroupAdapter(GroupFragment groupFragment, List<GroupDTO> groupList) {
+        this.groupFragment = groupFragment;
+        this.context = groupFragment.getActivity();
         this.groupList = groupList;
     }
 
@@ -63,7 +68,7 @@ public class GroupAdapter extends RecyclerView.Adapter<GroupViewHolder>
         viewHolder.title.setText(groupDTO.getName());
         viewHolder.description.setText(groupDTO.getDescription());
         viewHolder.members.setText(formatMembersText(groupDTO));
-        if (context != null && Utils.getInstance().getUserId(context) == groupDTO.getAdminId()) {
+        if (context != null && Utils.getUserId(context) == groupDTO.getAdminId()) {
             viewHolder.editButton.setVisibility(View.VISIBLE);
             viewHolder.deleteButton.setVisibility(View.VISIBLE);
         } else {
@@ -101,7 +106,7 @@ public class GroupAdapter extends RecyclerView.Adapter<GroupViewHolder>
 
     @Override
     public void onEditClick(int position) {
-        Toast.makeText(context, "onEditClick Position: " + Integer.toString(position), Toast.LENGTH_SHORT).show();
+        EditGroupDialog.newInstance(groupFragment, groupList.get(position)).show(((FragmentActivity) context).getFragmentManager(), "dialog");
     }
 
     @Override

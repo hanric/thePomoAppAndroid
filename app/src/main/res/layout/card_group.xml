@@ -68,14 +68,14 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginRight="@dimen/cardGroup_button_margin"
-                    android:text="EDIT" />
+                    android:text="@string/group_card_edit" />
 
                 <TextView
                     android:id="@+id/group_delete"
                     style="@style/cardButton"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="DELETE" />
+                    android:text="@string/group_card_delete" />
             </LinearLayout>
         </RelativeLayout>
 

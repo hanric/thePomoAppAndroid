@@ -10,15 +10,11 @@ import com.example.android.thepomoappandroid.api.interfaces.PeopleInterface;
 import com.example.android.thepomoappandroid.api.request.LoginRequest;
 import com.example.android.thepomoappandroid.api.request.RegisterRequest;
 import com.example.android.thepomoappandroid.api.response.LoginResponse;
-import com.google.android.gms.plus.model.people.Person;
-import com.squareup.okhttp.Call;
 
 import java.util.List;
 
 import retrofit.Callback;
 import retrofit.ResponseCallback;
-import retrofit.RetrofitError;
-import retrofit.client.Response;
 
 /**
  * Created by Enric on 22/04/2015.

@@ -198,7 +198,7 @@ public class GroupActivity extends AppCompatActivity implements
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.edit) {
-            EditGroupDialog.newInstance(this).show(getFragmentManager(), "dialog");
+            EditGroupDialog.newInstance(this, groupDTO).show(getFragmentManager(), "dialog");
         } else if (id == R.id.delete) {
             final GroupActivity groupActivity = this;
             new AlertDialog.Builder(this)

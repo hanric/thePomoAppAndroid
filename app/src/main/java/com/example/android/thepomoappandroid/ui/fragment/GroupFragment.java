@@ -85,11 +85,15 @@ public class GroupFragment extends Fragment implements
     }
 
     private void setUpRecyclerView() {
-        recyclerView.setHasFixedSize(true);
-        LinearLayoutManager llm = new LinearLayoutManager(getActivity());
-        llm.setOrientation(LinearLayoutManager.VERTICAL);
-        recyclerView.setLayoutManager(llm);
-        fab.attachToRecyclerView(recyclerView);
+        if (recyclerView != null) {
+            recyclerView.setHasFixedSize(true);
+            LinearLayoutManager llm = new LinearLayoutManager(getActivity());
+            llm.setOrientation(LinearLayoutManager.VERTICAL);
+            recyclerView.setLayoutManager(llm);
+            fab.attachToRecyclerView(recyclerView);
+        } else {
+            refreshFragment();
+        }
     }
 
     private void setFabVisibility() {
@@ -146,7 +150,7 @@ public class GroupFragment extends Fragment implements
     private void refreshFragment() {
         if (!Utils.isLoggedIn(getActivity())) {
             if (getUserVisibleHint()) loadDialog();
-            adapter = new GroupAdapter(getActivity(), new ArrayList<GroupDTO>());
+            adapter = new GroupAdapter(this, new ArrayList<GroupDTO>());
             recyclerView.setAdapter(adapter);
         } else {
             PeopleService.getInstance().getGroups(Utils.getUserId(getActivity()), Utils.getToken(getActivity()), new Callback<List<GroupDTO>>() {
@@ -164,7 +168,7 @@ public class GroupFragment extends Fragment implements
     }
 
     public void handleOnGetGroupsSuccess(List<GroupDTO> groupDTOs) {
-        adapter = new GroupAdapter(getActivity(), groupDTOs);
+        adapter = new GroupAdapter(this, groupDTOs);
         adapter.setOnDeleteGroupCallback(onDeleteGroupCallback);
         recyclerView.setAdapter(adapter);
     }

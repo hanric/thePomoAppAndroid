@@ -22,6 +22,7 @@ import com.strongloop.android.loopback.RestAdapter;
 import com.strongloop.android.loopback.callbacks.VoidCallback;
 
 import org.joda.time.DateTime;
+import org.joda.time.LocalDateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 
@@ -30,6 +31,7 @@ import java.security.InvalidParameterException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
+import java.util.Locale;
 
 /**
  * Created by Enric on 22/04/2015.
@@ -60,6 +62,10 @@ public class Utils {
 
     public static void clearPreferences(Context context) {
         getPrefs(context).edit().clear().commit();
+    }
+
+    public static boolean isFirstTimeOpened(Context context) {
+        return getPrefs(context).getBoolean(Constants.PREFS_FIRST_TIME, true);
     }
 
     public static int getUserId(Context context) {
@@ -116,7 +122,7 @@ public class Utils {
 
 
     public static String formatDate(GregorianCalendar calendar) {
-        SimpleDateFormat fmt = new SimpleDateFormat(DATE_PATTERN_TO_SERVER);
+        SimpleDateFormat fmt = new SimpleDateFormat(DATE_PATTERN_TO_SERVER, Locale.US);
         fmt.setCalendar(calendar);
         return fmt.format(calendar.getTime());
     }
@@ -124,8 +130,8 @@ public class Utils {
     public static GregorianCalendar formatStringDate(String date) {
         DateTimeFormatter formatter =
                 DateTimeFormat.forPattern(DATE_PATTERN_FROM_SERVER).withOffsetParsed();
-        DateTime dateTime = formatter.parseDateTime(date);
-        return dateTime.toGregorianCalendar();
+        LocalDateTime localDateTime = formatter.parseLocalDateTime(date);
+        return localDateTime.toDateTime().toGregorianCalendar();
     }
 
     public static boolean isSessionOld(SessionDTO sessionDTO) {

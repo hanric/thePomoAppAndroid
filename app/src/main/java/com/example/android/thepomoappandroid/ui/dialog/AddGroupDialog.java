@@ -5,6 +5,7 @@ import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.support.design.widget.TextInputLayout;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -19,6 +20,7 @@ import android.widget.AdapterView;
 import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.example.android.thepomoappandroid.R;
 import com.example.android.thepomoappandroid.Utils;
@@ -29,6 +31,12 @@ import com.example.android.thepomoappandroid.api.services.GroupsService;
 import com.example.android.thepomoappandroid.api.services.PeopleService;
 import com.example.android.thepomoappandroid.ui.adapter.UserAdapter;
 import com.example.android.thepomoappandroid.ui.adapter.UserSearchAdapter;
+import com.mobsandgeeks.saripaar.ValidationError;
+import com.mobsandgeeks.saripaar.Validator;
+import com.mobsandgeeks.saripaar.adapter.ViewDataAdapter;
+import com.mobsandgeeks.saripaar.annotation.Length;
+import com.mobsandgeeks.saripaar.annotation.NotEmpty;
+import com.mobsandgeeks.saripaar.exception.ConversionException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -44,15 +52,25 @@ public class AddGroupDialog extends DialogFragment
         implements Toolbar.OnMenuItemClickListener,
         View.OnClickListener,
         AdapterView.OnItemClickListener,
-        TextWatcher {
+        TextWatcher,
+        Validator.ValidationListener {
 
     public static final String CLASS_TAG = AddGroupDialog.class.getSimpleName();
 
     protected Context context;
 
     protected Toolbar toolbar;
+
+    private Validator validator;
+
+    @NotEmpty(sequence = 1, messageResId = R.string.emptyFieldError)
+    @Length(sequence = 2, min = 3, max = 20, messageResId = R.string.groupNameError)
     protected EditText name;
+
+    @NotEmpty(sequence = 1, messageResId = R.string.emptyFieldError)
+    @Length(sequence = 2, min = 3, max = 20, messageResId = R.string.groupDescriptionError)
     protected EditText description;
+
     private AutoCompleteTextView searchText;
     private ListView selectedUsersListView;
 
@@ -102,6 +120,16 @@ public class AddGroupDialog extends DialogFragment
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        validator = new Validator(this);
+        validator.setValidationListener(this);
+        validator.registerAdapter(TextInputLayout.class,
+                new ViewDataAdapter<TextInputLayout, String>() {
+                    @Override
+                    public String getData(TextInputLayout flet) throws ConversionException {
+                        return flet.getEditText().getText().toString();
+                    }
+                }
+        );
     }
 
     @Override
@@ -194,13 +222,33 @@ public class AddGroupDialog extends DialogFragment
     @Override
     public boolean onMenuItemClick(MenuItem menuItem) {
         if (menuItem.getItemId() == R.id.save) {
-            String nameString = name.getText().toString();
-            String descriptionString = description.getText().toString();
-            if (!nameString.isEmpty() && !descriptionString.isEmpty()) {
-                actionGroup(nameString, descriptionString);
-            }
+            validator.validate();
         }
         return false;
+    }
+
+    @Override
+    public void onValidationFailed(List<ValidationError> errors) {
+        ((TextInputLayout) name.getParent()).setError(null);
+        ((TextInputLayout) name.getParent()).setErrorEnabled(false);
+        ((TextInputLayout) description.getParent()).setError(null);
+        ((TextInputLayout) description.getParent()).setErrorEnabled(false);
+        for (ValidationError error : errors) {
+            View view = error.getView();
+            String message = error.getFailedRules().get(0).getMessage(getActivity());
+
+            // Display error messages ;)
+            if (view instanceof EditText) {
+                ((TextInputLayout) view.getParent()).setError(message);
+            } else {
+                Toast.makeText(getActivity(), message, Toast.LENGTH_LONG).show();
+            }
+        }
+    }
+
+    @Override
+    public void onValidationSucceeded() {
+        actionGroup(name.getText().toString(), description.getText().toString());
     }
 
     protected void actionGroup(String name, String description) {

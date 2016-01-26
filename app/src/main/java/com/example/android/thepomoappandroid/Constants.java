@@ -10,6 +10,7 @@ public interface Constants {
     String PREFS_USERID = "prefs.userId";
     String PREFS_TOKEN = "prefs.token";
     String PREFS_INSTALLATION_ID = "prefs.installationId";
+    String PREFS_FIRST_TIME = "prefs.firstTime";
 
     String API_ENDPONT = "http://pomoapp.herokuapp.com/api";
 

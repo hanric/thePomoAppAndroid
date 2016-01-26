@@ -7,6 +7,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.support.design.widget.TextInputLayout;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -27,6 +28,13 @@ import com.example.android.thepomoappandroid.db.DBHandler;
 import com.example.android.thepomoappandroid.db.Setting;
 import com.example.android.thepomoappandroid.ui.activity.MainActivity;
 import com.example.android.thepomoappandroid.ui.activity.RegisterActivity;
+import com.mobsandgeeks.saripaar.ValidationError;
+import com.mobsandgeeks.saripaar.Validator;
+import com.mobsandgeeks.saripaar.adapter.ViewDataAdapter;
+import com.mobsandgeeks.saripaar.annotation.Email;
+import com.mobsandgeeks.saripaar.annotation.NotEmpty;
+import com.mobsandgeeks.saripaar.annotation.Password;
+import com.mobsandgeeks.saripaar.exception.ConversionException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,7 +48,8 @@ import retrofit.client.Response;
  * Created by Enric on 13/04/2015.
  */
 public class LoginDialog extends DialogFragment implements
-        View.OnClickListener {
+        View.OnClickListener,
+        Validator.ValidationListener {
 
     public static final String CLASS_TAG = LoginDialog.class.getSimpleName();
 
@@ -52,8 +61,16 @@ public class LoginDialog extends DialogFragment implements
 
     private String emailText;
 
+    private Validator validator;
+
+    @NotEmpty (sequence = 1, messageResId = R.string.emptyFieldError)
+    @Email (sequence = 2, messageResId = R.string.emailError)
     private EditText email;
+
+    @NotEmpty (sequence = 1, messageResId = R.string.emptyFieldError)
+    @Password(sequence = 2, messageResId = R.string.passwordError, min = 6, scheme = Password.Scheme.ALPHA_NUMERIC)
     private EditText password;
+
     private Button login;
     private Button register;
     private int numberOfOfflineSettings;
@@ -72,6 +89,16 @@ public class LoginDialog extends DialogFragment implements
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.popup_login, container,
                 false);
+        validator = new Validator(this);
+        validator.setValidationListener(this);
+        validator.registerAdapter(TextInputLayout.class,
+                new ViewDataAdapter<TextInputLayout, String>() {
+                    @Override
+                    public String getData(TextInputLayout flet) throws ConversionException {
+                        return flet.getEditText().getText().toString();
+                    }
+                }
+        );
         findViews(view);
         setListeners();
         getDialog().getWindow().requestFeature(Window.FEATURE_NO_TITLE);
@@ -95,7 +122,7 @@ public class LoginDialog extends DialogFragment implements
     public void onClick(View v) {
         int id = v.getId();
         if (id == login.getId()) {
-            login();
+            validator.validate();
         } else if (id == register.getId()) {
             Intent intent = new Intent(getActivity(), RegisterActivity.class);
             startActivityForResult(intent, RegisterActivity.REGISTER_OK);// Activity is started with requestCode 2
@@ -114,6 +141,30 @@ public class LoginDialog extends DialogFragment implements
     public void onDismiss(DialogInterface dialog) {
         shown = false;
         super.onDismiss(dialog);
+    }
+
+    @Override
+    public void onValidationSucceeded() {
+        login();
+    }
+
+    @Override
+    public void onValidationFailed(List<ValidationError> errors) {
+        ((TextInputLayout) email.getParent()).setError(null);
+        ((TextInputLayout) email.getParent()).setError(null);
+        ((TextInputLayout) password.getParent()).setErrorEnabled(false);
+        ((TextInputLayout) password.getParent()).setErrorEnabled(false);
+        for (ValidationError error : errors) {
+            View view = error.getView();
+            String message = error.getFailedRules().get(0).getMessage(getActivity());
+
+            // Display error messages ;)
+            if (view instanceof EditText) {
+                ((TextInputLayout) view.getParent()).setError(message);
+            } else {
+                Toast.makeText(getActivity(), message, Toast.LENGTH_LONG).show();
+            }
+        }
     }
 
     public boolean isShown() {
